@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Arrays — DSA Zero to Hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream:#FAF7F2; --white:#FFFFFF;
+      --ink:#1A1A1A; --ink-light:#4A4A4A; --ink-muted:#888;
+      --accent:#D4500A; --accent-light:#F5E6DC;
+      --border:#E8E2D8; --code-bg:#1E1E2E;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--ink); }
+
+    /* NAV */
+    nav { position:sticky; top:0; z-index:100; background:rgba(250,247,242,0.96); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 5vw; display:flex; align-items:center; justify-content:space-between; height:64px; }
+    .nav-logo { font-family:'Playfair Display',serif; font-weight:900; font-size:1.3rem; color:var(--ink); text-decoration:none; }
+    .nav-logo span { color:var(--accent); }
+    .nav-back { display:flex; align-items:center; gap:0.4rem; text-decoration:none; color:var(--ink-light); font-size:0.87rem; font-weight:500; transition:color 0.2s; }
+    .nav-back:hover { color:var(--accent); }
+
+    /* CONCEPT HERO */
+    .concept-hero { background:var(--white); border-bottom:1px solid var(--border); padding:3rem 5vw 2.5rem; }
+    .concept-hero-inner { max-width:900px; margin:0 auto; }
+    .breadcrumb { font-size:0.73rem; color:var(--ink-muted); margin-bottom:1rem; display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; }
+    .breadcrumb a { color:var(--accent); text-decoration:none; }
+    .concept-badge { display:inline-block; background:var(--accent-light); color:var(--accent); font-size:0.7rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; padding:0.28rem 0.75rem; border-radius:20px; margin-bottom:1rem; }
+    .concept-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,3.8rem); font-weight:900; letter-spacing:-1.5px; line-height:1.05; margin-bottom:0.85rem; }
+    .concept-subtitle { font-size:1rem; color:var(--ink-light); line-height:1.75; max-width:600px; }
+    .concept-meta { display:flex; gap:1.5rem; margin-top:1.5rem; flex-wrap:wrap; }
+    .meta-item { display:flex; flex-direction:column; gap:2px; }
+    .meta-label { font-size:0.67rem; color:var(--ink-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.1em; }
+    .meta-value { font-size:0.88rem; font-weight:600; }
+
+    /* PROGRESS NAV */
+    .progress-nav { position:sticky; top:64px; z-index:99; background:rgba(250,247,242,0.96); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); padding:0 5vw; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .progress-list { max-width:900px; margin:0 auto; display:flex; list-style:none; }
+    .progress-list a { display:flex; align-items:center; gap:0.45rem; padding:0.85rem 1rem; text-decoration:none; font-size:0.8rem; font-weight:500; color:var(--ink-muted); border-bottom:2px solid transparent; white-space:nowrap; transition:color 0.2s, border-color 0.2s; }
+    .progress-list a:hover, .progress-list a.active { color:var(--accent); border-bottom-color:var(--accent); }
+    .step-badge { width:19px; height:19px; border-radius:50%; background:var(--accent-light); color:var(--accent); font-size:0.62rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+
+    /* CONTENT */
+    .content-wrapper { max-width:900px; margin:0 auto; padding:3.5rem 5vw 5rem; }
+    .section-block { margin-bottom:4rem; padding-bottom:4rem; border-bottom:1px solid var(--border); }
+    .section-block:last-child { border-bottom:none; }
+    .section-label { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.1rem; }
+    .label-num { width:30px; height:30px; border-radius:50%; background:var(--accent); color:white; font-weight:700; font-size:0.78rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .label-text { font-size:0.68rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink-muted); }
+    .section-heading { font-family:'Playfair Display',serif; font-size:clamp(1.5rem,3vw,1.9rem); font-weight:900; letter-spacing:-0.5px; margin-bottom:1rem; }
+    .prose { font-size:0.96rem; line-height:1.85; color:var(--ink-light); }
+    .prose strong { color:var(--ink); font-weight:600; }
+    .prose em { color:var(--accent); font-style:italic; }
+    .prose + .prose { margin-top:1rem; }
+    .spacer { height:1rem; }
+
+    /* DEFINITION BOX */
+    .definition-box { background:var(--white); border:1.5px solid var(--border); border-left:4px solid var(--accent); border-radius:8px; padding:1.3rem 1.5rem; margin:1.3rem 0; }
+    .definition-box p { font-size:0.98rem; line-height:1.78; color:var(--ink); }
+    .definition-box cite { display:block; margin-top:0.7rem; font-size:0.77rem; color:var(--ink-muted); font-style:normal; }
+    code.ic { background:var(--accent-light); color:var(--accent); padding:0.1em 0.42em; border-radius:3px; font-family:'DM Mono',monospace; font-size:0.87em; }
+
+    /* CODE BLOCK — key fix: white-space:pre inside pre */
+    .code-block { background:var(--code-bg); border-radius:10px; overflow:hidden; margin:1.3rem 0; box-shadow:0 4px 24px rgba(0,0,0,0.15); }
+    .code-header { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1.2rem; border-bottom:1px solid rgba(255,255,255,0.07); }
+    .code-dots { display:flex; gap:6px; }
+    .code-dots span { width:10px; height:10px; border-radius:50%; }
+    .dr{background:#F38BA8;} .dy{background:#F9E2AF;} .dg{background:#A6E3A1;}
+    .code-lang { font-family:'DM Mono',monospace; font-size:0.7rem; color:#6C7086; }
+    .code-body { padding:1.3rem 1.4rem; font-family:'DM Mono',monospace; font-size:0.8rem; line-height:1.9; color:#CDD6F4; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .code-body pre { margin:0; white-space:pre; }
+    /* token colours */
+    .kw{color:#CBA6F7;} .fn{color:#89B4FA;} .st{color:#A6E3A1;} .nm{color:#FAB387;} .cm{color:#6C7086;} .cls{color:#F9E2AF;}
+
+    /* COMPLEXITY TABLE */
+    .tbl-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:1.3rem 0; }
+    .complexity-table { width:100%; border-collapse:collapse; font-size:0.87rem; min-width:420px; }
+    .complexity-table th { background:var(--accent-light); color:var(--accent); padding:0.62rem 1rem; text-align:left; font-weight:700; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; }
+    .complexity-table td { padding:0.62rem 1rem; border-bottom:1px solid var(--border); color:var(--ink-light); }
+    .complexity-table tr:last-child td { border-bottom:none; }
+    .complexity-table tr:nth-child(even) td { background:rgba(250,247,242,0.6); }
+    .og{color:#1A6B4A;font-weight:700;font-family:'DM Mono',monospace;}
+    .om{color:#B8860B;font-weight:700;font-family:'DM Mono',monospace;}
+    .ob{color:#D4500A;font-weight:700;font-family:'DM Mono',monospace;}
+
+    /* DIAGRAM */
+    .diagram-box { background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:2rem 1.5rem; margin:1.3rem 0; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .diagram-title { font-size:0.7rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:1.4rem; text-align:center; }
+    .diagram-caption { text-align:center; margin-top:1.1rem; font-size:0.82rem; color:var(--ink-light); line-height:1.55; }
+    .mem-label { font-size:0.73rem; font-weight:600; color:var(--ink-muted); text-align:center; margin-bottom:0.5rem; }
+
+    /* Array cells */
+    .arr-row { display:flex; justify-content:center; flex-wrap:nowrap; min-width:max-content; margin:0 auto; }
+    .arr-cell-wrap { display:flex; flex-direction:column; align-items:center; gap:0.35rem; }
+    .arr-cell { width:60px; height:60px; border:2px solid var(--accent); background:var(--accent-light); display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:1rem; font-weight:700; color:var(--accent); transition:background 0.2s; cursor:default; }
+    .arr-cell:hover { background:var(--accent); color:white; }
+    .arr-cell.first { border-radius:6px 0 0 6px; }
+    .arr-cell.last  { border-radius:0 6px 6px 0; }
+    .arr-idx  { font-family:'DM Mono',monospace; font-size:0.67rem; color:var(--ink-muted); }
+    .arr-addr { font-family:'DM Mono',monospace; font-size:0.6rem; color:#aaa; }
+
+    /* Insert diagram */
+    .ins-row { display:flex; align-items:center; gap:0.3rem; justify-content:center; flex-wrap:nowrap; min-width:max-content; margin:0 auto; }
+    .ins-cell { width:50px; height:50px; border:2px solid var(--accent); background:var(--accent-light); display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:0.9rem; font-weight:700; color:var(--accent); }
+    .ins-cell.first { border-radius:5px 0 0 5px; }
+    .ins-cell.last  { border-radius:0 5px 5px 0; }
+    .ins-cell.highlight { background:#DCF0E6; color:#1A6B4A; border-color:#1A6B4A; }
+    .ins-cell.shifted  { background:#FDF3D0; color:#B8860B; border-color:#B8860B; }
+    .ins-step-lbl { font-size:0.75rem; color:var(--ink-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.5rem; text-align:center; }
+    .ins-arrow { font-size:1.4rem; color:var(--accent); text-align:center; margin:0.6rem 0; }
+
+    /* ANALOGY */
+    .analogy-box { background:linear-gradient(135deg,#FFF8F0,#FFF0E6); border:1.5px solid #F0C9A8; border-radius:12px; padding:2rem; margin:1.3rem 0; position:relative; }
+    .analogy-box::before { content:'🎒'; position:absolute; top:-1rem; left:1.4rem; font-size:1.5rem; background:var(--cream); padding:0 0.25rem; }
+    .analogy-title { font-family:'Playfair Display',serif; font-size:1.12rem; font-weight:700; color:var(--accent); margin-bottom:0.7rem; padding-top:0.4rem; }
+    .analogy-text { font-size:0.94rem; line-height:1.85; color:var(--ink-light); }
+    .analogy-text + .analogy-text { margin-top:0.85rem; }
+    .hi { background:rgba(212,80,10,0.1); padding:0.15rem 0.38rem; border-radius:4px; color:var(--accent); font-weight:600; }
+
+    /* TAKEAWAY */
+    .takeaway-box { background:var(--ink); color:white; border-radius:10px; padding:1.8rem; margin-top:1.8rem; }
+    .takeaway-box h4 { font-family:'Playfair Display',serif; font-size:1.12rem; margin-bottom:0.75rem; color:#FAB387; }
+    .takeaway-box ul { list-style:none; display:flex; flex-direction:column; gap:0.5rem; }
+    .takeaway-box li { font-size:0.87rem; color:#CDD6F4; padding-left:1.3rem; position:relative; line-height:1.6; }
+    .takeaway-box li::before { content:'✓'; position:absolute; left:0; color:#A6E3A1; font-weight:700; }
+
+    /* PAGE NAV */
+    .page-nav { display:flex; justify-content:space-between; gap:1rem; margin-top:3.5rem; flex-wrap:wrap; }
+    .page-nav-btn { flex:1; min-width:150px; display:flex; align-items:center; gap:0.85rem; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:1.1rem 1.3rem; text-decoration:none; color:inherit; transition:border-color 0.2s, box-shadow 0.2s, transform 0.2s; }
+    .page-nav-btn:hover { border-color:var(--accent); box-shadow:0 4px 18px rgba(212,80,10,0.12); transform:translateY(-2px); }
+    .page-nav-btn.next { justify-content:flex-end; text-align:right; }
+    .nav-btn-label { font-size:0.68rem; color:var(--ink-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.1em; }
+    .nav-btn-title { font-weight:700; font-size:0.95rem; margin-top:2px; }
+
+    /* RESPONSIVE */
+    @media (max-width:640px) {
+      .concept-meta { gap:1rem; }
+      .arr-cell { width:48px; height:48px; font-size:0.88rem; }
+      .arr-cell, .ins-cell { width:44px; height:44px; }
+      .page-nav { flex-direction:column; }
+      .page-nav-btn, .page-nav-btn.next { min-width:100%; justify-content:flex-start; text-align:left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">DSA <span>Zero→Hero</span></a>
+  <a class="nav-back" href="index.html">← Back to Home</a>
+</nav>
+
+<div class="concept-hero">
+  <div class="concept-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> › <span>Chapter 1: Foundations</span> › <span>Arrays</span></div>
+    <div class="concept-badge">🗂️ Module 01 · Foundation</div>
+    <h1 class="concept-title">Arrays</h1>
+    <p class="concept-subtitle">The most fundamental data structure — a fixed-size, ordered collection stored in contiguous memory locations.</p>
+    <div class="concept-meta">
+      <div class="meta-item"><span class="meta-label">Difficulty</span><span class="meta-value">⬤○○ Beginner</span></div>
+      <div class="meta-item"><span class="meta-label">Access</span><span class="meta-value" style="font-family:'DM Mono',monospace;color:#1A6B4A;">O(1)</span></div>
+      <div class="meta-item"><span class="meta-label">Insert / Delete (mid)</span><span class="meta-value" style="font-family:'DM Mono',monospace;color:#D4500A;">O(n)</span></div>
+      <div class="meta-item"><span class="meta-label">Read time</span><span class="meta-value">~8 min</span></div>
+    </div>
+  </div>
+</div>
+
+<nav class="progress-nav">
+  <ul class="progress-list">
+    <li><a href="#definition" class="active"><span class="step-badge">1</span> Definition</a></li>
+    <li><a href="#explanation"><span class="step-badge">2</span> Explanation</a></li>
+    <li><a href="#code"><span class="step-badge">3</span> Code</a></li>
+    <li><a href="#diagram"><span class="step-badge">4</span> Diagram</a></li>
+    <li><a href="#analogy"><span class="step-badge">5</span> Analogy</a></li>
+  </ul>
+</nav>
+
+<div class="content-wrapper">
+
+  <!-- 1. DEFINITION -->
+  <div id="definition" class="section-block">
+    <div class="section-label"><div class="label-num">1</div><div class="label-text">Formal Definition</div></div>
+    <h2 class="section-heading">What is an Array?</h2>
+    <div class="definition-box">
+      <p>An <strong>array</strong> is a linear data structure that stores a fixed-size, ordered collection of elements of the <strong>same data type</strong> in <em>contiguous (adjacent) memory locations</em>. Each element is identified by a non-negative integer <strong>index</strong>, starting at <code class="ic">0</code>. Given a base address and element size, any element can be located in <strong>O(1)</strong> time using: <code class="ic">address(A[i]) = base + i × size</code>.</p>
+      <cite>— Standard Computer Science Definition</cite>
+    </div>
+  </div>
+
+  <!-- 2. EXPLANATION -->
+  <div id="explanation" class="section-block">
+    <div class="section-label"><div class="label-num">2</div><div class="label-text">Explanation</div></div>
+    <h2 class="section-heading">How Arrays Actually Work</h2>
+    <p class="prose">When you declare an array, the OS reserves a <strong>single contiguous block of memory</strong> large enough for all elements. If each integer is 4 bytes and your array has 5 elements, exactly 20 consecutive bytes are allocated.</p>
+    <div class="spacer"></div>
+    <p class="prose">Because every element is the same size and they're packed side-by-side, the CPU can <strong>jump directly to any element</strong> using one arithmetic calculation — no traversal needed. That's why random access is <em>O(1)</em>.</p>
+    <div class="spacer"></div>
+    <p class="prose">The tradeoff: <strong>inserting or deleting in the middle</strong> forces every subsequent element to shift by one position — that's up to <em>O(n)</em> work. And arrays are <strong>fixed in size</strong>; resizing means allocating a brand-new block and copying everything over.</p>
+
+    <div class="tbl-wrap">
+      <table class="complexity-table">
+        <thead><tr><th>Operation</th><th>Time</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Access by index</td><td><span class="og">O(1)</span></td><td>Direct memory address calculation</td></tr>
+          <tr><td>Search (unsorted)</td><td><span class="ob">O(n)</span></td><td>May need to check every element</td></tr>
+          <tr><td>Search (sorted)</td><td><span class="om">O(log n)</span></td><td>Binary search is possible</td></tr>
+          <tr><td>Insert / delete at end</td><td><span class="og">O(1)</span></td><td>No shifting needed</td></tr>
+          <tr><td>Insert / delete in middle</td><td><span class="ob">O(n)</span></td><td>Must shift subsequent elements</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3. CODE -->
+  <div id="code" class="section-block">
+    <div class="section-label"><div class="label-num">3</div><div class="label-text">Code Snippet</div></div>
+    <h2 class="section-heading">Arrays in JavaScript</h2>
+    <p class="prose">A complete walkthrough of every core array operation — creation, access, update, insertion, deletion, and search.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="code-lang">JavaScript</span>
+      </div>
+      <div class="code-body"><pre><span class="cm">// 1. Create an array — 5 elements, indices 0..4</span>
+<span class="kw">const</span> scores = [<span class="nm">85</span>, <span class="nm">92</span>, <span class="nm">78</span>, <span class="nm">95</span>, <span class="nm">88</span>];
+<span class="cm">//               [0]  [1]  [2]  [3]  [4]</span>
+
+<span class="cm">// 2. Access by index — O(1)</span>
+console.log(scores[<span class="nm">0</span>]);       <span class="cm">// 85</span>
+console.log(scores[<span class="nm">3</span>]);       <span class="cm">// 95</span>
+console.log(scores.length);   <span class="cm">// 5</span>
+
+<span class="cm">// 3. Update an element — O(1)</span>
+scores[<span class="nm">2</span>] = <span class="nm">82</span>;
+<span class="cm">// scores → [85, 92, 82, 95, 88]</span>
+
+<span class="cm">// 4. Append to end — O(1)</span>
+scores.push(<span class="nm">91</span>);
+<span class="cm">// scores → [85, 92, 82, 95, 88, 91]</span>
+
+<span class="cm">// 5. Insert in the middle — O(n)  (elements must shift right)</span>
+scores.splice(<span class="nm">2</span>, <span class="nm">0</span>, <span class="nm">99</span>);
+<span class="cm">// scores → [85, 92, 99, 82, 95, 88, 91]</span>
+
+<span class="cm">// 6. Remove last element — O(1)</span>
+scores.pop();
+<span class="cm">// scores → [85, 92, 99, 82, 95, 88]</span>
+
+<span class="cm">// 7. Remove from the middle — O(n)  (elements must shift left)</span>
+scores.splice(<span class="nm">2</span>, <span class="nm">1</span>);
+<span class="cm">// scores → [85, 92, 82, 95, 88]</span>
+
+<span class="cm">// 8. Traverse — O(n)</span>
+<span class="kw">for</span> (<span class="kw">let</span> i = <span class="nm">0</span>; i &lt; scores.length; i++) {
+  console.log(`index ${i} → ${scores[i]}`);
+}
+
+<span class="cm">// 9. Linear search — O(n)</span>
+<span class="kw">function</span> <span class="fn">linearSearch</span>(arr, target) {
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="nm">0</span>; i &lt; arr.length; i++) {
+    <span class="kw">if</span> (arr[i] === target) <span class="kw">return</span> i;  <span class="cm">// found</span>
+  }
+  <span class="kw">return</span> -<span class="nm">1</span>;  <span class="cm">// not found</span>
+}
+
+console.log(linearSearch(scores, <span class="nm">95</span>)); <span class="cm">// 3</span>
+console.log(linearSearch(scores, <span class="nm">10</span>)); <span class="cm">// -1</span></pre></div>
+    </div>
+  </div>
+
+  <!-- 4. DIAGRAM -->
+  <div id="diagram" class="section-block">
+    <div class="section-label"><div class="label-num">4</div><div class="label-text">Visual Diagram</div></div>
+    <h2 class="section-heading">Memory Layout of an Array</h2>
+    <p class="prose">Each element sits in adjacent memory — hover a cell to highlight it.</p>
+
+    <div class="diagram-box">
+      <div class="diagram-title">scores = [85, 92, 78, 95, 88] — contiguous memory</div>
+      <div class="mem-label">📦 Each cell = 4 bytes</div>
+      <br>
+      <div style="overflow-x:auto;">
+        <div class="arr-row">
+          <div class="arr-cell-wrap"><div class="arr-cell first">85</div><div class="arr-idx">index 0</div><div class="arr-addr">0x1000</div></div>
+          <div class="arr-cell-wrap"><div class="arr-cell">92</div><div class="arr-idx">index 1</div><div class="arr-addr">0x1004</div></div>
+          <div class="arr-cell-wrap"><div class="arr-cell">78</div><div class="arr-idx">index 2</div><div class="arr-addr">0x1008</div></div>
+          <div class="arr-cell-wrap"><div class="arr-cell">95</div><div class="arr-idx">index 3</div><div class="arr-addr">0x100C</div></div>
+          <div class="arr-cell-wrap"><div class="arr-cell last">88</div><div class="arr-idx">index 4</div><div class="arr-addr">0x1010</div></div>
+        </div>
+      </div>
+      <div class="diagram-caption"><strong>scores[3]</strong> → CPU computes: 0x1000 + (3 × 4) = 0x100C → reads <strong>95</strong> instantly. No loop. That's <strong style="color:#1A6B4A;">O(1)</strong>.</div>
+    </div>
+
+    <div class="diagram-box">
+      <div class="diagram-title">Inserting 99 at index 2 — elements must shift right</div>
+      <div style="overflow-x:auto;">
+        <div class="ins-step-lbl">Before</div>
+        <div class="ins-row">
+          <div class="ins-cell first">85</div><div class="ins-cell">92</div>
+          <div class="ins-cell shifted">78</div><div class="ins-cell shifted">95</div><div class="ins-cell shifted last">88</div>
+        </div>
+        <div class="ins-arrow">↓ insert 99 at index 2 (78, 95, 88 shift right)</div>
+        <div class="ins-step-lbl">After</div>
+        <div class="ins-row">
+          <div class="ins-cell first">85</div><div class="ins-cell">92</div>
+          <div class="ins-cell highlight">99</div>
+          <div class="ins-cell">78</div><div class="ins-cell">95</div><div class="ins-cell last">88</div>
+        </div>
+      </div>
+      <div class="diagram-caption">3 elements had to move → worst case <strong style="color:#D4500A;">O(n)</strong> for mid-array insertion.</div>
+    </div>
+  </div>
+
+  <!-- 5. ANALOGY -->
+  <div id="analogy" class="section-block">
+    <div class="section-label"><div class="label-num">5</div><div class="label-text">Analogy for a 14-year-old</div></div>
+    <h2 class="section-heading">Think of It Like a Numbered Pencil Case</h2>
+    <div class="analogy-box">
+      <div class="analogy-title">🎒 The Pencil Case Analogy</div>
+      <p class="analogy-text">Imagine a pencil case with exactly <span class="hi">5 numbered slots</span> — slots 0, 1, 2, 3, and 4. Each slot holds exactly one pen.</p>
+      <p class="analogy-text">Your friend asks: <em>"What's in slot 3?"</em> You don't open every slot — you <span class="hi">go directly to slot 3</span> and grab it instantly. That's O(1) access — you know the exact location.</p>
+      <p class="analogy-text">But what if you want to add a new pen <strong>between slot 1 and slot 2</strong>? You'd have to slide every pen from slot 2, 3, and 4 one position to the right to make room. <span class="hi">The more pens, the more sliding</span> — that's O(n) insertion.</p>
+      <p class="analogy-text">And the biggest limitation: <span class="hi">your pencil case has a fixed number of slots</span>. If it's full and you need a 6th slot, you'd need to buy a bigger pencil case and transfer everything over. That's exactly what happens when an array runs out of space.</p>
+    </div>
+    <div class="takeaway-box">
+      <h4>🎯 Key Takeaways</h4>
+      <ul>
+        <li>Elements are stored side-by-side in one block of memory (contiguous).</li>
+        <li>Any element can be accessed in O(1) using its index — no searching.</li>
+        <li>Inserting or deleting in the middle is O(n) — elements must shift.</li>
+        <li>Arrays have a fixed size; dynamic resizing copies everything to a new block.</li>
+        <li>Best used when you need fast random access and the size is known upfront.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-nav">
+    <a href="index.html" class="page-nav-btn"><span>←</span><div><div class="nav-btn-label">Back to</div><div class="nav-btn-title">Home</div></div></a>
+    <a href="linked-list.html" class="page-nav-btn next"><div><div class="nav-btn-label">Next Module</div><div class="nav-btn-title">Linked Lists</div></div><span>→</span></a>
+  </div>
+
+</div>
+
+<script>
+  const secs = document.querySelectorAll('[id]');
+  const links = document.querySelectorAll('.progress-list a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+  }, { passive: true });
+</script>
+</body>
+</html>

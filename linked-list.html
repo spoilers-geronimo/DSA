@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Linked Lists — DSA Zero to Hero</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    :root {
+      --cream:#FAF7F2; --white:#FFFFFF;
+      --ink:#1A1A1A; --ink-light:#4A4A4A; --ink-muted:#888;
+      --accent:#1A6B4A; --accent-light:#DCF0E6;
+      --border:#E8E2D8; --code-bg:#1E1E2E;
+    }
+    html { scroll-behavior:smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--ink); }
+
+    nav { position:sticky; top:0; z-index:100; background:rgba(250,247,242,0.96); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 5vw; display:flex; align-items:center; justify-content:space-between; height:64px; }
+    .nav-logo { font-family:'Playfair Display',serif; font-weight:900; font-size:1.3rem; color:var(--ink); text-decoration:none; }
+    .nav-logo span { color:var(--accent); }
+    .nav-back { display:flex; align-items:center; gap:0.4rem; text-decoration:none; color:var(--ink-light); font-size:0.87rem; font-weight:500; transition:color 0.2s; }
+    .nav-back:hover { color:var(--accent); }
+
+    .concept-hero { background:var(--white); border-bottom:1px solid var(--border); padding:3rem 5vw 2.5rem; }
+    .concept-hero-inner { max-width:900px; margin:0 auto; }
+    .breadcrumb { font-size:0.73rem; color:var(--ink-muted); margin-bottom:1rem; display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; }
+    .breadcrumb a { color:var(--accent); text-decoration:none; }
+    .concept-badge { display:inline-block; background:var(--accent-light); color:var(--accent); font-size:0.7rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; padding:0.28rem 0.75rem; border-radius:20px; margin-bottom:1rem; }
+    .concept-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,3.8rem); font-weight:900; letter-spacing:-1.5px; line-height:1.05; margin-bottom:0.85rem; }
+    .concept-subtitle { font-size:1rem; color:var(--ink-light); line-height:1.75; max-width:600px; }
+    .concept-meta { display:flex; gap:1.5rem; margin-top:1.5rem; flex-wrap:wrap; }
+    .meta-item { display:flex; flex-direction:column; gap:2px; }
+    .meta-label { font-size:0.67rem; color:var(--ink-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.1em; }
+    .meta-value { font-size:0.88rem; font-weight:600; }
+
+    .progress-nav { position:sticky; top:64px; z-index:99; background:rgba(250,247,242,0.96); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); padding:0 5vw; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .progress-list { max-width:900px; margin:0 auto; display:flex; list-style:none; }
+    .progress-list a { display:flex; align-items:center; gap:0.45rem; padding:0.85rem 1rem; text-decoration:none; font-size:0.8rem; font-weight:500; color:var(--ink-muted); border-bottom:2px solid transparent; white-space:nowrap; transition:color 0.2s, border-color 0.2s; }
+    .progress-list a:hover, .progress-list a.active { color:var(--accent); border-bottom-color:var(--accent); }
+    .step-badge { width:19px; height:19px; border-radius:50%; background:var(--accent-light); color:var(--accent); font-size:0.62rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+
+    .content-wrapper { max-width:900px; margin:0 auto; padding:3.5rem 5vw 5rem; }
+    .section-block { margin-bottom:4rem; padding-bottom:4rem; border-bottom:1px solid var(--border); }
+    .section-block:last-child { border-bottom:none; }
+    .section-label { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.1rem; }
+    .label-num { width:30px; height:30px; border-radius:50%; background:var(--accent); color:white; font-weight:700; font-size:0.78rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .label-text { font-size:0.68rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink-muted); }
+    .section-heading { font-family:'Playfair Display',serif; font-size:clamp(1.5rem,3vw,1.9rem); font-weight:900; letter-spacing:-0.5px; margin-bottom:1rem; }
+    .prose { font-size:0.96rem; line-height:1.85; color:var(--ink-light); }
+    .prose strong { color:var(--ink); font-weight:600; }
+    .prose em { color:var(--accent); font-style:italic; }
+    .prose + .prose { margin-top:1rem; }
+    .spacer { height:1rem; }
+
+    .definition-box { background:var(--white); border:1.5px solid var(--border); border-left:4px solid var(--accent); border-radius:8px; padding:1.3rem 1.5rem; margin:1.3rem 0; }
+    .definition-box p { font-size:0.98rem; line-height:1.78; color:var(--ink); }
+    .definition-box cite { display:block; margin-top:0.7rem; font-size:0.77rem; color:var(--ink-muted); font-style:normal; }
+    code.ic { background:var(--accent-light); color:var(--accent); padding:0.1em 0.42em; border-radius:3px; font-family:'DM Mono',monospace; font-size:0.87em; }
+
+    .code-block { background:var(--code-bg); border-radius:10px; overflow:hidden; margin:1.3rem 0; box-shadow:0 4px 24px rgba(0,0,0,0.15); }
+    .code-header { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1.2rem; border-bottom:1px solid rgba(255,255,255,0.07); }
+    .code-dots { display:flex; gap:6px; }
+    .code-dots span { width:10px; height:10px; border-radius:50%; }
+    .dr{background:#F38BA8;} .dy{background:#F9E2AF;} .dg{background:#A6E3A1;}
+    .code-lang { font-family:'DM Mono',monospace; font-size:0.7rem; color:#6C7086; }
+    .code-body { padding:1.3rem 1.4rem; font-family:'DM Mono',monospace; font-size:0.8rem; line-height:1.9; color:#CDD6F4; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .code-body pre { margin:0; white-space:pre; }
+    .kw{color:#CBA6F7;} .fn{color:#89B4FA;} .st{color:#A6E3A1;} .nm{color:#FAB387;} .cm{color:#6C7086;} .cls{color:#F9E2AF;}
+
+    .tbl-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:1.3rem 0; }
+    .vs-table { width:100%; border-collapse:collapse; font-size:0.87rem; min-width:380px; }
+    .vs-table th { padding:0.62rem 1rem; text-align:left; font-weight:700; font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; }
+    .vs-table th:nth-child(2) { background:#F5E6DC; color:#D4500A; }
+    .vs-table th:nth-child(3) { background:var(--accent-light); color:var(--accent); }
+    .vs-table td { padding:0.62rem 1rem; border-bottom:1px solid var(--border); color:var(--ink-light); }
+    .vs-table tr:last-child td { border-bottom:none; }
+    .og{color:#1A6B4A;font-weight:700;font-family:'DM Mono',monospace;}
+    .ob{color:#D4500A;font-weight:700;font-family:'DM Mono',monospace;}
+
+    .diagram-box { background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:2rem 1.5rem; margin:1.3rem 0; overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .diagram-title { font-size:0.7rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:1.4rem; text-align:center; }
+    .diagram-caption { text-align:center; margin-top:1.1rem; font-size:0.82rem; color:var(--ink-light); line-height:1.55; }
+
+    /* Linked list node visual */
+    .ll-track { display:flex; align-items:center; justify-content:flex-start; gap:0; min-width:max-content; }
+    .ll-head-lbl { font-family:'DM Mono',monospace; font-size:0.72rem; color:var(--accent); margin-right:0.4rem; white-space:nowrap; }
+    .ll-node-wrap { display:flex; flex-direction:column; align-items:center; gap:0.4rem; }
+    .ll-node { display:flex; border:2px solid var(--accent); border-radius:7px; overflow:hidden; min-width:110px; }
+    .node-data { padding:0.7rem 0.9rem; background:var(--accent-light); font-family:'DM Mono',monospace; font-weight:700; color:var(--accent); text-align:center; flex:1; font-size:0.9rem; }
+    .node-ptr  { padding:0.7rem 0.7rem; background:#E5F5EE; font-family:'DM Mono',monospace; font-size:0.7rem; color:#5A9E7A; text-align:center; border-left:1px dashed var(--accent); }
+    .node-lbl  { font-size:0.66rem; color:var(--ink-muted); text-align:center; }
+    .node-addr { font-family:'DM Mono',monospace; font-size:0.6rem; color:#aaa; }
+    .ll-arrow  { font-size:1.4rem; color:var(--accent); margin:0 0.3rem; flex-shrink:0; padding-top:0.5rem; }
+    .ll-null   { font-family:'DM Mono',monospace; font-size:0.85rem; color:var(--ink-muted); border:2px dashed var(--border); padding:0.5rem 0.7rem; border-radius:6px; margin-top:0.2rem; }
+
+    /* Delete diagram rows */
+    .del-row { display:flex; align-items:center; gap:0.3rem; min-width:max-content; justify-content:center; flex-wrap:nowrap; }
+    .del-cell { min-width:80px; border:2px solid var(--accent); border-radius:6px; overflow:hidden; display:flex; }
+    .del-cell .nd { padding:0.55rem 0.7rem; background:var(--accent-light); font-family:'DM Mono',monospace; font-weight:700; color:var(--accent); font-size:0.85rem; flex:1; text-align:center; }
+    .del-cell .np { padding:0.55rem 0.55rem; background:#E5F5EE; font-family:'DM Mono',monospace; font-size:0.65rem; color:#5A9E7A; border-left:1px dashed var(--accent); }
+    .del-cell.removed .nd { background:#FEE; color:#D4500A; }
+    .del-cell.removed .np { background:#FEE; }
+    .del-cell.removed { border-color:#D4500A; }
+    .del-arrow { font-size:1.2rem; color:var(--accent); padding-bottom:2px; }
+    .del-step-lbl { font-size:0.73rem; color:var(--ink-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0.5rem; text-align:center; }
+
+    .analogy-box { background:linear-gradient(135deg,#F0FFF8,#E0F5EC); border:1.5px solid #A8DFC3; border-radius:12px; padding:2rem; margin:1.3rem 0; position:relative; }
+    .analogy-box::before { content:'🗺️'; position:absolute; top:-1rem; left:1.4rem; font-size:1.5rem; background:var(--cream); padding:0 0.25rem; }
+    .analogy-title { font-family:'Playfair Display',serif; font-size:1.12rem; font-weight:700; color:var(--accent); margin-bottom:0.7rem; padding-top:0.4rem; }
+    .analogy-text { font-size:0.94rem; line-height:1.85; color:var(--ink-light); }
+    .analogy-text + .analogy-text { margin-top:0.85rem; }
+    .hi { background:rgba(26,107,74,0.1); padding:0.15rem 0.38rem; border-radius:4px; color:var(--accent); font-weight:600; }
+
+    .takeaway-box { background:var(--ink); color:white; border-radius:10px; padding:1.8rem; margin-top:1.8rem; }
+    .takeaway-box h4 { font-family:'Playfair Display',serif; font-size:1.12rem; margin-bottom:0.75rem; color:#A6E3A1; }
+    .takeaway-box ul { list-style:none; display:flex; flex-direction:column; gap:0.5rem; }
+    .takeaway-box li { font-size:0.87rem; color:#CDD6F4; padding-left:1.3rem; position:relative; line-height:1.6; }
+    .takeaway-box li::before { content:'✓'; position:absolute; left:0; color:#A6E3A1; font-weight:700; }
+
+    .page-nav { display:flex; justify-content:space-between; gap:1rem; margin-top:3.5rem; flex-wrap:wrap; }
+    .page-nav-btn { flex:1; min-width:150px; display:flex; align-items:center; gap:0.85rem; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:1.1rem 1.3rem; text-decoration:none; color:inherit; transition:border-color 0.2s, box-shadow 0.2s, transform 0.2s; }
+    .page-nav-btn:hover { border-color:var(--accent); box-shadow:0 4px 18px rgba(26,107,74,0.15); transform:translateY(-2px); }
+    .page-nav-btn.next { justify-content:flex-end; text-align:right; }
+    .nav-btn-label { font-size:0.68rem; color:var(--ink-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.1em; }
+    .nav-btn-title { font-weight:700; font-size:0.95rem; margin-top:2px; }
+
+    @media (max-width:640px) {
+      .concept-meta { gap:1rem; }
+      .page-nav { flex-direction:column; }
+      .page-nav-btn, .page-nav-btn.next { min-width:100%; justify-content:flex-start; text-align:left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">DSA <span>Zero→Hero</span></a>
+  <a class="nav-back" href="index.html">← Back to Home</a>
+</nav>
+
+<div class="concept-hero">
+  <div class="concept-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> › <span>Chapter 1: Foundations</span> › <span>Linked Lists</span></div>
+    <div class="concept-badge">🔗 Module 02 · Foundation</div>
+    <h1 class="concept-title">Linked Lists</h1>
+    <p class="concept-subtitle">A dynamic chain of nodes connected by pointers — no contiguous memory required. The flexible alternative to arrays.</p>
+    <div class="concept-meta">
+      <div class="meta-item"><span class="meta-label">Difficulty</span><span class="meta-value">⬤○○ Beginner</span></div>
+      <div class="meta-item"><span class="meta-label">Access</span><span class="meta-value" style="font-family:'DM Mono',monospace;color:#D4500A;">O(n)</span></div>
+      <div class="meta-item"><span class="meta-label">Insert at head</span><span class="meta-value" style="font-family:'DM Mono',monospace;color:#1A6B4A;">O(1)</span></div>
+      <div class="meta-item"><span class="meta-label">Read time</span><span class="meta-value">~9 min</span></div>
+    </div>
+  </div>
+</div>
+
+<nav class="progress-nav">
+  <ul class="progress-list">
+    <li><a href="#definition" class="active"><span class="step-badge">1</span> Definition</a></li>
+    <li><a href="#explanation"><span class="step-badge">2</span> Explanation</a></li>
+    <li><a href="#code"><span class="step-badge">3</span> Code</a></li>
+    <li><a href="#diagram"><span class="step-badge">4</span> Diagram</a></li>
+    <li><a href="#analogy"><span class="step-badge">5</span> Analogy</a></li>
+  </ul>
+</nav>
+
+<div class="content-wrapper">
+
+  <!-- 1. DEFINITION -->
+  <div id="definition" class="section-block">
+    <div class="section-label"><div class="label-num">1</div><div class="label-text">Formal Definition</div></div>
+    <h2 class="section-heading">What is a Linked List?</h2>
+    <div class="definition-box">
+      <p>A <strong>linked list</strong> is a linear data structure in which elements (called <em>nodes</em>) are stored at non-contiguous memory locations. Each node contains two fields: a <strong>data field</strong> holding the stored value, and a <strong>next pointer</strong> holding the memory address of the next node. The list begins at a pointer called the <em>head</em>. The final node's <code class="ic">next</code> pointer is <code class="ic">null</code>, marking the end of the list.</p>
+      <cite>— Standard Computer Science Definition</cite>
+    </div>
+    <p class="prose"><strong>Variants:</strong> a <em>Singly Linked List</em> (each node points only forward), a <em>Doubly Linked List</em> (each node points forward and backward), and a <em>Circular Linked List</em> (the tail points back to the head).</p>
+  </div>
+
+  <!-- 2. EXPLANATION -->
+  <div id="explanation" class="section-block">
+    <div class="section-label"><div class="label-num">2</div><div class="label-text">Explanation</div></div>
+    <h2 class="section-heading">How Linked Lists Work</h2>
+    <p class="prose">Unlike arrays, linked lists <strong>don't need a contiguous block of memory</strong>. Each node can live anywhere — they're connected purely by pointers (memory addresses) saying "the next node is over there."</p>
+    <div class="spacer"></div>
+    <p class="prose">This makes <strong>insertion and deletion at the head O(1)</strong> — you just rewire a pointer, no shifting. But to reach the 5th element you must walk the chain from the head one node at a time, making <em>random access O(n)</em>.</p>
+
+    <div class="tbl-wrap">
+      <table class="vs-table">
+        <thead><tr><th>Feature</th><th>🗂️ Array</th><th>🔗 Linked List</th></tr></thead>
+        <tbody>
+          <tr><td>Memory layout</td><td>Contiguous</td><td>Scattered (heap)</td></tr>
+          <tr><td>Access by index</td><td><span class="og">O(1)</span> ✅</td><td><span class="ob">O(n)</span> ❌</td></tr>
+          <tr><td>Insert at head</td><td><span class="ob">O(n)</span> ❌</td><td><span class="og">O(1)</span> ✅</td></tr>
+          <tr><td>Insert at tail</td><td><span class="og">O(1)</span> (amortised)</td><td><span class="og">O(1)</span> with tail pointer</td></tr>
+          <tr><td>Size</td><td>Fixed (static)</td><td>Dynamic</td></tr>
+          <tr><td>Extra memory per element</td><td>None</td><td>One pointer (8 bytes)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 3. CODE -->
+  <div id="code" class="section-block">
+    <div class="section-label"><div class="label-num">3</div><div class="label-text">Code Snippet</div></div>
+    <h2 class="section-heading">Singly Linked List in JavaScript</h2>
+    <p class="prose">Full implementation: Node class, prepend, append, delete, and print operations.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+        <span class="code-lang">JavaScript</span>
+      </div>
+      <div class="code-body"><pre><span class="cm">// ── Node: the single building block ──────────────────</span>
+<span class="kw">class</span> <span class="cls">Node</span> {
+  <span class="fn">constructor</span>(data) {
+    <span class="kw">this</span>.data = data;  <span class="cm">// the stored value</span>
+    <span class="kw">this</span>.next = <span class="kw">null</span>;  <span class="cm">// pointer to next node (null = no next)</span>
+  }
+}
+
+<span class="cm">// ── LinkedList: manages the chain ────────────────────</span>
+<span class="kw">class</span> <span class="cls">LinkedList</span> {
+  <span class="fn">constructor</span>() {
+    <span class="kw">this</span>.head = <span class="kw">null</span>;  <span class="cm">// entry point of the list</span>
+    <span class="kw">this</span>.size = <span class="nm">0</span>;
+  }
+
+  <span class="cm">// Insert at the front — O(1)</span>
+  <span class="fn">prepend</span>(data) {
+    <span class="kw">const</span> node = <span class="kw">new</span> <span class="cls">Node</span>(data);
+    node.next = <span class="kw">this</span>.head;  <span class="cm">// new node points to old head</span>
+    <span class="kw">this</span>.head = node;       <span class="cm">// head now points to new node</span>
+    <span class="kw">this</span>.size++;
+  }
+
+  <span class="cm">// Insert at the back — O(n)</span>
+  <span class="fn">append</span>(data) {
+    <span class="kw">const</span> node = <span class="kw">new</span> <span class="cls">Node</span>(data);
+    <span class="kw">if</span> (!<span class="kw">this</span>.head) {
+      <span class="kw">this</span>.head = node;      <span class="cm">// empty list: new node becomes head</span>
+    } <span class="kw">else</span> {
+      <span class="kw">let</span> curr = <span class="kw">this</span>.head;
+      <span class="kw">while</span> (curr.next) {
+        curr = curr.next;    <span class="cm">// walk to the last node</span>
+      }
+      curr.next = node;      <span class="cm">// attach new node at the end</span>
+    }
+    <span class="kw">this</span>.size++;
+  }
+
+  <span class="cm">// Delete first node with matching data — O(n)</span>
+  <span class="fn">delete</span>(data) {
+    <span class="kw">if</span> (!<span class="kw">this</span>.head) <span class="kw">return</span>;
+
+    <span class="cm">// Special case: target is the head node</span>
+    <span class="kw">if</span> (<span class="kw">this</span>.head.data === data) {
+      <span class="kw">this</span>.head = <span class="kw">this</span>.head.next;
+      <span class="kw">this</span>.size--;
+      <span class="kw">return</span>;
+    }
+
+    <span class="cm">// Walk until we find the node before the target</span>
+    <span class="kw">let</span> curr = <span class="kw">this</span>.head;
+    <span class="kw">while</span> (curr.next) {
+      <span class="kw">if</span> (curr.next.data === data) {
+        curr.next = curr.next.next;  <span class="cm">// bypass the target node</span>
+        <span class="kw">this</span>.size--;
+        <span class="kw">return</span>;
+      }
+      curr = curr.next;
+    }
+  }
+
+  <span class="cm">// Print list as: 5 → 10 → 20 → null</span>
+  <span class="fn">print</span>() {
+    <span class="kw">const</span> parts = [];
+    <span class="kw">let</span> curr = <span class="kw">this</span>.head;
+    <span class="kw">while</span> (curr) {
+      parts.push(curr.data);
+      curr = curr.next;
+    }
+    console.log(parts.join(<span class="st">' → '</span>) + <span class="st">' → null'</span>);
+  }
+}
+
+<span class="cm">// ── Demo ─────────────────────────────────────────────</span>
+<span class="kw">const</span> list = <span class="kw">new</span> <span class="cls">LinkedList</span>();
+list.<span class="fn">append</span>(<span class="nm">10</span>);
+list.<span class="fn">append</span>(<span class="nm">20</span>);
+list.<span class="fn">append</span>(<span class="nm">30</span>);
+list.<span class="fn">prepend</span>(<span class="nm">5</span>);
+list.<span class="fn">print</span>();    <span class="cm">// 5 → 10 → 20 → 30 → null</span>
+
+list.<span class="fn">delete</span>(<span class="nm">10</span>);
+list.<span class="fn">print</span>();    <span class="cm">// 5 → 20 → 30 → null</span>
+
+console.log(list.size); <span class="cm">// 3</span></pre></div>
+    </div>
+  </div>
+
+  <!-- 4. DIAGRAM -->
+  <div id="diagram" class="section-block">
+    <div class="section-label"><div class="label-num">4</div><div class="label-text">Visual Diagram</div></div>
+    <h2 class="section-heading">Inside a Linked List</h2>
+
+    <div class="diagram-box">
+      <div class="diagram-title">Singly Linked List: 5 → 10 → 20 → 30 → null</div>
+      <div style="overflow-x:auto;">
+        <div class="ll-track">
+          <div class="ll-head-lbl">HEAD →</div>
+          <div class="ll-node-wrap">
+            <div class="ll-node"><div class="node-data">5</div><div class="node-ptr">next•</div></div>
+            <div class="node-lbl">Node A</div><div class="node-addr">0x2100</div>
+          </div>
+          <div class="ll-arrow">→</div>
+          <div class="ll-node-wrap">
+            <div class="ll-node"><div class="node-data">10</div><div class="node-ptr">next•</div></div>
+            <div class="node-lbl">Node B</div><div class="node-addr">0x3A50</div>
+          </div>
+          <div class="ll-arrow">→</div>
+          <div class="ll-node-wrap">
+            <div class="ll-node"><div class="node-data">20</div><div class="node-ptr">next•</div></div>
+            <div class="node-lbl">Node C</div><div class="node-addr">0x5F10</div>
+          </div>
+          <div class="ll-arrow">→</div>
+          <div class="ll-node-wrap">
+            <div class="ll-node"><div class="node-data">30</div><div class="node-ptr">null</div></div>
+            <div class="node-lbl">Node D</div><div class="node-addr">0x1C80</div>
+          </div>
+        </div>
+      </div>
+      <div class="diagram-caption">Addresses are completely random — nodes can live <strong>anywhere</strong> in memory.<br>They're connected only by the <code style="background:var(--accent-light);color:var(--accent);padding:0.1em 0.4em;border-radius:3px;font-family:'DM Mono',monospace;">next</code> pointer inside each node.</div>
+    </div>
+
+    <div class="diagram-box">
+      <div class="diagram-title">Deleting Node B (value = 10) — just rewire one pointer</div>
+      <div style="overflow-x:auto; padding-bottom:0.5rem;">
+        <div class="del-step-lbl">Before — A.next points to B</div>
+        <div class="del-row">
+          <div class="del-cell"><div class="nd">5</div><div class="np">→B</div></div>
+          <div class="del-arrow">→</div>
+          <div class="del-cell removed"><div class="nd">10</div><div class="np">→C</div></div>
+          <div class="del-arrow">→</div>
+          <div class="del-cell"><div class="nd">20</div><div class="np">→D</div></div>
+          <div class="del-arrow">→</div>
+          <div class="del-cell"><div class="nd">30</div><div class="np">null</div></div>
+        </div>
+        <br>
+        <div style="text-align:center;font-size:1.2rem;color:var(--accent);margin:0.4rem 0;">↓ A.next = B.next (skip B entirely)</div>
+        <br>
+        <div class="del-step-lbl">After — A.next now points directly to C</div>
+        <div class="del-row">
+          <div class="del-cell"><div class="nd">5</div><div class="np">→C</div></div>
+          <div class="del-arrow">→</div>
+          <div class="del-cell"><div class="nd">20</div><div class="np">→D</div></div>
+          <div class="del-arrow">→</div>
+          <div class="del-cell"><div class="nd">30</div><div class="np">null</div></div>
+        </div>
+      </div>
+      <div class="diagram-caption">One pointer reassignment = <strong style="color:#1A6B4A;">O(1)</strong> deletion (once the target node is found).<br>No elements shift. Node B simply becomes unreachable and is garbage-collected.</div>
+    </div>
+  </div>
+
+  <!-- 5. ANALOGY -->
+  <div id="analogy" class="section-block">
+    <div class="section-label"><div class="label-num">5</div><div class="label-text">Analogy for a 14-year-old</div></div>
+    <h2 class="section-heading">Think of It Like a Scavenger Hunt</h2>
+    <div class="analogy-box">
+      <div class="analogy-title">🗺️ The Scavenger Hunt Analogy</div>
+      <p class="analogy-text">Your teacher sets up a scavenger hunt around school. You get a clue card at the entrance that says: <span class="hi">"Your next clue is in the library."</span></p>
+      <p class="analogy-text">You go to the library. That clue says: <span class="hi">"Your next clue is in the gym."</span> The gym clue says "Room 12." And so on.</p>
+      <p class="analogy-text">That's a linked list! Each location (node) holds <strong>a piece of data</strong> (the clue) and <strong>a pointer</strong> (where to go next). The clues are scattered all over school — not lined up in order like lockers.</p>
+      <p class="analogy-text">If the teacher wants to <strong>insert a new clue between the library and the gym</strong>, she just changes the library clue to point to "Cafeteria" and the cafeteria clue to point to "Gym." <span class="hi">No reprinting every clue</span> — just update two cards. That's O(1) insertion!</p>
+      <p class="analogy-text">But if someone asks "what's clue #4?" you have to <span class="hi">follow every clue from the start</span> until you count to 4. You can't teleport. That's why access is O(n).</p>
+    </div>
+    <div class="takeaway-box">
+      <h4>🎯 Key Takeaways</h4>
+      <ul>
+        <li>Each node stores data AND a pointer (next) to the following node.</li>
+        <li>Nodes can live anywhere in memory — no contiguous block needed.</li>
+        <li>Inserting at the head is O(1) — just update the head pointer.</li>
+        <li>Random access requires walking from the head — O(n).</li>
+        <li>Each node uses extra memory for the pointer (8 bytes on 64-bit systems).</li>
+        <li>Perfect when you need frequent head insertions/deletions and don't need random access.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="page-nav">
+    <a href="arrays.html" class="page-nav-btn"><span>←</span><div><div class="nav-btn-label">Previous</div><div class="nav-btn-title">Arrays</div></div></a>
+    <a href="stacks.html" class="page-nav-btn next"><div><div class="nav-btn-label">Next Module</div><div class="nav-btn-title">Stacks</div></div><span>→</span></a>
+  </div>
+
+</div>
+
+<script>
+  const secs = document.querySelectorAll('[id]');
+  const links = document.querySelectorAll('.progress-list a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
+    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
+  }, { passive:true });
+</script>
+</body>
+</html>
