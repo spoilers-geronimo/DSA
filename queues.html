@@ -1,304 +1,1015 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Queues — DSA Zero to Hero</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #f9f6f1; --surface: #ffffff; --border: #e4ddd3;
-      --text: #1a1612; --muted: #6b6055;
-      --accent: #c84b31; --accent2: #2d6a4f; --accent3: #1d3557;
-      --code-bg: #1e1e2e; --code-text: #cdd6f4;
-      --tag-bg: #fce8e4; --tag-text: #c84b31; --highlight: #fff3cd;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Queues — DSA Zero to Hero</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="header.css">
+    <script src="header.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    nav { position: sticky; top: 0; z-index: 100; background: rgba(249,246,241,0.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 58px; }
-    .nav-brand { font-family: 'Lora', serif; font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
-    .nav-links { display: flex; gap: 1.5rem; list-style: none; flex-wrap: wrap; }
-    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.85rem; font-weight: 500; transition: color .2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        :root {
+            --bg: #f9f6f1;
+            --surface: #ffffff;
+            --border: #e4ddd3;
+            --text: #1a1612;
+            --muted: #6b6055;
+            --accent: #c84b31;
+            --accent2: #2d6a4f;
+            --accent3: #1d3557;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tag-bg: #fce8e4;
+            --tag-text: #c84b31;
+            --highlight: #fff3cd;
+        }
 
-    .hero { padding: 5rem 2rem 3rem; max-width: 860px; margin: 0 auto; text-align: center; }
-    .breadcrumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; letter-spacing: 0.06em; text-transform: uppercase; }
-    .breadcrumb a { color: var(--accent); text-decoration: none; }
-    .hero h1 { font-family: 'Lora', serif; font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem; }
-    .hero h1 span { color: var(--accent); }
-    .hero-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
-    .tag { background: var(--tag-bg); color: var(--tag-text); border-radius: 20px; padding: 0.2rem 0.8rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em; }
-    .tag.green { background: #e0f0e9; color: var(--accent2); }
-    .tag.blue  { background: #dce8f5; color: var(--accent3); }
-    .tag.amber { background: #fff0d4; color: #a05c00; }
-    .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 580px; margin: 0 auto; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .toc-wrapper { max-width: 860px; margin: 0 auto 3rem; padding: 0 2rem; }
-    .toc { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.8rem; }
-    .toc h2 { font-family: 'Lora', serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.8rem; }
-    .toc ol { padding-left: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2rem; }
-    .toc a { color: var(--accent3); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
-    .toc a:hover { text-decoration: underline; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
 
-    main { max-width: 860px; margin: 0 auto; padding: 0 2rem 6rem; display: flex; flex-direction: column; gap: 3rem; }
-    section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .section-header { display: flex; align-items: center; gap: 0.75rem; padding: 1.2rem 1.8rem; border-bottom: 1px solid var(--border); background: #faf9f7; }
-    .section-number { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
-    .section-header h2 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 700; color: var(--text); }
-    .section-body { padding: 1.8rem; }
-    .section-body p { margin-bottom: 1rem; color: var(--muted); }
-    .section-body p:last-child { margin-bottom: 0; }
-    .section-body strong { color: var(--text); }
 
-    .definition-box { background: var(--highlight); border: 1px solid #ffe08a; border-left: 4px solid #f5a623; border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; font-family: 'Lora', serif; font-style: italic; font-size: 1.02rem; color: #3d2c00; line-height: 1.65; }
 
-    /* Variant cards */
-    .variant-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1rem 0; }
-    .variant-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem; }
-    .variant-card.standard { border-top: 3px solid var(--accent); }
-    .variant-card.circular  { border-top: 3px solid var(--accent2); }
-    .variant-card.deque     { border-top: 3px solid var(--accent3); }
-    .variant-card h3 { font-family: 'Lora', serif; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--text); }
-    .variant-card ul { padding-left: 1.1rem; color: var(--muted); font-size: 0.87rem; }
-    .variant-card li { margin-bottom: 0.25rem; }
+        .hero {
+            padding: 5rem 2rem 3rem;
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
 
-    .ops-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
-    .ops-table th { background: #f0ece6; text-align: left; padding: 0.6rem 1rem; font-weight: 600; color: var(--text); border-bottom: 2px solid var(--border); }
-    .ops-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
-    .ops-table tr:last-child td { border-bottom: none; }
-    .ops-table tr:hover td { background: #faf8f5; }
-    code.inline { font-family: 'JetBrains Mono', monospace; background: #f0ece6; color: var(--accent); padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em; }
-    .o1 { color: var(--accent2); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-    .on { color: #c47a00;        font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
 
-    .code-block { background: var(--code-bg); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
-    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1.1rem; background: #181825; }
-    .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #a6adc8; letter-spacing: 0.06em; text-transform: uppercase; }
-    .copy-btn { background: #313244; border: none; color: #cdd6f4; padding: 0.25rem 0.65rem; border-radius: 5px; font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background .2s; }
-    .copy-btn:hover { background: #45475a; }
-    pre { margin: 0; padding: 1.5rem 1.4rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.65; }
-    pre code { font-family: 'JetBrains Mono', monospace; color: var(--code-text); }
-    .kw { color: #cba6f7; } .fn { color: #89b4fa; } .str { color: #a6e3a1; }
-    .num { color: #fab387; } .cm { color: #6c7086; font-style: italic; }
-    .cl { color: #f38ba8; } .prop { color: #89dceb; }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-    /* Diagrams */
-    .diagram-area { background: #f9f6f1; border: 1px solid var(--border); border-radius: 10px; padding: 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1.2rem; margin-bottom: 1.4rem; overflow-x: auto; }
-    .diagram-label { font-size: 0.78rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; }
-    .diagram-caption { font-size: 0.82rem; color: var(--muted); text-align: center; font-style: italic; }
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
 
-    /* Queue horizontal cells */
-    .q-row { display: flex; align-items: center; gap: 0; }
-    .q-end-label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; padding: 0 0.6rem; white-space: nowrap; }
-    .q-end-label.front { color: var(--accent2); }
-    .q-end-label.rear  { color: var(--accent); }
-    .q-cell { width: 62px; height: 48px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 600; background: var(--surface); color: var(--text); margin-right: -2px; }
-    .q-cell:first-of-type { border-radius: 6px 0 0 6px; }
-    .q-cell:last-of-type  { border-radius: 0 6px 6px 0; margin-right: 0; }
-    .q-cell.front-cell { border-color: var(--accent2); background: #e0f0e9; color: var(--accent2); }
-    .q-cell.rear-cell  { border-color: var(--accent);  background: #fce8e4; color: var(--accent); }
-    .q-cell.empty { border-style: dashed; color: #c0b8af; background: #f5f1ec; }
-    .q-arrow { font-size: 1.3rem; color: var(--muted); margin: 0 0.3rem; }
-    .q-arrow.green { color: var(--accent2); }
-    .q-arrow.red   { color: var(--accent); }
+        .hero h1 span {
+            color: var(--accent);
+        }
 
-    /* Circular diagram */
-    .circ-wrapper { position: relative; width: 220px; height: 220px; flex-shrink: 0; }
-    .circ-cell {
-      position: absolute; width: 52px; height: 40px;
-      border: 2px solid var(--border); border-radius: 6px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 600;
-      background: var(--surface); color: var(--text);
-    }
-    .circ-cell .slot-idx { font-size: 0.6rem; color: var(--muted); }
-    .circ-cell.used { background: #dce8f5; border-color: var(--accent3); color: var(--accent3); }
-    .circ-cell.front-c { background: #e0f0e9; border-color: var(--accent2); color: var(--accent2); }
-    .circ-cell.rear-c  { background: #fce8e4; border-color: var(--accent);  color: var(--accent); }
-    .circ-cell.empty { border-style: dashed; color: #c0b8af; }
-    /* Positions around circle (r=80, centre=110,110) */
-    .circ-cell:nth-child(1) { top: 10px;  left: 84px; }   /* top */
-    .circ-cell:nth-child(2) { top: 64px;  left: 158px; }  /* top-right */
-    .circ-cell:nth-child(3) { top: 142px; left: 158px; }  /* bottom-right */
-    .circ-cell:nth-child(4) { top: 170px; left: 84px; }   /* bottom */
-    .circ-cell:nth-child(5) { top: 142px; left: 10px; }   /* bottom-left */
-    .circ-cell:nth-child(6) { top: 64px;  left: 10px; }   /* top-left */
-    .circ-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 0.72rem; font-weight: 700; color: var(--muted); text-align: center; line-height: 1.4; }
+        .hero-meta {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
 
-    /* Deque diagram */
-    .deque-row { display: flex; align-items: center; gap: 0; }
-    .deq-cell { width: 62px; height: 48px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 600; background: var(--surface); color: var(--text); margin-right: -2px; }
-    .deq-cell:first-of-type { border-radius: 6px 0 0 6px; }
-    .deq-cell:last-of-type  { border-radius: 0 6px 6px 0; margin-right: 0; }
-    .deq-cell.left  { border-color: var(--accent3); background: #dce8f5; color: var(--accent3); }
-    .deq-cell.right { border-color: var(--accent);  background: #fce8e4; color: var(--accent); }
-    .deq-label { font-size: 0.72rem; font-weight: 700; padding: 0 0.6rem; white-space: nowrap; }
-    .deq-label.left  { color: var(--accent3); }
-    .deq-label.right { color: var(--accent); }
-    .double-arrow { font-size: 1.1rem; color: var(--muted); margin: 0 0.2rem; }
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
 
-    .callout { display: flex; gap: 0.8rem; align-items: flex-start; background: #eef4ff; border: 1px solid #b8d0f5; border-left: 4px solid var(--accent3); border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1rem; }
-    .callout.amber { background: #fff8e6; border-color: #ffe08a; border-left-color: #f5a623; }
-    .callout.green { background: #e8f5ee; border-color: #a8d5ba; border-left-color: var(--accent2); }
-    .callout-icon { font-size: 1.1rem; flex-shrink: 0; }
-    .callout p { margin: 0; font-size: 0.9rem; color: var(--accent3); }
-    .callout.amber p { color: #7a4800; }
-    .callout.green p { color: var(--accent2); }
+        .tag.green {
+            background: #e0f0e9;
+            color: var(--accent2);
+        }
 
-    .analogy-card { background: linear-gradient(135deg,#fdf6ec,#fef9f5); border: 1px solid #f0d9b5; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; }
-    .analogy-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
-    .analogy-card h3 { font-family: 'Lora', serif; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text); }
-    .analogy-card p { color: var(--muted); margin-bottom: 0.6rem; }
-    .analogy-card ul { padding-left: 1.3rem; color: var(--muted); font-size: 0.95rem; }
-    .analogy-card li { margin-bottom: 0.3rem; }
+        .tag.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
 
-    .rw-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 1rem; }
-    .rw-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.2rem; background: var(--surface); }
-    .rw-card .rw-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
-    .rw-card h4 { font-family: 'Lora', serif; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--text); }
-    .rw-card p { font-size: 0.86rem; color: var(--muted); margin: 0; }
+        .tag.amber {
+            background: #fff0d4;
+            color: #a05c00;
+        }
 
-    footer { text-align: center; padding: 2.5rem 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
-    footer a { color: var(--accent); text-decoration: none; }
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 580px;
+            margin: 0 auto;
+        }
 
-    @media (max-width: 660px) {
-      .toc ol, .variant-grid { grid-template-columns: 1fr; }
-      nav { padding: 0 1rem; } .nav-links { gap: 0.8rem; }
-    }
-  </style>
+        .toc-wrapper {
+            max-width: 860px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.4rem 1.8rem;
+        }
+
+        .toc h2 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .toc ol {
+            padding-left: 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 2rem;
+        }
+
+        .toc a {
+            color: var(--accent3);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            background: #faf9f7;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-body {
+            padding: 1.8rem;
+        }
+
+        .section-body p {
+            margin-bottom: 1rem;
+            color: var(--muted);
+        }
+
+        .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-body strong {
+            color: var(--text);
+        }
+
+        .definition-box {
+            background: var(--highlight);
+            border: 1px solid #ffe08a;
+            border-left: 4px solid #f5a623;
+            border-radius: 8px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.02rem;
+            color: #3d2c00;
+            line-height: 1.65;
+        }
+
+        /* Variant cards */
+        .variant-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .variant-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem;
+        }
+
+        .variant-card.standard {
+            border-top: 3px solid var(--accent);
+        }
+
+        .variant-card.circular {
+            border-top: 3px solid var(--accent2);
+        }
+
+        .variant-card.deque {
+            border-top: 3px solid var(--accent3);
+        }
+
+        .variant-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .variant-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.87rem;
+        }
+
+        .variant-card li {
+            margin-bottom: 0.25rem;
+        }
+
+        .ops-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .ops-table th {
+            background: #f0ece6;
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .ops-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            vertical-align: top;
+        }
+
+        .ops-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ops-table tr:hover td {
+            background: #faf8f5;
+        }
+
+        code.inline {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f0ece6;
+            color: var(--accent);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .o1 {
+            color: var(--accent2);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .on {
+            color: #c47a00;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.1rem;
+            background: #181825;
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #a6adc8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 0.25rem 0.65rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            transition: background .2s;
+        }
+
+        .copy-btn:hover {
+            background: #45475a;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem 1.4rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.65;
+        }
+
+        pre code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--code-text);
+        }
+
+        .kw {
+            color: #cba6f7;
+        }
+
+        .fn {
+            color: #89b4fa;
+        }
+
+        .str {
+            color: #a6e3a1;
+        }
+
+        .num {
+            color: #fab387;
+        }
+
+        .cm {
+            color: #6c7086;
+            font-style: italic;
+        }
+
+        .cl {
+            color: #f38ba8;
+        }
+
+        .prop {
+            color: #89dceb;
+        }
+
+        /* Diagrams */
+        .diagram-area {
+            background: #f9f6f1;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.4rem;
+            overflow-x: auto;
+        }
+
+        .diagram-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            text-align: center;
+        }
+
+        .diagram-caption {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Queue horizontal cells */
+        .q-row {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .q-end-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            padding: 0 0.6rem;
+            white-space: nowrap;
+        }
+
+        .q-end-label.front {
+            color: var(--accent2);
+        }
+
+        .q-end-label.rear {
+            color: var(--accent);
+        }
+
+        .q-cell {
+            width: 62px;
+            height: 48px;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: var(--surface);
+            color: var(--text);
+            margin-right: -2px;
+        }
+
+        .q-cell:first-of-type {
+            border-radius: 6px 0 0 6px;
+        }
+
+        .q-cell:last-of-type {
+            border-radius: 0 6px 6px 0;
+            margin-right: 0;
+        }
+
+        .q-cell.front-cell {
+            border-color: var(--accent2);
+            background: #e0f0e9;
+            color: var(--accent2);
+        }
+
+        .q-cell.rear-cell {
+            border-color: var(--accent);
+            background: #fce8e4;
+            color: var(--accent);
+        }
+
+        .q-cell.empty {
+            border-style: dashed;
+            color: #c0b8af;
+            background: #f5f1ec;
+        }
+
+        .q-arrow {
+            font-size: 1.3rem;
+            color: var(--muted);
+            margin: 0 0.3rem;
+        }
+
+        .q-arrow.green {
+            color: var(--accent2);
+        }
+
+        .q-arrow.red {
+            color: var(--accent);
+        }
+
+        /* Circular diagram */
+        .circ-wrapper {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            flex-shrink: 0;
+        }
+
+        .circ-cell {
+            position: absolute;
+            width: 52px;
+            height: 40px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .circ-cell .slot-idx {
+            font-size: 0.6rem;
+            color: var(--muted);
+        }
+
+        .circ-cell.used {
+            background: #dce8f5;
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        .circ-cell.front-c {
+            background: #e0f0e9;
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .circ-cell.rear-c {
+            background: #fce8e4;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .circ-cell.empty {
+            border-style: dashed;
+            color: #c0b8af;
+        }
+
+        /* Positions around circle (r=80, centre=110,110) */
+        .circ-cell:nth-child(1) {
+            top: 10px;
+            left: 84px;
+        }
+
+        /* top */
+        .circ-cell:nth-child(2) {
+            top: 64px;
+            left: 158px;
+        }
+
+        /* top-right */
+        .circ-cell:nth-child(3) {
+            top: 142px;
+            left: 158px;
+        }
+
+        /* bottom-right */
+        .circ-cell:nth-child(4) {
+            top: 170px;
+            left: 84px;
+        }
+
+        /* bottom */
+        .circ-cell:nth-child(5) {
+            top: 142px;
+            left: 10px;
+        }
+
+        /* bottom-left */
+        .circ-cell:nth-child(6) {
+            top: 64px;
+            left: 10px;
+        }
+
+        /* top-left */
+        .circ-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* Deque diagram */
+        .deque-row {
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .deq-cell {
+            width: 62px;
+            height: 48px;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 600;
+            background: var(--surface);
+            color: var(--text);
+            margin-right: -2px;
+        }
+
+        .deq-cell:first-of-type {
+            border-radius: 6px 0 0 6px;
+        }
+
+        .deq-cell:last-of-type {
+            border-radius: 0 6px 6px 0;
+            margin-right: 0;
+        }
+
+        .deq-cell.left {
+            border-color: var(--accent3);
+            background: #dce8f5;
+            color: var(--accent3);
+        }
+
+        .deq-cell.right {
+            border-color: var(--accent);
+            background: #fce8e4;
+            color: var(--accent);
+        }
+
+        .deq-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0 0.6rem;
+            white-space: nowrap;
+        }
+
+        .deq-label.left {
+            color: var(--accent3);
+        }
+
+        .deq-label.right {
+            color: var(--accent);
+        }
+
+        .double-arrow {
+            font-size: 1.1rem;
+            color: var(--muted);
+            margin: 0 0.2rem;
+        }
+
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: #eef4ff;
+            border: 1px solid #b8d0f5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .callout.amber {
+            background: #fff8e6;
+            border-color: #ffe08a;
+            border-left-color: #f5a623;
+        }
+
+        .callout.green {
+            background: #e8f5ee;
+            border-color: #a8d5ba;
+            border-left-color: var(--accent2);
+        }
+
+        .callout-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--accent3);
+        }
+
+        .callout.amber p {
+            color: #7a4800;
+        }
+
+        .callout.green p {
+            color: var(--accent2);
+        }
+
+        .analogy-card {
+            background: linear-gradient(135deg, #fdf6ec, #fef9f5);
+            border: 1px solid #f0d9b5;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .analogy-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .analogy-card p {
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card ul {
+            padding-left: 1.3rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .analogy-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        .rw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .rw-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem;
+            background: var(--surface);
+        }
+
+        .rw-card .rw-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rw-card h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+
+        .rw-card p {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 660px) {
+
+            .toc ol,
+            .variant-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                gap: 0.8rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<nav>
-  <a class="nav-brand" href="index.html">DSA: Zero to Hero</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="arrays.html">Arrays</a></li>
-    <li><a href="strings.html">Strings</a></li>
-    <li><a href="linked-lists.html">Linked Lists</a></li>
-    <li><a href="stacks.html">Stacks</a></li>
-    <li><a href="queues.html" class="active">Queues</a></li>
-    <li><a href="priority-queues.html">Heaps</a></li>
-  </ul>
-</nav>
+    <common-header accent="#c84b31"></common-header>
 
-<header class="hero">
-  <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Queues</p>
-  <h1>Data Structures:<br/><span>Queues</span></h1>
-  <div class="hero-meta">
-    <span class="tag">FIFO</span>
-    <span class="tag green">Circular Queue</span>
-    <span class="tag blue">Deque</span>
-    <span class="tag amber">O(1) Enqueue &amp; Dequeue</span>
-  </div>
-  <p class="hero-desc">The data structure that guarantees fairness — whoever arrives first, leaves first. Three variants that extend this idea for real-world systems.</p>
-</header>
-
-<div class="toc-wrapper">
-  <div class="toc">
-    <h2>Contents</h2>
-    <ol>
-      <li><a href="#definition">Definition</a></li>
-      <li><a href="#explanation">Explanation &amp; Operations</a></li>
-      <li><a href="#code">Code Snippet</a></li>
-      <li><a href="#diagram">Diagram</a></li>
-      <li><a href="#analogy">Analogy (Plain English)</a></li>
-      <li><a href="#real-world">Real-World Applications</a></li>
-    </ol>
-  </div>
-</div>
-
-<main>
-
-  <!-- 1. DEFINITION -->
-  <section id="definition">
-    <div class="section-header">
-      <div class="section-number">1</div>
-      <h2>Formal Definition</h2>
-    </div>
-    <div class="section-body">
-      <div class="definition-box">
-        A <strong>Queue</strong> is a linear abstract data type that enforces the <em>First In, First Out (FIFO)</em> principle: elements are inserted at one end (the <strong>rear</strong>) and removed from the opposite end (the <strong>front</strong>). A <strong>Circular Queue</strong> uses a fixed-size array whose rear and front pointers wrap around using modular arithmetic, eliminating wasted space. A <strong>Deque</strong> (Double-Ended Queue) generalises a queue by permitting insertion and deletion at <em>both</em> ends in O(1), making it simultaneously a stack and a queue.
-      </div>
-    </div>
-  </section>
-
-  <!-- 2. EXPLANATION -->
-  <section id="explanation">
-    <div class="section-header">
-      <div class="section-number">2</div>
-      <h2>Formal Explanation &amp; Operations</h2>
-    </div>
-    <div class="section-body">
-      <div class="variant-grid">
-        <div class="variant-card standard">
-          <h3>→ Standard Queue</h3>
-          <ul>
-            <li>FIFO: first in, first out</li>
-            <li>Enqueue at rear, dequeue from front</li>
-            <li>Implemented via array or linked list</li>
-            <li>Array version wastes space as front moves</li>
-            <li>Linked list version uses O(n) memory, no waste</li>
-          </ul>
+    <header class="hero">
+        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Queues</p>
+        <h1>Data Structures:<br /><span>Queues</span></h1>
+        <div class="hero-meta">
+            <span class="tag">FIFO</span>
+            <span class="tag green">Circular Queue</span>
+            <span class="tag blue">Deque</span>
+            <span class="tag amber">O(1) Enqueue &amp; Dequeue</span>
         </div>
-        <div class="variant-card circular">
-          <h3>↻ Circular Queue</h3>
-          <ul>
-            <li>Fixed capacity, no wasted slots</li>
-            <li>front = (front + 1) % capacity</li>
-            <li>rear  = (rear  + 1) % capacity</li>
-            <li>Full when (rear+1) % cap = front</li>
-            <li>Ideal for bounded buffers</li>
-          </ul>
+        <p class="hero-desc">The data structure that guarantees fairness — whoever arrives first, leaves first. Three
+            variants that extend this idea for real-world systems.</p>
+    </header>
+
+    <div class="toc-wrapper">
+        <div class="toc">
+            <h2>Contents</h2>
+            <ol>
+                <li><a href="#definition">Definition</a></li>
+                <li><a href="#explanation">Explanation &amp; Operations</a></li>
+                <li><a href="#code">Code Snippet</a></li>
+                <li><a href="#diagram">Diagram</a></li>
+                <li><a href="#analogy">Analogy (Plain English)</a></li>
+                <li><a href="#real-world">Real-World Applications</a></li>
+            </ol>
         </div>
-        <div class="variant-card deque">
-          <h3>⇄ Deque</h3>
-          <ul>
-            <li>Insert/delete at both front and rear</li>
-            <li>Superset of stack and queue</li>
-            <li>Backed by a doubly linked list or array</li>
-            <li>Used in sliding-window algorithms</li>
-            <li>JS <code class="inline">Array</code> works as a deque</li>
-          </ul>
-        </div>
-      </div>
-
-      <table class="ops-table">
-        <thead>
-          <tr><th>Operation</th><th>Standard</th><th>Circular</th><th>Deque</th><th>Notes</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code class="inline">enqueue(x)</code> / <code class="inline">pushBack(x)</code></td><td class="o1">O(1)</td><td class="o1">O(1)</td><td class="o1">O(1)</td><td>Add to rear</td></tr>
-          <tr><td><code class="inline">dequeue()</code> / <code class="inline">popFront()</code></td><td class="o1">O(1)</td><td class="o1">O(1)</td><td class="o1">O(1)</td><td>Remove from front</td></tr>
-          <tr><td><code class="inline">pushFront(x)</code></td><td>✗</td><td>✗</td><td class="o1">O(1)</td><td>Deque only</td></tr>
-          <tr><td><code class="inline">popBack()</code></td><td>✗</td><td>✗</td><td class="o1">O(1)</td><td>Deque only</td></tr>
-          <tr><td><code class="inline">peek()</code> / <code class="inline">front()</code></td><td class="o1">O(1)</td><td class="o1">O(1)</td><td class="o1">O(1)</td><td>View without removing</td></tr>
-          <tr><td><code class="inline">isEmpty()</code></td><td class="o1">O(1)</td><td class="o1">O(1)</td><td class="o1">O(1)</td><td>Check if size = 0</td></tr>
-          <tr><td>Access by index</td><td class="on">O(n)</td><td class="on">O(n)</td><td class="on">O(n)</td><td>Not a primary operation</td></tr>
-        </tbody>
-      </table>
-
-      <div class="callout green">
-        <span class="callout-icon">💡</span>
-        <p><strong>Queue vs Stack in one sentence:</strong> A stack lets the <em>last</em> person in go first (LIFO). A queue lets the <em>first</em> person in go first (FIFO). Same operations, opposite ordering guarantees — choose based on whether fairness or recency matters.</p>
-      </div>
     </div>
-  </section>
 
-  <!-- 3. CODE -->
-  <section id="code">
-    <div class="section-header">
-      <div class="section-number">3</div>
-      <h2>Code Snippet</h2>
-    </div>
-    <div class="section-body">
-      <p>A linked-list-backed standard queue, a circular queue with modular pointer arithmetic, and a practical deque-based sliding window maximum problem.</p>
+    <main>
 
-      <div class="code-block">
-        <div class="code-header"><span class="code-lang">JavaScript — Standard Queue (linked-list backed)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><code><span class="cm">// ─── Node ─────────────────────────────────────────────────────────</span>
+        <!-- 1. DEFINITION -->
+        <section id="definition">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Formal Definition</h2>
+            </div>
+            <div class="section-body">
+                <div class="definition-box">
+                    A <strong>Queue</strong> is a linear abstract data type that enforces the <em>First In, First Out
+                        (FIFO)</em> principle: elements are inserted at one end (the <strong>rear</strong>) and removed
+                    from the opposite end (the <strong>front</strong>). A <strong>Circular Queue</strong> uses a
+                    fixed-size array whose rear and front pointers wrap around using modular arithmetic, eliminating
+                    wasted space. A <strong>Deque</strong> (Double-Ended Queue) generalises a queue by permitting
+                    insertion and deletion at <em>both</em> ends in O(1), making it simultaneously a stack and a queue.
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. EXPLANATION -->
+        <section id="explanation">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>Formal Explanation &amp; Operations</h2>
+            </div>
+            <div class="section-body">
+                <div class="variant-grid">
+                    <div class="variant-card standard">
+                        <h3>→ Standard Queue</h3>
+                        <ul>
+                            <li>FIFO: first in, first out</li>
+                            <li>Enqueue at rear, dequeue from front</li>
+                            <li>Implemented via array or linked list</li>
+                            <li>Array version wastes space as front moves</li>
+                            <li>Linked list version uses O(n) memory, no waste</li>
+                        </ul>
+                    </div>
+                    <div class="variant-card circular">
+                        <h3>↻ Circular Queue</h3>
+                        <ul>
+                            <li>Fixed capacity, no wasted slots</li>
+                            <li>front = (front + 1) % capacity</li>
+                            <li>rear = (rear + 1) % capacity</li>
+                            <li>Full when (rear+1) % cap = front</li>
+                            <li>Ideal for bounded buffers</li>
+                        </ul>
+                    </div>
+                    <div class="variant-card deque">
+                        <h3>⇄ Deque</h3>
+                        <ul>
+                            <li>Insert/delete at both front and rear</li>
+                            <li>Superset of stack and queue</li>
+                            <li>Backed by a doubly linked list or array</li>
+                            <li>Used in sliding-window algorithms</li>
+                            <li>JS <code class="inline">Array</code> works as a deque</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Standard</th>
+                            <th>Circular</th>
+                            <th>Deque</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code class="inline">enqueue(x)</code> / <code class="inline">pushBack(x)</code></td>
+                            <td class="o1">O(1)</td>
+                            <td class="o1">O(1)</td>
+                            <td class="o1">O(1)</td>
+                            <td>Add to rear</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">dequeue()</code> / <code class="inline">popFront()</code></td>
+                            <td class="o1">O(1)</td>
+                            <td class="o1">O(1)</td>
+                            <td class="o1">O(1)</td>
+                            <td>Remove from front</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">pushFront(x)</code></td>
+                            <td>✗</td>
+                            <td>✗</td>
+                            <td class="o1">O(1)</td>
+                            <td>Deque only</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">popBack()</code></td>
+                            <td>✗</td>
+                            <td>✗</td>
+                            <td class="o1">O(1)</td>
+                            <td>Deque only</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">peek()</code> / <code class="inline">front()</code></td>
+                            <td class="o1">O(1)</td>
+                            <td class="o1">O(1)</td>
+                            <td class="o1">O(1)</td>
+                            <td>View without removing</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">isEmpty()</code></td>
+                            <td class="o1">O(1)</td>
+                            <td class="o1">O(1)</td>
+                            <td class="o1">O(1)</td>
+                            <td>Check if size = 0</td>
+                        </tr>
+                        <tr>
+                            <td>Access by index</td>
+                            <td class="on">O(n)</td>
+                            <td class="on">O(n)</td>
+                            <td class="on">O(n)</td>
+                            <td>Not a primary operation</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="callout green">
+                    <span class="callout-icon">💡</span>
+                    <p><strong>Queue vs Stack in one sentence:</strong> A stack lets the <em>last</em> person in go
+                        first (LIFO). A queue lets the <em>first</em> person in go first (FIFO). Same operations,
+                        opposite ordering guarantees — choose based on whether fairness or recency matters.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CODE -->
+        <section id="code">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>Code Snippet</h2>
+            </div>
+            <div class="section-body">
+                <p>A linked-list-backed standard queue, a circular queue with modular pointer arithmetic, and a
+                    practical deque-based sliding window maximum problem.</p>
+
+                <div class="code-block">
+                    <div class="code-header"><span class="code-lang">JavaScript — Standard Queue (linked-list
+                            backed)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code><span class="cm">// ─── Node ─────────────────────────────────────────────────────────</span>
 <span class="kw">class</span> <span class="cl">QNode</span> {
   <span class="fn">constructor</span>(data) { <span class="kw">this</span>.<span class="prop">data</span> = data; <span class="kw">this</span>.<span class="prop">next</span> = <span class="kw">null</span>; }
 }
@@ -349,11 +1060,12 @@ q.<span class="fn">enqueue</span>(<span class="str">"Alice"</span>); q.<span cla
 <span class="fn">console</span>.<span class="fn">log</span>(q.<span class="fn">toArray</span>());   <span class="cm">// ["Alice", "Bob", "Carol"]</span>
 <span class="fn">console</span>.<span class="fn">log</span>(q.<span class="fn">dequeue</span>());   <span class="cm">// "Alice" — first in, first out</span>
 <span class="fn">console</span>.<span class="fn">log</span>(q.<span class="fn">peek</span>());      <span class="cm">// "Bob"   — now at front</span></code></pre>
-      </div>
+                </div>
 
-      <div class="code-block" style="margin-top:1.2rem;">
-        <div class="code-header"><span class="code-lang">JavaScript — Circular Queue (fixed-size array)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><code><span class="cm">// ─── Circular Queue ───────────────────────────────────────────────</span>
+                <div class="code-block" style="margin-top:1.2rem;">
+                    <div class="code-header"><span class="code-lang">JavaScript — Circular Queue (fixed-size
+                            array)</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code><span class="cm">// ─── Circular Queue ───────────────────────────────────────────────</span>
 <span class="cm">// Uses modular arithmetic so the array "wraps around".</span>
 <span class="cm">// Eliminates the wasted-space problem of a naive array queue.</span>
 <span class="kw">class</span> <span class="cl">CircularQueue</span> {
@@ -392,11 +1104,12 @@ cq.<span class="fn">enqueue</span>(<span class="num">1</span>); cq.<span class="
 <span class="fn">console</span>.<span class="fn">log</span>(cq.<span class="fn">dequeue</span>());   <span class="cm">// 1 — front slot freed</span>
 cq.<span class="fn">enqueue</span>(<span class="num">4</span>); cq.<span class="fn">enqueue</span>(<span class="num">5</span>); <span class="cm">// 5 wraps into slot 0!</span>
 <span class="fn">console</span>.<span class="fn">log</span>(cq.<span class="fn">peek</span>());      <span class="cm">// 2 — new front</span></code></pre>
-      </div>
+                </div>
 
-      <div class="code-block" style="margin-top:1.2rem;">
-        <div class="code-header"><span class="code-lang">JavaScript — Deque &amp; Sliding Window Maximum</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
-        <pre><code><span class="cm">// ─── Deque (double-ended queue) ───────────────────────────────────</span>
+                <div class="code-block" style="margin-top:1.2rem;">
+                    <div class="code-header"><span class="code-lang">JavaScript — Deque &amp; Sliding Window
+                            Maximum</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+                    <pre><code><span class="cm">// ─── Deque (double-ended queue) ───────────────────────────────────</span>
 <span class="kw">class</span> <span class="cl">Deque</span> {
   <span class="fn">constructor</span>() { <span class="kw">this</span>.<span class="prop">items</span> = []; }
 
@@ -437,154 +1150,207 @@ cq.<span class="fn">enqueue</span>(<span class="num">4</span>); cq.<span class="
 
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">maxSlidingWindow</span>([<span class="num">1</span>,<span class="num">3</span>,<span class="num">-1</span>,<span class="num">-3</span>,<span class="num">5</span>,<span class="num">3</span>,<span class="num">6</span>,<span class="num">7</span>], <span class="num">3</span>));
 <span class="cm">// [3, 3, 5, 5, 6, 7]</span></code></pre>
-      </div>
-    </div>
-  </section>
+                </div>
+            </div>
+        </section>
 
-  <!-- 4. DIAGRAM -->
-  <section id="diagram">
-    <div class="section-header">
-      <div class="section-number">4</div>
-      <h2>Diagram Explanation</h2>
-    </div>
-    <div class="section-body">
-      <p>A standard queue is a horizontal tunnel: items enter at the <strong>rear</strong> and exit from the <strong>front</strong>. The two ends never switch roles.</p>
+        <!-- 4. DIAGRAM -->
+        <section id="diagram">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Diagram Explanation</h2>
+            </div>
+            <div class="section-body">
+                <p>A standard queue is a horizontal tunnel: items enter at the <strong>rear</strong> and exit from the
+                    <strong>front</strong>. The two ends never switch roles.</p>
 
-      <div class="diagram-area">
-        <div class="diagram-label">Standard Queue — enqueue at rear, dequeue from front</div>
-        <div style="display:flex; align-items:center; gap:0.5rem;">
-          <span style="font-size:1.4rem; color:var(--accent)">←</span>
-          <span style="font-size:0.75rem; color:var(--accent); font-weight:700;">DEQUEUE</span>
-        </div>
-        <div class="q-row">
-          <span class="q-end-label front">FRONT</span>
-          <div class="q-cell front-cell">Alice</div>
-          <div class="q-cell">Bob</div>
-          <div class="q-cell">Carol</div>
-          <div class="q-cell rear-cell">Dave</div>
-          <span class="q-end-label rear">REAR</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:0.5rem;">
-          <span style="font-size:0.75rem; color:var(--accent2); font-weight:700;">ENQUEUE</span>
-          <span style="font-size:1.4rem; color:var(--accent2)">→</span>
-        </div>
-        <p class="diagram-caption">Alice was first in — she is first out. Dave was last in — he waits longest.</p>
-      </div>
+                <div class="diagram-area">
+                    <div class="diagram-label">Standard Queue — enqueue at rear, dequeue from front</div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <span style="font-size:1.4rem; color:var(--accent)">←</span>
+                        <span style="font-size:0.75rem; color:var(--accent); font-weight:700;">DEQUEUE</span>
+                    </div>
+                    <div class="q-row">
+                        <span class="q-end-label front">FRONT</span>
+                        <div class="q-cell front-cell">Alice</div>
+                        <div class="q-cell">Bob</div>
+                        <div class="q-cell">Carol</div>
+                        <div class="q-cell rear-cell">Dave</div>
+                        <span class="q-end-label rear">REAR</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <span style="font-size:0.75rem; color:var(--accent2); font-weight:700;">ENQUEUE</span>
+                        <span style="font-size:1.4rem; color:var(--accent2)">→</span>
+                    </div>
+                    <p class="diagram-caption">Alice was first in — she is first out. Dave was last in — he waits
+                        longest.</p>
+                </div>
 
-      <p>A circular queue uses the same fixed array endlessly by wrapping indices with modulo arithmetic — no slot is ever permanently wasted.</p>
+                <p>A circular queue uses the same fixed array endlessly by wrapping indices with modulo arithmetic — no
+                    slot is ever permanently wasted.</p>
 
-      <div class="diagram-area">
-        <div class="diagram-label">Circular Queue — capacity 6, size 4, front=2, rear=6%6=0</div>
-        <div class="circ-wrapper">
-          <div class="circ-cell empty"><span class="slot-idx">slot 0</span>—</div>
-          <div class="circ-cell used"><span class="slot-idx">slot 1</span>B</div>
-          <div class="circ-cell front-c"><span class="slot-idx">slot 2 ↑front</span>C</div>
-          <div class="circ-cell used"><span class="slot-idx">slot 3</span>D</div>
-          <div class="circ-cell rear-c"><span class="slot-idx">slot 4 ↑rear</span>E</div>
-          <div class="circ-cell empty"><span class="slot-idx">slot 5</span>—</div>
-          <div class="circ-label">capacity<br/>= 6</div>
-        </div>
-        <p class="diagram-caption">When rear reaches slot 5 and wraps to slot 0, the array reuses freed space. No copying required.</p>
-      </div>
+                <div class="diagram-area">
+                    <div class="diagram-label">Circular Queue — capacity 6, size 4, front=2, rear=6%6=0</div>
+                    <div class="circ-wrapper">
+                        <div class="circ-cell empty"><span class="slot-idx">slot 0</span>—</div>
+                        <div class="circ-cell used"><span class="slot-idx">slot 1</span>B</div>
+                        <div class="circ-cell front-c"><span class="slot-idx">slot 2 ↑front</span>C</div>
+                        <div class="circ-cell used"><span class="slot-idx">slot 3</span>D</div>
+                        <div class="circ-cell rear-c"><span class="slot-idx">slot 4 ↑rear</span>E</div>
+                        <div class="circ-cell empty"><span class="slot-idx">slot 5</span>—</div>
+                        <div class="circ-label">capacity<br />= 6</div>
+                    </div>
+                    <p class="diagram-caption">When rear reaches slot 5 and wraps to slot 0, the array reuses freed
+                        space. No copying required.</p>
+                </div>
 
-      <p>A deque opens <strong>both ends</strong>. It can act as a stack (use one end only) or a queue (use opposite ends), or something more powerful.</p>
+                <p>A deque opens <strong>both ends</strong>. It can act as a stack (use one end only) or a queue (use
+                    opposite ends), or something more powerful.</p>
 
-      <div class="diagram-area">
-        <div class="diagram-label">Deque — insert &amp; remove at either end</div>
-        <div style="display:flex; align-items:center; gap:0.5rem;">
-          <span style="font-size:1.1rem; color:var(--accent3)">⇄</span>
-          <span style="font-size:0.75rem; color:var(--accent3); font-weight:700;">pushFront / popFront</span>
-        </div>
-        <div class="deque-row">
-          <span class="deq-label left">FRONT</span>
-          <div class="deq-cell left">10</div>
-          <div class="deq-cell">20</div>
-          <div class="deq-cell">30</div>
-          <div class="deq-cell">40</div>
-          <div class="deq-cell right">50</div>
-          <span class="deq-label right">REAR</span>
-        </div>
-        <div style="display:flex; align-items:center; gap:0.5rem;">
-          <span style="font-size:0.75rem; color:var(--accent); font-weight:700;">pushBack / popBack</span>
-          <span style="font-size:1.1rem; color:var(--accent)">⇄</span>
-        </div>
-        <p class="diagram-caption">Both ends are live. A deque is the most flexible of the three queue variants.</p>
-      </div>
-    </div>
-  </section>
+                <div class="diagram-area">
+                    <div class="diagram-label">Deque — insert &amp; remove at either end</div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <span style="font-size:1.1rem; color:var(--accent3)">⇄</span>
+                        <span style="font-size:0.75rem; color:var(--accent3); font-weight:700;">pushFront /
+                            popFront</span>
+                    </div>
+                    <div class="deque-row">
+                        <span class="deq-label left">FRONT</span>
+                        <div class="deq-cell left">10</div>
+                        <div class="deq-cell">20</div>
+                        <div class="deq-cell">30</div>
+                        <div class="deq-cell">40</div>
+                        <div class="deq-cell right">50</div>
+                        <span class="deq-label right">REAR</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <span style="font-size:0.75rem; color:var(--accent); font-weight:700;">pushBack / popBack</span>
+                        <span style="font-size:1.1rem; color:var(--accent)">⇄</span>
+                    </div>
+                    <p class="diagram-caption">Both ends are live. A deque is the most flexible of the three queue
+                        variants.</p>
+                </div>
+            </div>
+        </section>
 
-  <!-- 5. ANALOGY -->
-  <section id="analogy">
-    <div class="section-header">
-      <div class="section-number">5</div>
-      <h2>Plain English Analogy</h2>
-    </div>
-    <div class="section-body">
+        <!-- 5. ANALOGY -->
+        <section id="analogy">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Plain English Analogy</h2>
+            </div>
+            <div class="section-body">
 
-      <div class="analogy-card">
-        <div class="analogy-icon">🎮</div>
-        <h3>Standard Queue — Waiting to Buy Tickets at a Gaming Tournament</h3>
-        <p>You're at a gaming expo, and there's a huge line to get your copy signed by a pro gamer. The first person to join the line is the first one to get their signature and leave. Nobody can cut the queue or jump out from the middle. If you arrive last, you wait longest. That's FIFO — the rule that makes queues fair.</p>
-        <ul>
-          <li><strong>Joining the back of the line</strong> → <code class="inline">enqueue()</code></li>
-          <li><strong>The person at the front getting served and leaving</strong> → <code class="inline">dequeue()</code></li>
-          <li><strong>Checking who's next without moving them</strong> → <code class="inline">peek()</code></li>
-        </ul>
-      </div>
+                <div class="analogy-card">
+                    <div class="analogy-icon">🎮</div>
+                    <h3>Standard Queue — Waiting to Buy Tickets at a Gaming Tournament</h3>
+                    <p>You're at a gaming expo, and there's a huge line to get your copy signed by a pro gamer. The
+                        first person to join the line is the first one to get their signature and leave. Nobody can cut
+                        the queue or jump out from the middle. If you arrive last, you wait longest. That's FIFO — the
+                        rule that makes queues fair.</p>
+                    <ul>
+                        <li><strong>Joining the back of the line</strong> → <code class="inline">enqueue()</code></li>
+                        <li><strong>The person at the front getting served and leaving</strong> → <code
+                                class="inline">dequeue()</code></li>
+                        <li><strong>Checking who's next without moving them</strong> → <code
+                                class="inline">peek()</code></li>
+                    </ul>
+                </div>
 
-      <div class="analogy-card">
-        <div class="analogy-icon">🎡</div>
-        <h3>Circular Queue — A Looping Rollercoaster Ride</h3>
-        <p>Imagine a rollercoaster with exactly 6 seats arranged in a circle. Once a seat is vacated at the front, that same seat becomes available again at the back of the cycle — no new track is added. The ride keeps looping through the same fixed seats. A circular queue does the same thing with array slots: once you dequeue from the front, that slot wraps around and becomes usable at the rear again, using <strong>modular arithmetic</strong> instead of a new seat.</p>
-        <p>This is critical when you have a limited, fixed-size buffer and can't afford to waste any space.</p>
-      </div>
+                <div class="analogy-card">
+                    <div class="analogy-icon">🎡</div>
+                    <h3>Circular Queue — A Looping Rollercoaster Ride</h3>
+                    <p>Imagine a rollercoaster with exactly 6 seats arranged in a circle. Once a seat is vacated at the
+                        front, that same seat becomes available again at the back of the cycle — no new track is added.
+                        The ride keeps looping through the same fixed seats. A circular queue does the same thing with
+                        array slots: once you dequeue from the front, that slot wraps around and becomes usable at the
+                        rear again, using <strong>modular arithmetic</strong> instead of a new seat.</p>
+                    <p>This is critical when you have a limited, fixed-size buffer and can't afford to waste any space.
+                    </p>
+                </div>
 
-      <div class="analogy-card">
-        <div class="analogy-icon">🚌</div>
-        <h3>Deque — A Bus with Doors at Both Ends</h3>
-        <p>Most buses have a door at the front (to board) and a door at the back (to exit). But imagine a special VIP bus where people can board <em>and</em> exit from either end. A VIP can board from the front; everyone else boards from the back. A deque works exactly the same — you choose which end to use depending on whether you need stack behaviour (same end) or queue behaviour (opposite ends), and you can mix both in the same data structure.</p>
-        <ul>
-          <li><strong>VIP boarding at the front</strong> → <code class="inline">pushFront()</code></li>
-          <li><strong>Regular boarding at the back</strong> → <code class="inline">pushBack()</code></li>
-          <li><strong>Exiting from either door</strong> → <code class="inline">popFront()</code> / <code class="inline">popBack()</code></li>
-        </ul>
-      </div>
+                <div class="analogy-card">
+                    <div class="analogy-icon">🚌</div>
+                    <h3>Deque — A Bus with Doors at Both Ends</h3>
+                    <p>Most buses have a door at the front (to board) and a door at the back (to exit). But imagine a
+                        special VIP bus where people can board <em>and</em> exit from either end. A VIP can board from
+                        the front; everyone else boards from the back. A deque works exactly the same — you choose which
+                        end to use depending on whether you need stack behaviour (same end) or queue behaviour (opposite
+                        ends), and you can mix both in the same data structure.</p>
+                    <ul>
+                        <li><strong>VIP boarding at the front</strong> → <code class="inline">pushFront()</code></li>
+                        <li><strong>Regular boarding at the back</strong> → <code class="inline">pushBack()</code></li>
+                        <li><strong>Exiting from either door</strong> → <code class="inline">popFront()</code> / <code
+                                class="inline">popBack()</code></li>
+                    </ul>
+                </div>
 
-    </div>
-  </section>
+            </div>
+        </section>
 
-  <!-- 6. REAL WORLD -->
-  <section id="real-world">
-    <div class="section-header">
-      <div class="section-number">6</div>
-      <h2>Real-World Coding Applications</h2>
-    </div>
-    <div class="section-body">
-      <div class="rw-grid">
-        <div class="rw-card"><div class="rw-icon">🖨️</div><h4>Print Spooler</h4><p>Documents sent to a printer are held in a queue. The first document sent is the first to print — FIFO ensures jobs aren't starved or reordered.</p></div>
-        <div class="rw-card"><div class="rw-icon">🌐</div><h4>Web Server Request Queue</h4><p>HTTP servers queue incoming requests when under load. Each worker thread dequeues the next request to handle. Fair, orderly, and essential for high traffic.</p></div>
-        <div class="rw-card"><div class="rw-icon">📡</div><h4>Network Packet Buffers</h4><p>Routers use circular queues (ring buffers) to hold incoming packets. When the buffer fills, new packets are dropped — a bounded, zero-wasted-space design.</p></div>
-        <div class="rw-card"><div class="rw-icon">🔍</div><h4>BFS Graph Traversal</h4><p>Breadth-First Search uses a queue to visit nodes level by level — closest nodes first. Used in shortest-path algorithms like those behind Google Maps.</p></div>
-        <div class="rw-card"><div class="rw-icon">🪟</div><h4>Sliding Window Algorithms</h4><p>Deques power O(n) sliding window problems: finding moving averages, maximum in a window, or rate-limiting a stream of events in real-time systems.</p></div>
-        <div class="rw-card"><div class="rw-icon">⌨️</div><h4>Keyboard Input Buffer</h4><p>Your keyboard's keystrokes are stored in a circular queue in hardware. Characters are consumed by the OS in the order they were typed — FIFO guaranteed.</p></div>
-      </div>
-    </div>
-  </section>
+        <!-- 6. REAL WORLD -->
+        <section id="real-world">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Real-World Coding Applications</h2>
+            </div>
+            <div class="section-body">
+                <div class="rw-grid">
+                    <div class="rw-card">
+                        <div class="rw-icon">🖨️</div>
+                        <h4>Print Spooler</h4>
+                        <p>Documents sent to a printer are held in a queue. The first document sent is the first to
+                            print — FIFO ensures jobs aren't starved or reordered.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🌐</div>
+                        <h4>Web Server Request Queue</h4>
+                        <p>HTTP servers queue incoming requests when under load. Each worker thread dequeues the next
+                            request to handle. Fair, orderly, and essential for high traffic.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">📡</div>
+                        <h4>Network Packet Buffers</h4>
+                        <p>Routers use circular queues (ring buffers) to hold incoming packets. When the buffer fills,
+                            new packets are dropped — a bounded, zero-wasted-space design.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🔍</div>
+                        <h4>BFS Graph Traversal</h4>
+                        <p>Breadth-First Search uses a queue to visit nodes level by level — closest nodes first. Used
+                            in shortest-path algorithms like those behind Google Maps.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🪟</div>
+                        <h4>Sliding Window Algorithms</h4>
+                        <p>Deques power O(n) sliding window problems: finding moving averages, maximum in a window, or
+                            rate-limiting a stream of events in real-time systems.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">⌨️</div>
+                        <h4>Keyboard Input Buffer</h4>
+                        <p>Your keyboard's keystrokes are stored in a circular queue in hardware. Characters are
+                            consumed by the OS in the order they were typed — FIFO guaranteed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-</main>
+    </main>
 
-<footer>
-  <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
-  <p style="margin-top:0.4rem;font-size:0.8rem;">Built for learners, by learners.</p>
-</footer>
-<script>
-  function copyCode(btn) {
-    const pre = btn.closest('.code-block').querySelector('pre');
-    navigator.clipboard.writeText(pre.innerText).then(() => {
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy', 2000);
-    });
-  }
-</script>
+    <footer>
+        <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+        <p style="margin-top:0.4rem;font-size:0.8rem;">Built for learners, by learners.</p>
+    </footer>
+    <script>
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+    </script>
 </body>
+
 </html>

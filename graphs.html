@@ -1,396 +1,1105 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Graphs — DSA Zero to Hero</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Graphs — DSA Zero to Hero</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="header.css">
+    <script src="header.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    :root {
-      --bg:        #f9f6f1;
-      --surface:   #ffffff;
-      --border:    #e4ddd3;
-      --text:      #1a1612;
-      --muted:     #6b6055;
-      --accent:    #c84b31;
-      --accent2:   #2d6a4f;
-      --accent3:   #1d3557;
-      --code-bg:   #1e1e2e;
-      --code-text: #cdd6f4;
-      --tag-bg:    #fce8e4;
-      --tag-text:  #c84b31;
-      --highlight: #fff3cd;
-    }
+        :root {
+            --bg: #f9f6f1;
+            --surface: #ffffff;
+            --border: #e4ddd3;
+            --text: #1a1612;
+            --muted: #6b6055;
+            --accent: #c84b31;
+            --accent2: #2d6a4f;
+            --accent3: #1d3557;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tag-bg: #fce8e4;
+            --tag-text: #c84b31;
+            --highlight: #fff3cd;
+        }
 
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(249,246,241,0.92); backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem; height: 58px;
-    }
-    .nav-brand { font-family: 'Lora', serif; font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
-    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
-    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; transition: color .2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
 
-    .hero { padding: 5rem 2rem 3rem; max-width: 860px; margin: 0 auto; text-align: center; }
-    .breadcrumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; letter-spacing: 0.06em; text-transform: uppercase; }
-    .breadcrumb a { color: var(--accent); text-decoration: none; }
-    .hero h1 { font-family: 'Lora', serif; font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 1rem; }
-    .hero h1 span { color: var(--accent); }
-    .hero-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
-    .tag { background: var(--tag-bg); color: var(--tag-text); border-radius: 20px; padding: 0.2rem 0.8rem; font-size: 0.78rem; font-weight: 600; }
-    .tag.green { background: #e0f0e9; color: var(--accent2); }
-    .tag.blue  { background: #dce8f5; color: var(--accent3); }
-    .tag.amber { background: #fff0d4; color: #a05c00; }
-    .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 580px; margin: 0 auto; }
 
-    .toc-wrapper { max-width: 860px; margin: 0 auto 3rem; padding: 0 2rem; }
-    .toc { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.8rem; }
-    .toc h2 { font-family: 'Lora', serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.8rem; }
-    .toc ol { padding-left: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2rem; }
-    .toc a { color: var(--accent3); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
-    .toc a:hover { text-decoration: underline; }
 
-    main { max-width: 860px; margin: 0 auto; padding: 0 2rem 6rem; display: flex; flex-direction: column; gap: 3rem; }
+        .hero {
+            padding: 5rem 2rem 3rem;
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
 
-    section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .section-header { display: flex; align-items: center; gap: 0.75rem; padding: 1.2rem 1.8rem; border-bottom: 1px solid var(--border); background: #faf9f7; }
-    .section-number { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
-    .section-header h2 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 700; color: var(--text); }
-    .section-body { padding: 1.8rem; }
-    .section-body p { margin-bottom: 1rem; color: var(--muted); }
-    .section-body p:last-child { margin-bottom: 0; }
-    .section-body strong { color: var(--text); }
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
 
-    .definition-box { background: var(--highlight); border: 1px solid #ffe08a; border-left: 4px solid #f5a623; border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; font-family: 'Lora', serif; font-style: italic; font-size: 1.02rem; color: #3d2c00; line-height: 1.65; }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-    .variant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
-    .variant-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
-    .variant-card.undirected { border-top: 3px solid var(--accent3); }
-    .variant-card.directed   { border-top: 3px solid var(--accent2); }
-    .variant-card.weighted   { border-top: 3px solid var(--accent); }
-    .variant-card.dag        { border-top: 3px solid #a05c00; }
-    .variant-card h3 { font-family: 'Lora', serif; font-size: 1rem; margin-bottom: 0.6rem; color: var(--text); }
-    .variant-card ul { padding-left: 1.1rem; color: var(--muted); font-size: 0.9rem; }
-    .variant-card li { margin-bottom: 0.3rem; }
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
 
-    /* Representation comparison */
-    .rep-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
-    .rep-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
-    .rep-card.adjlist { border-top: 3px solid var(--accent2); }
-    .rep-card.adjmat  { border-top: 3px solid var(--accent3); }
-    .rep-card h3 { font-family: 'Lora', serif; font-size: 1rem; margin-bottom: 0.5rem; color: var(--text); }
-    .rep-card p  { font-size: 0.88rem; color: var(--muted); margin-bottom: 0.4rem; }
-    .rep-card ul { padding-left: 1.1rem; color: var(--muted); font-size: 0.88rem; }
-    .rep-card li { margin-bottom: 0.25rem; }
+        .hero h1 span {
+            color: var(--accent);
+        }
 
-    .ops-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
-    .ops-table th { background: #f0ece6; text-align: left; padding: 0.6rem 1rem; font-weight: 600; color: var(--text); border-bottom: 2px solid var(--border); }
-    .ops-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
-    .ops-table tr:last-child td { border-bottom: none; }
-    .ops-table tr:hover td { background: #faf8f5; }
-    code.inline { font-family: 'JetBrains Mono', monospace; background: #f0ece6; color: var(--accent); padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em; }
-    .complexity { font-family: 'JetBrains Mono', monospace; }
-    .o1    { color: var(--accent2); font-weight: 700; }
-    .on    { color: #c47a00; font-weight: 700; }
-    .ologn { color: var(--accent3); font-weight: 700; }
-    .ove   { color: var(--accent); font-weight: 700; }
+        .hero-meta {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
 
-    .code-block { background: var(--code-bg); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
-    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1.1rem; background: #181825; }
-    .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #a6adc8; letter-spacing: 0.06em; text-transform: uppercase; }
-    .copy-btn { background: #313244; border: none; color: #cdd6f4; padding: 0.25rem 0.65rem; border-radius: 5px; font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background .2s; }
-    .copy-btn:hover { background: #45475a; }
-    pre { margin: 0; padding: 1.5rem 1.4rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.65; }
-    pre code { font-family: 'JetBrains Mono', monospace; color: var(--code-text); }
-    .kw   { color: #cba6f7; }
-    .fn   { color: #89b4fa; }
-    .str  { color: #a6e3a1; }
-    .num  { color: #fab387; }
-    .cm   { color: #6c7086; font-style: italic; }
-    .cl   { color: #f38ba8; }
-    .prop { color: #89dceb; }
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
 
-    /* ── DIAGRAM ── */
-    .diagram-area { background: #f9f6f1; border: 1px solid var(--border); border-radius: 10px; padding: 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.4rem; overflow-x: auto; }
-    .diagram-caption { font-size: 0.82rem; color: var(--muted); text-align: center; font-style: italic; }
-    .mem-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-    .tree-svg { width: 100%; max-width: 520px; overflow: visible; }
+        .tag.green {
+            background: #e0f0e9;
+            color: var(--accent2);
+        }
 
-    /* Adjacency list display */
-    .adj-list { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 2; width: 100%; max-width: 380px; }
-    .adj-row { display: flex; align-items: center; gap: 0.5rem; }
-    .adj-key  { width: 28px; height: 28px; border-radius: 50%; background: #fce8e4; border: 2px solid var(--accent); color: var(--accent); font-weight: 700; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .adj-key.blue { background: #dce8f5; border-color: var(--accent3); color: var(--accent3); }
-    .adj-key.green { background: #e0f0e9; border-color: var(--accent2); color: var(--accent2); }
-    .adj-arrow { color: var(--muted); }
-    .adj-vals { color: var(--muted); }
-    .adj-vals span { color: var(--accent3); font-weight: 700; margin-right: 0.35rem; }
+        .tag.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
 
-    /* Adjacency matrix */
-    .adj-matrix { border-collapse: collapse; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
-    .adj-matrix th, .adj-matrix td { border: 1px solid var(--border); padding: 0.35rem 0.55rem; text-align: center; }
-    .adj-matrix th { background: #f0ece6; color: var(--muted); font-weight: 600; }
-    .adj-matrix td { color: var(--muted); background: var(--surface); }
-    .adj-matrix td.one { color: var(--accent2); font-weight: 700; background: #e0f0e9; }
+        .tag.amber {
+            background: #fff0d4;
+            color: #a05c00;
+        }
 
-    /* BFS visited trail */
-    .bfs-trail { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
-    .bfs-node { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; border: 2px solid; }
-    .bfs-node.visited { background: #e0f0e9; border-color: var(--accent2); color: var(--accent2); }
-    .bfs-node.queued  { background: #dce8f5; border-color: var(--accent3); color: var(--accent3); }
-    .bfs-node.unvisited { background: var(--surface); border-color: var(--border); color: var(--muted); }
-    .bfs-arrow { color: var(--muted); font-size: 1rem; }
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 580px;
+            margin: 0 auto;
+        }
 
-    .callout { display: flex; gap: 0.8rem; align-items: flex-start; background: #eef4ff; border: 1px solid #b8d0f5; border-left: 4px solid var(--accent3); border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1rem; }
-    .callout.green { background: #e8f5ee; border-color: #a8d5ba; border-left-color: var(--accent2); }
-    .callout.amber { background: #fff8e6; border-color: #ffe08a; border-left-color: #f5a623; }
-    .callout.red   { background: #fef2f0; border-color: #f5c6bb; border-left-color: var(--accent); }
-    .callout-icon { font-size: 1.1rem; flex-shrink: 0; }
-    .callout p { margin: 0; font-size: 0.9rem; color: var(--accent3); }
-    .callout.green p { color: var(--accent2); }
-    .callout.amber p { color: #7a4800; }
-    .callout.red   p { color: #8a2010; }
+        .toc-wrapper {
+            max-width: 860px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
 
-    .analogy-card { background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%); border: 1px solid #f0d9b5; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; }
-    .analogy-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
-    .analogy-card h3 { font-family: 'Lora', serif; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text); }
-    .analogy-card p { color: var(--muted); margin-bottom: 0.6rem; }
-    .analogy-card ul { padding-left: 1.3rem; color: var(--muted); font-size: 0.95rem; }
-    .analogy-card li { margin-bottom: 0.3rem; }
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.4rem 1.8rem;
+        }
 
-    .rw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
-    .rw-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.2rem; background: var(--surface); }
-    .rw-card .rw-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
-    .rw-card h4 { font-family: 'Lora', serif; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--text); }
-    .rw-card p { font-size: 0.86rem; color: var(--muted); margin: 0; }
+        .toc h2 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
 
-    .interview-problem { background: #f0f4ff; border: 1px solid #c0cff5; border-left: 4px solid var(--accent3); border-radius: 10px; padding: 1.4rem 1.6rem; margin-bottom: 1.4rem; }
-    .interview-problem h3 { font-family: 'Lora', serif; font-size: 1.05rem; color: var(--accent3); margin-bottom: 0.5rem; }
-    .interview-problem p { color: var(--muted); font-size: 0.95rem; margin-bottom: 0; }
-    .difficulty-badge { display: inline-block; margin-top: 0.6rem; background: #fde8e4; color: var(--accent); border-radius: 20px; padding: 0.18rem 0.75rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; }
-    .step-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; margin: 1rem 0; }
-    .step-list li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.93rem; color: var(--muted); }
-    .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .toc ol {
+            padding-left: 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 2rem;
+        }
 
-    .module-nav { max-width: 860px; margin: 0 auto; padding: 0 2rem 1rem; display: flex; justify-content: space-between; gap: 1rem; }
-    .module-nav a { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); transition: border-color .2s, color .2s; }
-    .module-nav a:hover { border-color: var(--accent); color: var(--accent); }
-    .module-nav a.next { margin-left: auto; }
+        .toc a {
+            color: var(--accent3);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
 
-    footer { text-align: center; padding: 2.5rem 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
-    footer a { color: var(--accent); text-decoration: none; }
+        .toc a:hover {
+            text-decoration: underline;
+        }
 
-    @media (max-width: 640px) {
-      .toc ol, .variant-grid, .rep-grid { grid-template-columns: 1fr; }
-      nav { padding: 0 1rem; }
-      .nav-links { gap: 1rem; }
-    }
-  </style>
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            background: #faf9f7;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-body {
+            padding: 1.8rem;
+        }
+
+        .section-body p {
+            margin-bottom: 1rem;
+            color: var(--muted);
+        }
+
+        .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-body strong {
+            color: var(--text);
+        }
+
+        .definition-box {
+            background: var(--highlight);
+            border: 1px solid #ffe08a;
+            border-left: 4px solid #f5a623;
+            border-radius: 8px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.02rem;
+            color: #3d2c00;
+            line-height: 1.65;
+        }
+
+        .variant-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .variant-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .variant-card.undirected {
+            border-top: 3px solid var(--accent3);
+        }
+
+        .variant-card.directed {
+            border-top: 3px solid var(--accent2);
+        }
+
+        .variant-card.weighted {
+            border-top: 3px solid var(--accent);
+        }
+
+        .variant-card.dag {
+            border-top: 3px solid #a05c00;
+        }
+
+        .variant-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            color: var(--text);
+        }
+
+        .variant-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .variant-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* Representation comparison */
+        .rep-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .rep-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .rep-card.adjlist {
+            border-top: 3px solid var(--accent2);
+        }
+
+        .rep-card.adjmat {
+            border-top: 3px solid var(--accent3);
+        }
+
+        .rep-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .rep-card p {
+            font-size: 0.88rem;
+            color: var(--muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .rep-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .rep-card li {
+            margin-bottom: 0.25rem;
+        }
+
+        .ops-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .ops-table th {
+            background: #f0ece6;
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .ops-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            vertical-align: top;
+        }
+
+        .ops-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ops-table tr:hover td {
+            background: #faf8f5;
+        }
+
+        code.inline {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f0ece6;
+            color: var(--accent);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .complexity {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .o1 {
+            color: var(--accent2);
+            font-weight: 700;
+        }
+
+        .on {
+            color: #c47a00;
+            font-weight: 700;
+        }
+
+        .ologn {
+            color: var(--accent3);
+            font-weight: 700;
+        }
+
+        .ove {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.1rem;
+            background: #181825;
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #a6adc8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 0.25rem 0.65rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            transition: background .2s;
+        }
+
+        .copy-btn:hover {
+            background: #45475a;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem 1.4rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.65;
+        }
+
+        pre code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--code-text);
+        }
+
+        .kw {
+            color: #cba6f7;
+        }
+
+        .fn {
+            color: #89b4fa;
+        }
+
+        .str {
+            color: #a6e3a1;
+        }
+
+        .num {
+            color: #fab387;
+        }
+
+        .cm {
+            color: #6c7086;
+            font-style: italic;
+        }
+
+        .cl {
+            color: #f38ba8;
+        }
+
+        .prop {
+            color: #89dceb;
+        }
+
+        /* ── DIAGRAM ── */
+        .diagram-area {
+            background: #f9f6f1;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+            overflow-x: auto;
+        }
+
+        .diagram-caption {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .mem-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .tree-svg {
+            width: 100%;
+            max-width: 520px;
+            overflow: visible;
+        }
+
+        /* Adjacency list display */
+        .adj-list {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 2;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .adj-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .adj-key {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #fce8e4;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 0.82rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .adj-key.blue {
+            background: #dce8f5;
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        .adj-key.green {
+            background: #e0f0e9;
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .adj-arrow {
+            color: var(--muted);
+        }
+
+        .adj-vals {
+            color: var(--muted);
+        }
+
+        .adj-vals span {
+            color: var(--accent3);
+            font-weight: 700;
+            margin-right: 0.35rem;
+        }
+
+        /* Adjacency matrix */
+        .adj-matrix {
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+        }
+
+        .adj-matrix th,
+        .adj-matrix td {
+            border: 1px solid var(--border);
+            padding: 0.35rem 0.55rem;
+            text-align: center;
+        }
+
+        .adj-matrix th {
+            background: #f0ece6;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .adj-matrix td {
+            color: var(--muted);
+            background: var(--surface);
+        }
+
+        .adj-matrix td.one {
+            color: var(--accent2);
+            font-weight: 700;
+            background: #e0f0e9;
+        }
+
+        /* BFS visited trail */
+        .bfs-trail {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .bfs-node {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 2px solid;
+        }
+
+        .bfs-node.visited {
+            background: #e0f0e9;
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .bfs-node.queued {
+            background: #dce8f5;
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        .bfs-node.unvisited {
+            background: var(--surface);
+            border-color: var(--border);
+            color: var(--muted);
+        }
+
+        .bfs-arrow {
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: #eef4ff;
+            border: 1px solid #b8d0f5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .callout.green {
+            background: #e8f5ee;
+            border-color: #a8d5ba;
+            border-left-color: var(--accent2);
+        }
+
+        .callout.amber {
+            background: #fff8e6;
+            border-color: #ffe08a;
+            border-left-color: #f5a623;
+        }
+
+        .callout.red {
+            background: #fef2f0;
+            border-color: #f5c6bb;
+            border-left-color: var(--accent);
+        }
+
+        .callout-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--accent3);
+        }
+
+        .callout.green p {
+            color: var(--accent2);
+        }
+
+        .callout.amber p {
+            color: #7a4800;
+        }
+
+        .callout.red p {
+            color: #8a2010;
+        }
+
+        .analogy-card {
+            background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%);
+            border: 1px solid #f0d9b5;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .analogy-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .analogy-card p {
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card ul {
+            padding-left: 1.3rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .analogy-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        .rw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .rw-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem;
+            background: var(--surface);
+        }
+
+        .rw-card .rw-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rw-card h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+
+        .rw-card p {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .interview-problem {
+            background: #f0f4ff;
+            border: 1px solid #c0cff5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .interview-problem h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            color: var(--accent3);
+            margin-bottom: 0.5rem;
+        }
+
+        .interview-problem p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            margin-top: 0.6rem;
+            background: #fde8e4;
+            color: var(--accent);
+            border-radius: 20px;
+            padding: 0.18rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 1rem 0;
+        }
+
+        .step-list li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            font-size: 0.93rem;
+            color: var(--muted);
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .module-nav {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .module-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            transition: border-color .2s, color .2s;
+        }
+
+        .module-nav a:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .module-nav a.next {
+            margin-left: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+
+            .toc ol,
+            .variant-grid,
+            .rep-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+        }
+    </style>
 </head>
+
 <body>
 
-<nav>
-  <a class="nav-brand" href="index.html">DSA: Zero to Hero</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="arrays.html">Arrays</a></li>
-    <li><a href="binary-trees.html">Binary Trees</a></li>
-    <li><a href="graphs.html" class="active">Graphs</a></li>
-    <li><a href="heaps.html">Heaps</a></li>
-  </ul>
-</nav>
+    <common-header accent="#c84b31"></common-header>
 
-<header class="hero">
-  <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Graphs</p>
-  <h1>Data Structures:<br/><span>Graphs</span></h1>
-  <div class="hero-meta">
-    <span class="tag">Nodes &amp; Edges</span>
-    <span class="tag green">BFS &amp; DFS</span>
-    <span class="tag blue">Directed &amp; Undirected</span>
-    <span class="tag amber">Advanced</span>
-  </div>
-  <p class="hero-desc">The most general data structure in computer science — graphs model everything from social networks and road maps to the internet itself.</p>
-</header>
+    <header class="hero">
+        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Graphs</p>
+        <h1>Data Structures:<br /><span>Graphs</span></h1>
+        <div class="hero-meta">
+            <span class="tag">Nodes &amp; Edges</span>
+            <span class="tag green">BFS &amp; DFS</span>
+            <span class="tag blue">Directed &amp; Undirected</span>
+            <span class="tag amber">Advanced</span>
+        </div>
+        <p class="hero-desc">The most general data structure in computer science — graphs model everything from social
+            networks and road maps to the internet itself.</p>
+    </header>
 
-<div class="toc-wrapper">
-  <div class="toc">
-    <h2>Contents</h2>
-    <ol>
-      <li><a href="#definition">Formal Definition</a></li>
-      <li><a href="#explanation">Explanation &amp; Operations</a></li>
-      <li><a href="#code">Code Snippet</a></li>
-      <li><a href="#diagram">Visual Diagram</a></li>
-      <li><a href="#analogy">Analogy (Plain English)</a></li>
-      <li><a href="#real-world">Real-World Applications</a></li>
-      <li><a href="#interview">Interview Question</a></li>
-    </ol>
-  </div>
-</div>
-
-<main>
-
-  <!-- 1. DEFINITION -->
-  <section id="definition">
-    <div class="section-header">
-      <div class="section-number">1</div>
-      <h2>Formal Definition</h2>
+    <div class="toc-wrapper">
+        <div class="toc">
+            <h2>Contents</h2>
+            <ol>
+                <li><a href="#definition">Formal Definition</a></li>
+                <li><a href="#explanation">Explanation &amp; Operations</a></li>
+                <li><a href="#code">Code Snippet</a></li>
+                <li><a href="#diagram">Visual Diagram</a></li>
+                <li><a href="#analogy">Analogy (Plain English)</a></li>
+                <li><a href="#real-world">Real-World Applications</a></li>
+                <li><a href="#interview">Interview Question</a></li>
+            </ol>
+        </div>
     </div>
-    <div class="section-body">
-      <div class="definition-box">
-        A <strong>Graph</strong> G = (V, E) is a mathematical structure consisting of a finite set of <em>vertices</em> (also called <em>nodes</em>) V and a set of <em>edges</em> E, where each edge connects a pair of vertices. In an <strong>undirected graph</strong>, edges have no orientation — the edge {u, v} is the same as {v, u}. In a <strong>directed graph</strong> (digraph), each edge (u → v) has a direction. A <strong>weighted graph</strong> assigns a numerical cost to each edge. A graph with no cycles is called <em>acyclic</em>; a directed acyclic graph is a <strong>DAG</strong>. A graph is <em>connected</em> if there exists a path between every pair of vertices.
-      </div>
-      <p>Trees are a special case of graphs — a connected, undirected graph with no cycles and exactly n−1 edges for n nodes. Graphs are the most general non-linear data structure, capable of representing any pairwise relationship between entities.</p>
-    </div>
-  </section>
 
-  <!-- 2. EXPLANATION -->
-  <section id="explanation">
-    <div class="section-header">
-      <div class="section-number">2</div>
-      <h2>Plain English Explanation &amp; Operations</h2>
-    </div>
-    <div class="section-body">
-      <p>Graphs model <strong>relationships</strong>. Wherever you have a set of things (cities, users, web pages, tasks) and connections between them (roads, friendships, hyperlinks, dependencies), you have a graph problem.</p>
+    <main>
 
-      <div class="variant-grid">
-        <div class="variant-card undirected">
-          <h3>↔️ Undirected Graph</h3>
-          <ul>
-            <li>Edges have no direction — connection is mutual</li>
-            <li>If A connects to B, then B connects to A</li>
-            <li>Used for: social networks, road maps, peer connections</li>
-            <li>Represented: <code class="inline">A — B</code></li>
-          </ul>
-        </div>
-        <div class="variant-card directed">
-          <h3>➡️ Directed Graph (Digraph)</h3>
-          <ul>
-            <li>Edges have a direction — one-way connection</li>
-            <li>A → B does NOT imply B → A</li>
-            <li>Used for: web links, Twitter follows, dependency graphs</li>
-            <li>Represented: <code class="inline">A → B</code></li>
-          </ul>
-        </div>
-        <div class="variant-card weighted">
-          <h3>⚖️ Weighted Graph</h3>
-          <ul>
-            <li>Each edge carries a numerical cost or distance</li>
-            <li>Can be directed or undirected</li>
-            <li>Used for: GPS routing, network bandwidth, flight prices</li>
-            <li>Shortest path: Dijkstra's, Bellman-Ford</li>
-          </ul>
-        </div>
-        <div class="variant-card dag">
-          <h3>🔀 DAG (Directed Acyclic Graph)</h3>
-          <ul>
-            <li>Directed with no cycles — no path leads back to itself</li>
-            <li>Has a topological ordering of vertices</li>
-            <li>Used for: build systems, task scheduling, version control</li>
-            <li>Algorithm: Topological Sort (Kahn's / DFS)</li>
-          </ul>
-        </div>
-      </div>
+        <!-- 1. DEFINITION -->
+        <section id="definition">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Formal Definition</h2>
+            </div>
+            <div class="section-body">
+                <div class="definition-box">
+                    A <strong>Graph</strong> G = (V, E) is a mathematical structure consisting of a finite set of
+                    <em>vertices</em> (also called <em>nodes</em>) V and a set of <em>edges</em> E, where each edge
+                    connects a pair of vertices. In an <strong>undirected graph</strong>, edges have no orientation —
+                    the edge {u, v} is the same as {v, u}. In a <strong>directed graph</strong> (digraph), each edge (u
+                    → v) has a direction. A <strong>weighted graph</strong> assigns a numerical cost to each edge. A
+                    graph with no cycles is called <em>acyclic</em>; a directed acyclic graph is a <strong>DAG</strong>.
+                    A graph is <em>connected</em> if there exists a path between every pair of vertices.
+                </div>
+                <p>Trees are a special case of graphs — a connected, undirected graph with no cycles and exactly n−1
+                    edges for n nodes. Graphs are the most general non-linear data structure, capable of representing
+                    any pairwise relationship between entities.</p>
+            </div>
+        </section>
 
-      <p style="margin-top:1.2rem;"><strong>Two ways to store a graph</strong> — the choice matters for both time and space complexity:</p>
+        <!-- 2. EXPLANATION -->
+        <section id="explanation">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>Plain English Explanation &amp; Operations</h2>
+            </div>
+            <div class="section-body">
+                <p>Graphs model <strong>relationships</strong>. Wherever you have a set of things (cities, users, web
+                    pages, tasks) and connections between them (roads, friendships, hyperlinks, dependencies), you have
+                    a graph problem.</p>
 
-      <div class="rep-grid">
-        <div class="rep-card adjlist">
-          <h3>📋 Adjacency List</h3>
-          <p>A hash map (or array) where each key is a node and its value is a list of its neighbours.</p>
-          <ul>
-            <li>Space: O(V + E) — only stores actual edges</li>
-            <li>Check if edge exists: O(degree)</li>
-            <li>Iterate neighbours: O(degree)</li>
-            <li><strong>Best for sparse graphs</strong> (few edges)</li>
-            <li>Used in most real-world graph algorithms</li>
-          </ul>
-        </div>
-        <div class="rep-card adjmat">
-          <h3>🔲 Adjacency Matrix</h3>
-          <p>A V×V 2D array where <code class="inline">matrix[u][v] = 1</code> if an edge exists from u to v.</p>
-          <ul>
-            <li>Space: O(V²) — stores all possible pairs</li>
-            <li>Check if edge exists: O(1)</li>
-            <li>Iterate neighbours: O(V)</li>
-            <li><strong>Best for dense graphs</strong> (many edges)</li>
-            <li>Used in Floyd-Warshall, small graphs</li>
-          </ul>
-        </div>
-      </div>
+                <div class="variant-grid">
+                    <div class="variant-card undirected">
+                        <h3>↔️ Undirected Graph</h3>
+                        <ul>
+                            <li>Edges have no direction — connection is mutual</li>
+                            <li>If A connects to B, then B connects to A</li>
+                            <li>Used for: social networks, road maps, peer connections</li>
+                            <li>Represented: <code class="inline">A — B</code></li>
+                        </ul>
+                    </div>
+                    <div class="variant-card directed">
+                        <h3>➡️ Directed Graph (Digraph)</h3>
+                        <ul>
+                            <li>Edges have a direction — one-way connection</li>
+                            <li>A → B does NOT imply B → A</li>
+                            <li>Used for: web links, Twitter follows, dependency graphs</li>
+                            <li>Represented: <code class="inline">A → B</code></li>
+                        </ul>
+                    </div>
+                    <div class="variant-card weighted">
+                        <h3>⚖️ Weighted Graph</h3>
+                        <ul>
+                            <li>Each edge carries a numerical cost or distance</li>
+                            <li>Can be directed or undirected</li>
+                            <li>Used for: GPS routing, network bandwidth, flight prices</li>
+                            <li>Shortest path: Dijkstra's, Bellman-Ford</li>
+                        </ul>
+                    </div>
+                    <div class="variant-card dag">
+                        <h3>🔀 DAG (Directed Acyclic Graph)</h3>
+                        <ul>
+                            <li>Directed with no cycles — no path leads back to itself</li>
+                            <li>Has a topological ordering of vertices</li>
+                            <li>Used for: build systems, task scheduling, version control</li>
+                            <li>Algorithm: Topological Sort (Kahn's / DFS)</li>
+                        </ul>
+                    </div>
+                </div>
 
-      <table class="ops-table" style="margin-top:1.4rem;">
-        <thead>
-          <tr><th>Operation</th><th>Description</th><th>Adj. List</th><th>Adj. Matrix</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Add vertex</td>
-            <td>Insert a new node into the graph</td>
-            <td class="complexity o1">O(1)</td>
-            <td class="complexity ove">O(V²)</td>
-          </tr>
-          <tr>
-            <td>Add edge</td>
-            <td>Create a connection between two nodes</td>
-            <td class="complexity o1">O(1)</td>
-            <td class="complexity o1">O(1)</td>
-          </tr>
-          <tr>
-            <td>Remove edge</td>
-            <td>Delete a connection between two nodes</td>
-            <td class="complexity on">O(E)</td>
-            <td class="complexity o1">O(1)</td>
-          </tr>
-          <tr>
-            <td>Check edge</td>
-            <td>Does edge (u, v) exist?</td>
-            <td class="complexity on">O(degree)</td>
-            <td class="complexity o1">O(1)</td>
-          </tr>
-          <tr>
-            <td>BFS / DFS</td>
-            <td>Traverse every node and edge</td>
-            <td class="complexity ove">O(V + E)</td>
-            <td class="complexity ove">O(V²)</td>
-          </tr>
-        </tbody>
-      </table>
+                <p style="margin-top:1.2rem;"><strong>Two ways to store a graph</strong> — the choice matters for both
+                    time and space complexity:</p>
 
-      <div class="callout" style="margin-top:1.2rem;">
-        <span class="callout-icon">💡</span>
-        <p><strong>BFS vs DFS on graphs:</strong> BFS (queue) finds the <em>shortest path</em> in an unweighted graph and explores level by level. DFS (stack / recursion) is better for detecting cycles, finding connected components, and topological sorting. Most graph interview problems require one or the other — recognising which is half the battle.</p>
-      </div>
+                <div class="rep-grid">
+                    <div class="rep-card adjlist">
+                        <h3>📋 Adjacency List</h3>
+                        <p>A hash map (or array) where each key is a node and its value is a list of its neighbours.</p>
+                        <ul>
+                            <li>Space: O(V + E) — only stores actual edges</li>
+                            <li>Check if edge exists: O(degree)</li>
+                            <li>Iterate neighbours: O(degree)</li>
+                            <li><strong>Best for sparse graphs</strong> (few edges)</li>
+                            <li>Used in most real-world graph algorithms</li>
+                        </ul>
+                    </div>
+                    <div class="rep-card adjmat">
+                        <h3>🔲 Adjacency Matrix</h3>
+                        <p>A V×V 2D array where <code class="inline">matrix[u][v] = 1</code> if an edge exists from u to
+                            v.</p>
+                        <ul>
+                            <li>Space: O(V²) — stores all possible pairs</li>
+                            <li>Check if edge exists: O(1)</li>
+                            <li>Iterate neighbours: O(V)</li>
+                            <li><strong>Best for dense graphs</strong> (many edges)</li>
+                            <li>Used in Floyd-Warshall, small graphs</li>
+                        </ul>
+                    </div>
+                </div>
 
-      <div class="callout amber" style="margin-top:0.8rem;">
-        <span class="callout-icon">⚠️</span>
-        <p><strong>Always mark nodes as visited.</strong> Unlike trees, graphs can have cycles. Without a <code class="inline">visited</code> set, your BFS or DFS will loop infinitely. This is the single most common graph bug in interviews.</p>
-      </div>
-    </div>
-  </section>
+                <table class="ops-table" style="margin-top:1.4rem;">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Description</th>
+                            <th>Adj. List</th>
+                            <th>Adj. Matrix</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Add vertex</td>
+                            <td>Insert a new node into the graph</td>
+                            <td class="complexity o1">O(1)</td>
+                            <td class="complexity ove">O(V²)</td>
+                        </tr>
+                        <tr>
+                            <td>Add edge</td>
+                            <td>Create a connection between two nodes</td>
+                            <td class="complexity o1">O(1)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Remove edge</td>
+                            <td>Delete a connection between two nodes</td>
+                            <td class="complexity on">O(E)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Check edge</td>
+                            <td>Does edge (u, v) exist?</td>
+                            <td class="complexity on">O(degree)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>BFS / DFS</td>
+                            <td>Traverse every node and edge</td>
+                            <td class="complexity ove">O(V + E)</td>
+                            <td class="complexity ove">O(V²)</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-  <!-- 3. CODE -->
-  <section id="code">
-    <div class="section-header">
-      <div class="section-number">3</div>
-      <h2>Code Snippet</h2>
-    </div>
-    <div class="section-body">
-      <p>The first snippet builds an undirected graph using an adjacency list, the standard representation. The second implements both BFS and DFS traversals on it — the two algorithms that unlock nearly every graph problem.</p>
+                <div class="callout" style="margin-top:1.2rem;">
+                    <span class="callout-icon">💡</span>
+                    <p><strong>BFS vs DFS on graphs:</strong> BFS (queue) finds the <em>shortest path</em> in an
+                        unweighted graph and explores level by level. DFS (stack / recursion) is better for detecting
+                        cycles, finding connected components, and topological sorting. Most graph interview problems
+                        require one or the other — recognising which is half the battle.</p>
+                </div>
 
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — Graph (Adjacency List)</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── Graph using adjacency list (undirected) ─────────────────────</span>
+                <div class="callout amber" style="margin-top:0.8rem;">
+                    <span class="callout-icon">⚠️</span>
+                    <p><strong>Always mark nodes as visited.</strong> Unlike trees, graphs can have cycles. Without a
+                        <code class="inline">visited</code> set, your BFS or DFS will loop infinitely. This is the
+                        single most common graph bug in interviews.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CODE -->
+        <section id="code">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>Code Snippet</h2>
+            </div>
+            <div class="section-body">
+                <p>The first snippet builds an undirected graph using an adjacency list, the standard representation.
+                    The second implements both BFS and DFS traversals on it — the two algorithms that unlock nearly
+                    every graph problem.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Graph (Adjacency List)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Graph using adjacency list (undirected) ─────────────────────</span>
 <span class="kw">class</span> <span class="cl">Graph</span> {
   <span class="fn">constructor</span>() {
     <span class="kw">this</span>.<span class="prop">adjacencyList</span> = <span class="kw">new</span> <span class="cl">Map</span>();
@@ -434,14 +1143,14 @@ g.<span class="fn">addEdge</span>(<span class="str">'C'</span>, <span class="str
 <span class="cm">// C → [A, E]</span>
 <span class="cm">// D → [B]</span>
 <span class="cm">// E → [B, C]</span></code></pre>
-      </div>
+                </div>
 
-      <div class="code-block" style="margin-top:1.2rem;">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — BFS and DFS Traversals</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── BFS — Breadth-First Search ──────────────────────────────────</span>
+                <div class="code-block" style="margin-top:1.2rem;">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — BFS and DFS Traversals</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── BFS — Breadth-First Search ──────────────────────────────────</span>
 <span class="cm">// Uses a QUEUE. Explores level by level — finds shortest path.</span>
 <span class="kw">function</span> <span class="fn">bfs</span>(graph, start) {
   <span class="kw">const</span> visited = <span class="kw">new</span> <span class="cl">Set</span>([start]);
@@ -500,229 +1209,336 @@ g.<span class="fn">addEdge</span>(<span class="str">'C'</span>, <span class="str
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">bfs</span>(g, <span class="str">'A'</span>));           <span class="cm">// ['A', 'B', 'C', 'D', 'E']  — level by level</span>
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">dfs</span>(g, <span class="str">'A'</span>));           <span class="cm">// ['A', 'C', 'E', 'B', 'D']  — deep first</span>
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">dfsRecursive</span>(g, <span class="str">'A'</span>));  <span class="cm">// ['A', 'B', 'D', 'E', 'C']  — recursive path</span></code></pre>
-      </div>
-    </div>
-  </section>
+                </div>
+            </div>
+        </section>
 
-  <!-- 4. DIAGRAM -->
-  <section id="diagram">
-    <div class="section-header">
-      <div class="section-number">4</div>
-      <h2>Visual Diagram</h2>
-    </div>
-    <div class="section-body">
-      <p>The same five-node graph shown as a visual network, its adjacency list, and its adjacency matrix — three lenses on the same structure:</p>
+        <!-- 4. DIAGRAM -->
+        <section id="diagram">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Visual Diagram</h2>
+            </div>
+            <div class="section-body">
+                <p>The same five-node graph shown as a visual network, its adjacency list, and its adjacency matrix —
+                    three lenses on the same structure:</p>
 
-      <div class="diagram-area">
-        <div class="mem-label">Undirected graph — 5 nodes, 5 edges</div>
-        <svg class="tree-svg" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace">
-          <!-- Edges -->
-          <line x1="100" y1="80"  x2="220" y2="80"  stroke="#e4ddd3" stroke-width="2"/>
-          <line x1="100" y1="80"  x2="100" y2="180" stroke="#e4ddd3" stroke-width="2"/>
-          <line x1="220" y1="80"  x2="340" y2="80"  stroke="#e4ddd3" stroke-width="2"/>
-          <line x1="220" y1="80"  x2="220" y2="180" stroke="#e4ddd3" stroke-width="2"/>
-          <line x1="100" y1="180" x2="220" y2="180" stroke="#e4ddd3" stroke-width="2"/>
+                <div class="diagram-area">
+                    <div class="mem-label">Undirected graph — 5 nodes, 5 edges</div>
+                    <svg class="tree-svg" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                        font-family="JetBrains Mono, monospace">
+                        <!-- Edges -->
+                        <line x1="100" y1="80" x2="220" y2="80" stroke="#e4ddd3" stroke-width="2" />
+                        <line x1="100" y1="80" x2="100" y2="180" stroke="#e4ddd3" stroke-width="2" />
+                        <line x1="220" y1="80" x2="340" y2="80" stroke="#e4ddd3" stroke-width="2" />
+                        <line x1="220" y1="80" x2="220" y2="180" stroke="#e4ddd3" stroke-width="2" />
+                        <line x1="100" y1="180" x2="220" y2="180" stroke="#e4ddd3" stroke-width="2" />
 
-          <!-- Nodes -->
-          <circle cx="100" cy="80"  r="26" fill="#fce8e4" stroke="#c84b31" stroke-width="2.5"/>
-          <text x="100" y="85" text-anchor="middle" font-size="15" font-weight="700" fill="#c84b31">A</text>
+                        <!-- Nodes -->
+                        <circle cx="100" cy="80" r="26" fill="#fce8e4" stroke="#c84b31" stroke-width="2.5" />
+                        <text x="100" y="85" text-anchor="middle" font-size="15" font-weight="700"
+                            fill="#c84b31">A</text>
 
-          <circle cx="220" cy="80"  r="26" fill="#dce8f5" stroke="#1d3557" stroke-width="2.5"/>
-          <text x="220" y="85" text-anchor="middle" font-size="15" font-weight="700" fill="#1d3557">B</text>
+                        <circle cx="220" cy="80" r="26" fill="#dce8f5" stroke="#1d3557" stroke-width="2.5" />
+                        <text x="220" y="85" text-anchor="middle" font-size="15" font-weight="700"
+                            fill="#1d3557">B</text>
 
-          <circle cx="340" cy="80"  r="26" fill="#e0f0e9" stroke="#2d6a4f" stroke-width="2.5"/>
-          <text x="340" y="85" text-anchor="middle" font-size="15" font-weight="700" fill="#2d6a4f">D</text>
+                        <circle cx="340" cy="80" r="26" fill="#e0f0e9" stroke="#2d6a4f" stroke-width="2.5" />
+                        <text x="340" y="85" text-anchor="middle" font-size="15" font-weight="700"
+                            fill="#2d6a4f">D</text>
 
-          <circle cx="100" cy="180" r="26" fill="#e0f0e9" stroke="#2d6a4f" stroke-width="2.5"/>
-          <text x="100" y="185" text-anchor="middle" font-size="15" font-weight="700" fill="#2d6a4f">C</text>
+                        <circle cx="100" cy="180" r="26" fill="#e0f0e9" stroke="#2d6a4f" stroke-width="2.5" />
+                        <text x="100" y="185" text-anchor="middle" font-size="15" font-weight="700"
+                            fill="#2d6a4f">C</text>
 
-          <circle cx="220" cy="180" r="26" fill="#e0f0e9" stroke="#2d6a4f" stroke-width="2.5"/>
-          <text x="220" y="185" text-anchor="middle" font-size="15" font-weight="700" fill="#2d6a4f">E</text>
+                        <circle cx="220" cy="180" r="26" fill="#e0f0e9" stroke="#2d6a4f" stroke-width="2.5" />
+                        <text x="220" y="185" text-anchor="middle" font-size="15" font-weight="700"
+                            fill="#2d6a4f">E</text>
 
-          <!-- Labels -->
-          <text x="370" y="88" font-size="11" fill="#2d6a4f">degree 1</text>
-          <text x="50"  y="88" font-size="11" fill="#c84b31">degree 2</text>
-          <text x="230" y="55" font-size="11" fill="#1d3557">degree 3</text>
-        </svg>
-        <p class="diagram-caption">Node degree = number of edges connecting it. B has degree 3 (connected to A, D, E). D has degree 1 (leaf-like — only connected to B).</p>
-      </div>
+                        <!-- Labels -->
+                        <text x="370" y="88" font-size="11" fill="#2d6a4f">degree 1</text>
+                        <text x="50" y="88" font-size="11" fill="#c84b31">degree 2</text>
+                        <text x="230" y="55" font-size="11" fill="#1d3557">degree 3</text>
+                    </svg>
+                    <p class="diagram-caption">Node degree = number of edges connecting it. B has degree 3 (connected to
+                        A, D, E). D has degree 1 (leaf-like — only connected to B).</p>
+                </div>
 
-      <p>The same graph stored as an <strong>adjacency list</strong> (left) and an <strong>adjacency matrix</strong> (right):</p>
+                <p>The same graph stored as an <strong>adjacency list</strong> (left) and an <strong>adjacency
+                        matrix</strong> (right):</p>
 
-      <div style="display:flex;gap:2.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.4rem;">
-        <div>
-          <div class="mem-label" style="margin-bottom:0.6rem;text-align:center;">Adjacency List</div>
-          <div class="adj-list">
-            <div class="adj-row"><div class="adj-key">A</div><span class="adj-arrow">→</span><div class="adj-vals"><span>B</span><span>C</span></div></div>
-            <div class="adj-row"><div class="adj-key blue">B</div><span class="adj-arrow">→</span><div class="adj-vals"><span>A</span><span>D</span><span>E</span></div></div>
-            <div class="adj-row"><div class="adj-key green">C</div><span class="adj-arrow">→</span><div class="adj-vals"><span>A</span><span>E</span></div></div>
-            <div class="adj-row"><div class="adj-key green">D</div><span class="adj-arrow">→</span><div class="adj-vals"><span>B</span></div></div>
-            <div class="adj-row"><div class="adj-key green">E</div><span class="adj-arrow">→</span><div class="adj-vals"><span>B</span><span>C</span></div></div>
-          </div>
-        </div>
-        <div>
-          <div class="mem-label" style="margin-bottom:0.6rem;text-align:center;">Adjacency Matrix</div>
-          <table class="adj-matrix">
-            <thead>
-              <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
-            </thead>
-            <tbody>
-              <tr><th>A</th><td>0</td><td class="one">1</td><td class="one">1</td><td>0</td><td>0</td></tr>
-              <tr><th>B</th><td class="one">1</td><td>0</td><td>0</td><td class="one">1</td><td class="one">1</td></tr>
-              <tr><th>C</th><td class="one">1</td><td>0</td><td>0</td><td>0</td><td class="one">1</td></tr>
-              <tr><th>D</th><td>0</td><td class="one">1</td><td>0</td><td>0</td><td>0</td></tr>
-              <tr><th>E</th><td>0</td><td class="one">1</td><td class="one">1</td><td>0</td><td>0</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
+                <div style="display:flex;gap:2.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.4rem;">
+                    <div>
+                        <div class="mem-label" style="margin-bottom:0.6rem;text-align:center;">Adjacency List</div>
+                        <div class="adj-list">
+                            <div class="adj-row">
+                                <div class="adj-key">A</div><span class="adj-arrow">→</span>
+                                <div class="adj-vals"><span>B</span><span>C</span></div>
+                            </div>
+                            <div class="adj-row">
+                                <div class="adj-key blue">B</div><span class="adj-arrow">→</span>
+                                <div class="adj-vals"><span>A</span><span>D</span><span>E</span></div>
+                            </div>
+                            <div class="adj-row">
+                                <div class="adj-key green">C</div><span class="adj-arrow">→</span>
+                                <div class="adj-vals"><span>A</span><span>E</span></div>
+                            </div>
+                            <div class="adj-row">
+                                <div class="adj-key green">D</div><span class="adj-arrow">→</span>
+                                <div class="adj-vals"><span>B</span></div>
+                            </div>
+                            <div class="adj-row">
+                                <div class="adj-key green">E</div><span class="adj-arrow">→</span>
+                                <div class="adj-vals"><span>B</span><span>C</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="mem-label" style="margin-bottom:0.6rem;text-align:center;">Adjacency Matrix</div>
+                        <table class="adj-matrix">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>A</th>
+                                    <th>B</th>
+                                    <th>C</th>
+                                    <th>D</th>
+                                    <th>E</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>A</th>
+                                    <td>0</td>
+                                    <td class="one">1</td>
+                                    <td class="one">1</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <th>B</th>
+                                    <td class="one">1</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="one">1</td>
+                                    <td class="one">1</td>
+                                </tr>
+                                <tr>
+                                    <th>C</th>
+                                    <td class="one">1</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td class="one">1</td>
+                                </tr>
+                                <tr>
+                                    <th>D</th>
+                                    <td>0</td>
+                                    <td class="one">1</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                                <tr>
+                                    <th>E</th>
+                                    <td>0</td>
+                                    <td class="one">1</td>
+                                    <td class="one">1</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-      <p>BFS from node <strong>A</strong> — exploring level by level, closest nodes first:</p>
+                <p>BFS from node <strong>A</strong> — exploring level by level, closest nodes first:</p>
 
-      <div class="diagram-area">
-        <div class="mem-label">BFS traversal starting from A</div>
+                <div class="diagram-area">
+                    <div class="mem-label">BFS traversal starting from A</div>
 
-        <div style="display:flex;flex-direction:column;gap:0.8rem;width:100%;max-width:480px;">
-          <div style="display:flex;align-items:center;gap:0.7rem;font-size:0.82rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">
-            <span style="width:60px;font-weight:600;">Level 0</span>
-            <div class="bfs-node visited">A</div>
-            <span>→ visit A, enqueue neighbours B, C</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:0.7rem;font-size:0.82rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">
-            <span style="width:60px;font-weight:600;">Level 1</span>
-            <div class="bfs-node visited">B</div>
-            <div class="bfs-node visited">C</div>
-            <span>→ visit B,C — enqueue D, E (skip A: visited)</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:0.7rem;font-size:0.82rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">
-            <span style="width:60px;font-weight:600;">Level 2</span>
-            <div class="bfs-node visited">D</div>
-            <div class="bfs-node visited">E</div>
-            <span>→ visit D, E — all reachable nodes seen</span>
-          </div>
-        </div>
+                    <div style="display:flex;flex-direction:column;gap:0.8rem;width:100%;max-width:480px;">
+                        <div
+                            style="display:flex;align-items:center;gap:0.7rem;font-size:0.82rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">
+                            <span style="width:60px;font-weight:600;">Level 0</span>
+                            <div class="bfs-node visited">A</div>
+                            <span>→ visit A, enqueue neighbours B, C</span>
+                        </div>
+                        <div
+                            style="display:flex;align-items:center;gap:0.7rem;font-size:0.82rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">
+                            <span style="width:60px;font-weight:600;">Level 1</span>
+                            <div class="bfs-node visited">B</div>
+                            <div class="bfs-node visited">C</div>
+                            <span>→ visit B,C — enqueue D, E (skip A: visited)</span>
+                        </div>
+                        <div
+                            style="display:flex;align-items:center;gap:0.7rem;font-size:0.82rem;color:var(--muted);font-family:'JetBrains Mono',monospace;">
+                            <span style="width:60px;font-weight:600;">Level 2</span>
+                            <div class="bfs-node visited">D</div>
+                            <div class="bfs-node visited">E</div>
+                            <span>→ visit D, E — all reachable nodes seen</span>
+                        </div>
+                    </div>
 
-        <div class="bfs-trail" style="margin-top:0.5rem;">
-          <span style="font-size:0.78rem;color:var(--muted);font-family:'JetBrains Mono',monospace;font-weight:600;">Result:</span>
-          <div class="bfs-node visited">A</div>
-          <span class="bfs-arrow">→</span>
-          <div class="bfs-node visited">B</div>
-          <span class="bfs-arrow">→</span>
-          <div class="bfs-node visited">C</div>
-          <span class="bfs-arrow">→</span>
-          <div class="bfs-node visited">D</div>
-          <span class="bfs-arrow">→</span>
-          <div class="bfs-node visited">E</div>
-        </div>
-        <p class="diagram-caption">BFS guarantees that nodes are visited in order of their distance (hop count) from the start node.</p>
-      </div>
-    </div>
-  </section>
+                    <div class="bfs-trail" style="margin-top:0.5rem;">
+                        <span
+                            style="font-size:0.78rem;color:var(--muted);font-family:'JetBrains Mono',monospace;font-weight:600;">Result:</span>
+                        <div class="bfs-node visited">A</div>
+                        <span class="bfs-arrow">→</span>
+                        <div class="bfs-node visited">B</div>
+                        <span class="bfs-arrow">→</span>
+                        <div class="bfs-node visited">C</div>
+                        <span class="bfs-arrow">→</span>
+                        <div class="bfs-node visited">D</div>
+                        <span class="bfs-arrow">→</span>
+                        <div class="bfs-node visited">E</div>
+                    </div>
+                    <p class="diagram-caption">BFS guarantees that nodes are visited in order of their distance (hop
+                        count) from the start node.</p>
+                </div>
+            </div>
+        </section>
 
-  <!-- 5. ANALOGY -->
-  <section id="analogy">
-    <div class="section-header">
-      <div class="section-number">5</div>
-      <h2>Plain English Analogy</h2>
-    </div>
-    <div class="section-body">
-      <div class="analogy-card">
-        <div class="analogy-icon">🗺️</div>
-        <h3>A City Road Network</h3>
-        <p>Imagine a city where intersections are <strong>nodes</strong> and roads are <strong>edges</strong>. If the roads are two-way, it's an <strong>undirected graph</strong>. If some roads are one-way (like motorway on-ramps), it's a <strong>directed graph</strong>. If roads have speed limits or distances, it's a <strong>weighted graph</strong>.</p>
-        <p>Now think about two ways to explore this city from your starting point:</p>
-        <p><strong>BFS</strong> is like ripples in a pond. You first visit every intersection one street away, then every intersection two streets away, then three — you explore the whole city level by level. This is how Google Maps finds the <em>shortest route</em> (fewest turns or stops).</p>
-        <p><strong>DFS</strong> is like an adventurer who always takes the first new road they see, going deeper and deeper until they hit a dead end, then backtracks and tries the next untried road. This is how you'd explore a maze.</p>
-        <ul>
-          <li><strong>Intersection</strong> = vertex / node</li>
-          <li><strong>Road</strong> = edge</li>
-          <li><strong>One-way street</strong> = directed edge</li>
-          <li><strong>Road distance</strong> = edge weight</li>
-          <li><strong>Road map</strong> = graph representation</li>
-          <li><strong>"Have I been here?"</strong> = the visited set</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+        <!-- 5. ANALOGY -->
+        <section id="analogy">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Plain English Analogy</h2>
+            </div>
+            <div class="section-body">
+                <div class="analogy-card">
+                    <div class="analogy-icon">🗺️</div>
+                    <h3>A City Road Network</h3>
+                    <p>Imagine a city where intersections are <strong>nodes</strong> and roads are
+                        <strong>edges</strong>. If the roads are two-way, it's an <strong>undirected graph</strong>. If
+                        some roads are one-way (like motorway on-ramps), it's a <strong>directed graph</strong>. If
+                        roads have speed limits or distances, it's a <strong>weighted graph</strong>.
+                    </p>
+                    <p>Now think about two ways to explore this city from your starting point:</p>
+                    <p><strong>BFS</strong> is like ripples in a pond. You first visit every intersection one street
+                        away, then every intersection two streets away, then three — you explore the whole city level by
+                        level. This is how Google Maps finds the <em>shortest route</em> (fewest turns or stops).</p>
+                    <p><strong>DFS</strong> is like an adventurer who always takes the first new road they see, going
+                        deeper and deeper until they hit a dead end, then backtracks and tries the next untried road.
+                        This is how you'd explore a maze.</p>
+                    <ul>
+                        <li><strong>Intersection</strong> = vertex / node</li>
+                        <li><strong>Road</strong> = edge</li>
+                        <li><strong>One-way street</strong> = directed edge</li>
+                        <li><strong>Road distance</strong> = edge weight</li>
+                        <li><strong>Road map</strong> = graph representation</li>
+                        <li><strong>"Have I been here?"</strong> = the visited set</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-  <!-- 6. REAL WORLD -->
-  <section id="real-world">
-    <div class="section-header">
-      <div class="section-number">6</div>
-      <h2>Real-World Coding Applications</h2>
-    </div>
-    <div class="section-body">
-      <p>Graphs model the most complex systems in engineering — anywhere relationships exist between entities, a graph is the right abstraction.</p>
-      <div class="rw-grid">
-        <div class="rw-card">
-          <div class="rw-icon">🌐</div>
-          <h4>The World Wide Web</h4>
-          <p>Web pages are nodes; hyperlinks are directed edges. Google's PageRank algorithm runs on this graph, computing importance scores by analysing which pages link to which.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">👥</div>
-          <h4>Social Networks</h4>
-          <p>Users are nodes; friendships (undirected) or follows (directed) are edges. "Friend suggestions", "degrees of separation", and feed ranking all require graph algorithms.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🧭</div>
-          <h4>GPS &amp; Navigation</h4>
-          <p>Road networks are weighted directed graphs. Dijkstra's algorithm finds shortest paths. Google Maps, Waze, and Uber all run variants of this on graphs with millions of nodes.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">📦</div>
-          <h4>Package Dependency Resolution</h4>
-          <p>npm, pip, and cargo model package dependencies as a DAG. Installing a package triggers a topological sort to determine the correct install order with no circular dependencies.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🔌</div>
-          <h4>Network Routing</h4>
-          <p>Routers on the internet are nodes; connections are weighted edges. Protocols like OSPF use Dijkstra's algorithm to find the optimal path for every data packet.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🧬</div>
-          <h4>Knowledge Graphs (AI)</h4>
-          <p>Large language models and AI assistants use knowledge graphs to represent facts and relationships. Nodes are entities (people, places, things); edges are relationships (born-in, works-for).</p>
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- 6. REAL WORLD -->
+        <section id="real-world">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Real-World Coding Applications</h2>
+            </div>
+            <div class="section-body">
+                <p>Graphs model the most complex systems in engineering — anywhere relationships exist between entities,
+                    a graph is the right abstraction.</p>
+                <div class="rw-grid">
+                    <div class="rw-card">
+                        <div class="rw-icon">🌐</div>
+                        <h4>The World Wide Web</h4>
+                        <p>Web pages are nodes; hyperlinks are directed edges. Google's PageRank algorithm runs on this
+                            graph, computing importance scores by analysing which pages link to which.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">👥</div>
+                        <h4>Social Networks</h4>
+                        <p>Users are nodes; friendships (undirected) or follows (directed) are edges. "Friend
+                            suggestions", "degrees of separation", and feed ranking all require graph algorithms.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🧭</div>
+                        <h4>GPS &amp; Navigation</h4>
+                        <p>Road networks are weighted directed graphs. Dijkstra's algorithm finds shortest paths. Google
+                            Maps, Waze, and Uber all run variants of this on graphs with millions of nodes.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">📦</div>
+                        <h4>Package Dependency Resolution</h4>
+                        <p>npm, pip, and cargo model package dependencies as a DAG. Installing a package triggers a
+                            topological sort to determine the correct install order with no circular dependencies.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🔌</div>
+                        <h4>Network Routing</h4>
+                        <p>Routers on the internet are nodes; connections are weighted edges. Protocols like OSPF use
+                            Dijkstra's algorithm to find the optimal path for every data packet.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🧬</div>
+                        <h4>Knowledge Graphs (AI)</h4>
+                        <p>Large language models and AI assistants use knowledge graphs to represent facts and
+                            relationships. Nodes are entities (people, places, things); edges are relationships
+                            (born-in, works-for).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-  <!-- 7. INTERVIEW -->
-  <section id="interview">
-    <div class="section-header">
-      <div class="section-number">7</div>
-      <h2>Classic Interview Question</h2>
-    </div>
-    <div class="section-body">
+        <!-- 7. INTERVIEW -->
+        <section id="interview">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2>Classic Interview Question</h2>
+            </div>
+            <div class="section-body">
 
-      <div class="interview-problem">
-        <h3>🏝️ Number of Islands</h3>
-        <p>Given an <code class="inline">m × n</code> grid of <code class="inline">'1'</code> (land) and <code class="inline">'0'</code> (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically.</p>
-        <p style="margin-top:0.6rem;">Example: the grid below contains <strong>3 islands</strong>.</p>
-        <pre style="background:#f0ece6;border-radius:6px;padding:0.8rem 1rem;margin-top:0.6rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--text);line-height:1.8;">11000
+                <div class="interview-problem">
+                    <h3>🏝️ Number of Islands</h3>
+                    <p>Given an <code class="inline">m × n</code> grid of <code class="inline">'1'</code> (land) and
+                        <code class="inline">'0'</code> (water), count the number of islands. An island is surrounded by
+                        water and is formed by connecting adjacent lands horizontally or vertically.
+                    </p>
+                    <p style="margin-top:0.6rem;">Example: the grid below contains <strong>3 islands</strong>.</p>
+                    <pre
+                        style="background:#f0ece6;border-radius:6px;padding:0.8rem 1rem;margin-top:0.6rem;font-family:'JetBrains Mono',monospace;font-size:0.85rem;color:var(--text);line-height:1.8;">11000
 11000
 00100
 00011</pre>
-        <span class="difficulty-badge">🔥 Medium — LeetCode #200 · asked at Google, Amazon, Microsoft, Meta</span>
-      </div>
+                    <span class="difficulty-badge">🔥 Medium — LeetCode #200 · asked at Google, Amazon, Microsoft,
+                        Meta</span>
+                </div>
 
-      <p><strong>Why this question?</strong> It's the canonical graph problem disguised as a grid puzzle. The grid is an implicit graph — each cell is a node, and adjacent land cells are edges. Solving it requires connected components enumeration using DFS or BFS, the most fundamental graph traversal skill.</p>
+                <p><strong>Why this question?</strong> It's the canonical graph problem disguised as a grid puzzle. The
+                    grid is an implicit graph — each cell is a node, and adjacent land cells are edges. Solving it
+                    requires connected components enumeration using DFS or BFS, the most fundamental graph traversal
+                    skill.</p>
 
-      <p><strong>The approach — DFS flood fill:</strong></p>
-      <ul class="step-list">
-        <li><div class="step-num">1</div><span>Loop through every cell in the grid.</span></li>
-        <li><div class="step-num">2</div><span>When you find an unvisited <code class="inline">'1'</code> (land), increment the island counter and launch a DFS from that cell.</span></li>
-        <li><div class="step-num">3</div><span>The DFS marks every connected land cell as visited (by setting it to <code class="inline">'0'</code> or using a visited set) — this "sinks" the whole island so it isn't counted twice.</span></li>
-        <li><div class="step-num">4</div><span>Continue scanning; each new unvisited <code class="inline">'1'</code> you find is the start of a new island.</span></li>
-      </ul>
+                <p><strong>The approach — DFS flood fill:</strong></p>
+                <ul class="step-list">
+                    <li>
+                        <div class="step-num">1</div><span>Loop through every cell in the grid.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">2</div><span>When you find an unvisited <code class="inline">'1'</code>
+                            (land), increment the island counter and launch a DFS from that cell.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">3</div><span>The DFS marks every connected land cell as visited (by
+                            setting it to <code class="inline">'0'</code> or using a visited set) — this "sinks" the
+                            whole island so it isn't counted twice.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">4</div><span>Continue scanning; each new unvisited <code
+                                class="inline">'1'</code> you find is the start of a new island.</span>
+                    </li>
+                </ul>
 
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — Number of Islands</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── Number of Islands — O(m×n) time and space ───────────────────</span>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Number of Islands</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Number of Islands — O(m×n) time and space ───────────────────</span>
 <span class="kw">function</span> <span class="fn">numIslands</span>(grid) {
   <span class="kw">if</span> (!grid || grid.<span class="prop">length</span> === <span class="num">0</span>) <span class="kw">return</span> <span class="num">0</span>;
 
@@ -769,35 +1585,42 @@ g.<span class="fn">addEdge</span>(<span class="str">'C'</span>, <span class="str
 <span class="cm">// Sinking ('1' → '0') modifies the input grid.</span>
 <span class="cm">// If you need the original grid intact, use a separate visited Set</span>
 <span class="cm">// with Set.add(`${r},${c}`) instead of mutating.</span></code></pre>
-      </div>
+                </div>
 
-      <div class="callout green" style="margin-top:1rem;">
-        <span class="callout-icon">✅</span>
-        <p><strong>Interview tip:</strong> Start by saying "I'll treat the grid as an implicit graph — each cell is a node with up to 4 neighbours." This immediately signals graph thinking to the interviewer. Mention both the DFS (recursive flood fill) and BFS alternative. Discuss the mutation trade-off: sinking cells is clean but destructive — a <code class="inline">visited</code> set preserves the input. Also note that this exact pattern (grid DFS/BFS) applies directly to: Surrounded Regions, Pacific Atlantic Water Flow, Walls and Gates, and Rotting Oranges.</p>
-      </div>
+                <div class="callout green" style="margin-top:1rem;">
+                    <span class="callout-icon">✅</span>
+                    <p><strong>Interview tip:</strong> Start by saying "I'll treat the grid as an implicit graph — each
+                        cell is a node with up to 4 neighbours." This immediately signals graph thinking to the
+                        interviewer. Mention both the DFS (recursive flood fill) and BFS alternative. Discuss the
+                        mutation trade-off: sinking cells is clean but destructive — a <code
+                            class="inline">visited</code> set preserves the input. Also note that this exact pattern
+                        (grid DFS/BFS) applies directly to: Surrounded Regions, Pacific Atlantic Water Flow, Walls and
+                        Gates, and Rotting Oranges.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="module-nav">
+        <a href="binary-trees.html">← Binary Trees</a>
+        <a href="heaps.html" class="next">Heaps &amp; Priority Queues →</a>
     </div>
-  </section>
 
-</main>
+    <footer>
+        <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+        <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
+    </footer>
 
-<div class="module-nav">
-  <a href="binary-trees.html">← Binary Trees</a>
-  <a href="heaps.html" class="next">Heaps &amp; Priority Queues →</a>
-</div>
-
-<footer>
-  <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
-  <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
-</footer>
-
-<script>
-  function copyCode(btn) {
-    const pre = btn.closest('.code-block').querySelector('pre');
-    navigator.clipboard.writeText(pre.innerText).then(() => {
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy', 2000);
-    });
-  }
-</script>
+    <script>
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+    </script>
 </body>
+
 </html>

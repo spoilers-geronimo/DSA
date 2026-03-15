@@ -1,391 +1,1108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sorting Algorithms — DSA Zero to Hero</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sorting Algorithms — DSA Zero to Hero</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="header.css">
+    <script src="header.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    :root {
-      --bg:        #f9f6f1;
-      --surface:   #ffffff;
-      --border:    #e4ddd3;
-      --text:      #1a1612;
-      --muted:     #6b6055;
-      --accent:    #c84b31;
-      --accent2:   #2d6a4f;
-      --accent3:   #1d3557;
-      --code-bg:   #1e1e2e;
-      --code-text: #cdd6f4;
-      --tag-bg:    #fce8e4;
-      --tag-text:  #c84b31;
-      --highlight: #fff3cd;
-    }
+        :root {
+            --bg: #f9f6f1;
+            --surface: #ffffff;
+            --border: #e4ddd3;
+            --text: #1a1612;
+            --muted: #6b6055;
+            --accent: #c84b31;
+            --accent2: #2d6a4f;
+            --accent3: #1d3557;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tag-bg: #fce8e4;
+            --tag-text: #c84b31;
+            --highlight: #fff3cd;
+        }
 
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(249,246,241,0.92); backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem; height: 58px;
-    }
-    .nav-brand { font-family: 'Lora', serif; font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
-    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
-    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; transition: color .2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
 
-    .hero { padding: 5rem 2rem 3rem; max-width: 860px; margin: 0 auto; text-align: center; }
-    .breadcrumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; letter-spacing: 0.06em; text-transform: uppercase; }
-    .breadcrumb a { color: var(--accent); text-decoration: none; }
-    .hero h1 { font-family: 'Lora', serif; font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 1rem; }
-    .hero h1 span { color: var(--accent); }
-    .hero-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
-    .tag { background: var(--tag-bg); color: var(--tag-text); border-radius: 20px; padding: 0.2rem 0.8rem; font-size: 0.78rem; font-weight: 600; }
-    .tag.green { background: #e0f0e9; color: var(--accent2); }
-    .tag.blue  { background: #dce8f5; color: var(--accent3); }
-    .tag.amber { background: #fff0d4; color: #a05c00; }
-    .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 580px; margin: 0 auto; }
 
-    .toc-wrapper { max-width: 860px; margin: 0 auto 3rem; padding: 0 2rem; }
-    .toc { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.8rem; }
-    .toc h2 { font-family: 'Lora', serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.8rem; }
-    .toc ol { padding-left: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2rem; }
-    .toc a { color: var(--accent3); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
-    .toc a:hover { text-decoration: underline; }
 
-    main { max-width: 860px; margin: 0 auto; padding: 0 2rem 6rem; display: flex; flex-direction: column; gap: 3rem; }
+        .hero {
+            padding: 5rem 2rem 3rem;
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
 
-    section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .section-header { display: flex; align-items: center; gap: 0.75rem; padding: 1.2rem 1.8rem; border-bottom: 1px solid var(--border); background: #faf9f7; }
-    .section-number { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
-    .section-header h2 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 700; color: var(--text); }
-    .section-body { padding: 1.8rem; }
-    .section-body p { margin-bottom: 1rem; color: var(--muted); }
-    .section-body p:last-child { margin-bottom: 0; }
-    .section-body strong { color: var(--text); }
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
 
-    .definition-box { background: var(--highlight); border: 1px solid #ffe08a; border-left: 4px solid #f5a623; border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; font-family: 'Lora', serif; font-style: italic; font-size: 1.02rem; color: #3d2c00; line-height: 1.65; }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-    /* Algorithm cards */
-    .algo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
-    .algo-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
-    .algo-card.bubble  { border-top: 3px solid #a05c00; }
-    .algo-card.merge   { border-top: 3px solid var(--accent2); }
-    .algo-card.quick   { border-top: 3px solid var(--accent3); }
-    .algo-card.insert  { border-top: 3px solid var(--accent); }
-    .algo-card h3 { font-family: 'Lora', serif; font-size: 1rem; margin-bottom: 0.4rem; color: var(--text); }
-    .algo-card .badge { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 10px; margin-bottom: 0.5rem; }
-    .algo-card .badge.slow { background: #fde8e4; color: var(--accent); }
-    .algo-card .badge.fast { background: #e0f0e9; color: var(--accent2); }
-    .algo-card .badge.avg  { background: #dce8f5; color: var(--accent3); }
-    .algo-card ul { padding-left: 1.1rem; color: var(--muted); font-size: 0.88rem; }
-    .algo-card li { margin-bottom: 0.25rem; }
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
 
-    /* Comparison mega-table */
-    .ops-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.88rem; }
-    .ops-table th { background: #f0ece6; text-align: left; padding: 0.55rem 0.9rem; font-weight: 600; color: var(--text); border-bottom: 2px solid var(--border); }
-    .ops-table td { padding: 0.55rem 0.9rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: middle; }
-    .ops-table tr:last-child td { border-bottom: none; }
-    .ops-table tr:hover td { background: #faf8f5; }
-    code.inline { font-family: 'JetBrains Mono', monospace; background: #f0ece6; color: var(--accent); padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em; }
-    .complexity { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
-    .o1     { color: var(--accent2); font-weight: 700; }
-    .on     { color: #c47a00;        font-weight: 700; }
-    .on2    { color: var(--accent);  font-weight: 700; }
-    .onlogn { color: var(--accent3); font-weight: 700; }
-    .check  { color: var(--accent2); font-weight: 700; }
-    .cross  { color: var(--accent);  font-weight: 700; }
+        .hero h1 span {
+            color: var(--accent);
+        }
 
-    .code-block { background: var(--code-bg); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
-    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1.1rem; background: #181825; }
-    .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #a6adc8; letter-spacing: 0.06em; text-transform: uppercase; }
-    .copy-btn { background: #313244; border: none; color: #cdd6f4; padding: 0.25rem 0.65rem; border-radius: 5px; font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background .2s; }
-    .copy-btn:hover { background: #45475a; }
-    pre { margin: 0; padding: 1.5rem 1.4rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.65; }
-    pre code { font-family: 'JetBrains Mono', monospace; color: var(--code-text); }
-    .kw   { color: #cba6f7; }
-    .fn   { color: #89b4fa; }
-    .str  { color: #a6e3a1; }
-    .num  { color: #fab387; }
-    .cm   { color: #6c7086; font-style: italic; }
-    .cl   { color: #f38ba8; }
-    .prop { color: #89dceb; }
+        .hero-meta {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
 
-    /* ── SORT DIAGRAMS ── */
-    .diagram-area { background: #f9f6f1; border: 1px solid var(--border); border-radius: 10px; padding: 1.8rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.4rem; overflow-x: auto; }
-    .diagram-caption { font-size: 0.82rem; color: var(--muted); text-align: center; font-style: italic; }
-    .mem-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
 
-    /* Sort steps display */
-    .sort-steps { display: flex; flex-direction: column; gap: 0.55rem; width: 100%; max-width: 500px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
-    .sort-row { display: flex; align-items: center; gap: 0.6rem; }
-    .sort-label { width: 86px; color: var(--muted); font-size: 0.75rem; flex-shrink: 0; text-align: right; }
-    .sort-arr { display: flex; gap: 3px; }
-    .sc { /* sort cell */
-      width: 36px; height: 34px; border: 1.5px solid var(--border); border-radius: 5px;
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 0.82rem; background: var(--surface); color: var(--text);
-    }
-    .sc.comparing { background: #fff8e6; border-color: #f5a623; color: #7a4800; }
-    .sc.swapped   { background: #fce8e4; border-color: var(--accent); color: var(--accent); }
-    .sc.sorted    { background: #e0f0e9; border-color: var(--accent2); color: var(--accent2); }
-    .sc.pivot     { background: #dce8f5; border-color: var(--accent3); color: var(--accent3); }
-    .sc.left      { background: #fce8e4; border-color: var(--accent); color: var(--accent); }
-    .sc.right     { background: #e0f0e9; border-color: var(--accent2); color: var(--accent2); }
-    .sort-note { font-size: 0.75rem; color: var(--muted); margin-left: 0.2rem; }
+        .tag.green {
+            background: #e0f0e9;
+            color: var(--accent2);
+        }
 
-    /* Merge diagram */
-    .merge-level { display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-    .merge-chunk { display: flex; gap: 2px; }
-    .mc { width: 30px; height: 30px; border: 1.5px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; background: var(--surface); color: var(--text); }
-    .mc.a { background: #fce8e4; border-color: var(--accent); color: var(--accent); }
-    .mc.b { background: #dce8f5; border-color: var(--accent3); color: var(--accent3); }
-    .mc.merged { background: #e0f0e9; border-color: var(--accent2); color: var(--accent2); }
-    .merge-arrow { font-size: 1.1rem; color: var(--muted); align-self: center; }
+        .tag.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
 
-    .callout { display: flex; gap: 0.8rem; align-items: flex-start; background: #eef4ff; border: 1px solid #b8d0f5; border-left: 4px solid var(--accent3); border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1rem; }
-    .callout.green { background: #e8f5ee; border-color: #a8d5ba; border-left-color: var(--accent2); }
-    .callout.amber { background: #fff8e6; border-color: #ffe08a; border-left-color: #f5a623; }
-    .callout.red   { background: #fef2f0; border-color: #f5c6bb; border-left-color: var(--accent); }
-    .callout-icon { font-size: 1.1rem; flex-shrink: 0; }
-    .callout p { margin: 0; font-size: 0.9rem; color: var(--accent3); }
-    .callout.green p { color: var(--accent2); }
-    .callout.amber p { color: #7a4800; }
-    .callout.red   p { color: #8a2010; }
+        .tag.amber {
+            background: #fff0d4;
+            color: #a05c00;
+        }
 
-    .analogy-card { background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%); border: 1px solid #f0d9b5; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; }
-    .analogy-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
-    .analogy-card h3 { font-family: 'Lora', serif; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text); }
-    .analogy-card p { color: var(--muted); margin-bottom: 0.6rem; }
-    .analogy-card ul { padding-left: 1.3rem; color: var(--muted); font-size: 0.95rem; }
-    .analogy-card li { margin-bottom: 0.3rem; }
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 580px;
+            margin: 0 auto;
+        }
 
-    .rw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
-    .rw-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.2rem; background: var(--surface); }
-    .rw-card .rw-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
-    .rw-card h4 { font-family: 'Lora', serif; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--text); }
-    .rw-card p { font-size: 0.86rem; color: var(--muted); margin: 0; }
+        .toc-wrapper {
+            max-width: 860px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
 
-    .interview-problem { background: #f0f4ff; border: 1px solid #c0cff5; border-left: 4px solid var(--accent3); border-radius: 10px; padding: 1.4rem 1.6rem; margin-bottom: 1.4rem; }
-    .interview-problem h3 { font-family: 'Lora', serif; font-size: 1.05rem; color: var(--accent3); margin-bottom: 0.5rem; }
-    .interview-problem p { color: var(--muted); font-size: 0.95rem; margin-bottom: 0; }
-    .difficulty-badge { display: inline-block; margin-top: 0.6rem; background: #fde8e4; color: var(--accent); border-radius: 20px; padding: 0.18rem 0.75rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; }
-    .step-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; margin: 1rem 0; }
-    .step-list li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.93rem; color: var(--muted); }
-    .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.4rem 1.8rem;
+        }
 
-    .module-nav { max-width: 860px; margin: 0 auto; padding: 0 2rem 1rem; display: flex; justify-content: space-between; gap: 1rem; }
-    .module-nav a { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); transition: border-color .2s, color .2s; }
-    .module-nav a:hover { border-color: var(--accent); color: var(--accent); }
-    .module-nav a.next { margin-left: auto; }
+        .toc h2 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
 
-    footer { text-align: center; padding: 2.5rem 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
-    footer a { color: var(--accent); text-decoration: none; }
+        .toc ol {
+            padding-left: 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 2rem;
+        }
 
-    @media (max-width: 640px) {
-      .toc ol, .algo-grid { grid-template-columns: 1fr; }
-      nav { padding: 0 1rem; }
-      .nav-links { gap: 1rem; }
-      .sc { width: 28px; height: 28px; font-size: 0.75rem; }
-      .mc { width: 26px; height: 26px; font-size: 0.72rem; }
-    }
-  </style>
+        .toc a {
+            color: var(--accent3);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            background: #faf9f7;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-body {
+            padding: 1.8rem;
+        }
+
+        .section-body p {
+            margin-bottom: 1rem;
+            color: var(--muted);
+        }
+
+        .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-body strong {
+            color: var(--text);
+        }
+
+        .definition-box {
+            background: var(--highlight);
+            border: 1px solid #ffe08a;
+            border-left: 4px solid #f5a623;
+            border-radius: 8px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.02rem;
+            color: #3d2c00;
+            line-height: 1.65;
+        }
+
+        /* Algorithm cards */
+        .algo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .algo-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .algo-card.bubble {
+            border-top: 3px solid #a05c00;
+        }
+
+        .algo-card.merge {
+            border-top: 3px solid var(--accent2);
+        }
+
+        .algo-card.quick {
+            border-top: 3px solid var(--accent3);
+        }
+
+        .algo-card.insert {
+            border-top: 3px solid var(--accent);
+        }
+
+        .algo-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            margin-bottom: 0.4rem;
+            color: var(--text);
+        }
+
+        .algo-card .badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.15rem 0.55rem;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .algo-card .badge.slow {
+            background: #fde8e4;
+            color: var(--accent);
+        }
+
+        .algo-card .badge.fast {
+            background: #e0f0e9;
+            color: var(--accent2);
+        }
+
+        .algo-card .badge.avg {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
+
+        .algo-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .algo-card li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Comparison mega-table */
+        .ops-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.88rem;
+        }
+
+        .ops-table th {
+            background: #f0ece6;
+            text-align: left;
+            padding: 0.55rem 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .ops-table td {
+            padding: 0.55rem 0.9rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            vertical-align: middle;
+        }
+
+        .ops-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ops-table tr:hover td {
+            background: #faf8f5;
+        }
+
+        code.inline {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f0ece6;
+            color: var(--accent);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .complexity {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+        }
+
+        .o1 {
+            color: var(--accent2);
+            font-weight: 700;
+        }
+
+        .on {
+            color: #c47a00;
+            font-weight: 700;
+        }
+
+        .on2 {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .onlogn {
+            color: var(--accent3);
+            font-weight: 700;
+        }
+
+        .check {
+            color: var(--accent2);
+            font-weight: 700;
+        }
+
+        .cross {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.1rem;
+            background: #181825;
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #a6adc8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 0.25rem 0.65rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            transition: background .2s;
+        }
+
+        .copy-btn:hover {
+            background: #45475a;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem 1.4rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.65;
+        }
+
+        pre code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--code-text);
+        }
+
+        .kw {
+            color: #cba6f7;
+        }
+
+        .fn {
+            color: #89b4fa;
+        }
+
+        .str {
+            color: #a6e3a1;
+        }
+
+        .num {
+            color: #fab387;
+        }
+
+        .cm {
+            color: #6c7086;
+            font-style: italic;
+        }
+
+        .cl {
+            color: #f38ba8;
+        }
+
+        .prop {
+            color: #89dceb;
+        }
+
+        /* ── SORT DIAGRAMS ── */
+        .diagram-area {
+            background: #f9f6f1;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.8rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+            overflow-x: auto;
+        }
+
+        .diagram-caption {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .mem-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* Sort steps display */
+        .sort-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+            width: 100%;
+            max-width: 500px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+        }
+
+        .sort-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .sort-label {
+            width: 86px;
+            color: var(--muted);
+            font-size: 0.75rem;
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .sort-arr {
+            display: flex;
+            gap: 3px;
+        }
+
+        .sc {
+            /* sort cell */
+            width: 36px;
+            height: 34px;
+            border: 1.5px solid var(--border);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.82rem;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .sc.comparing {
+            background: #fff8e6;
+            border-color: #f5a623;
+            color: #7a4800;
+        }
+
+        .sc.swapped {
+            background: #fce8e4;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .sc.sorted {
+            background: #e0f0e9;
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .sc.pivot {
+            background: #dce8f5;
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        .sc.left {
+            background: #fce8e4;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .sc.right {
+            background: #e0f0e9;
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .sort-note {
+            font-size: 0.75rem;
+            color: var(--muted);
+            margin-left: 0.2rem;
+        }
+
+        /* Merge diagram */
+        .merge-level {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .merge-chunk {
+            display: flex;
+            gap: 2px;
+        }
+
+        .mc {
+            width: 30px;
+            height: 30px;
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        .mc.a {
+            background: #fce8e4;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .mc.b {
+            background: #dce8f5;
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        .mc.merged {
+            background: #e0f0e9;
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .merge-arrow {
+            font-size: 1.1rem;
+            color: var(--muted);
+            align-self: center;
+        }
+
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: #eef4ff;
+            border: 1px solid #b8d0f5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .callout.green {
+            background: #e8f5ee;
+            border-color: #a8d5ba;
+            border-left-color: var(--accent2);
+        }
+
+        .callout.amber {
+            background: #fff8e6;
+            border-color: #ffe08a;
+            border-left-color: #f5a623;
+        }
+
+        .callout.red {
+            background: #fef2f0;
+            border-color: #f5c6bb;
+            border-left-color: var(--accent);
+        }
+
+        .callout-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--accent3);
+        }
+
+        .callout.green p {
+            color: var(--accent2);
+        }
+
+        .callout.amber p {
+            color: #7a4800;
+        }
+
+        .callout.red p {
+            color: #8a2010;
+        }
+
+        .analogy-card {
+            background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%);
+            border: 1px solid #f0d9b5;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .analogy-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .analogy-card p {
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card ul {
+            padding-left: 1.3rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .analogy-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        .rw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .rw-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem;
+            background: var(--surface);
+        }
+
+        .rw-card .rw-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rw-card h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+
+        .rw-card p {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .interview-problem {
+            background: #f0f4ff;
+            border: 1px solid #c0cff5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .interview-problem h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            color: var(--accent3);
+            margin-bottom: 0.5rem;
+        }
+
+        .interview-problem p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            margin-top: 0.6rem;
+            background: #fde8e4;
+            color: var(--accent);
+            border-radius: 20px;
+            padding: 0.18rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 1rem 0;
+        }
+
+        .step-list li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            font-size: 0.93rem;
+            color: var(--muted);
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .module-nav {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .module-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            transition: border-color .2s, color .2s;
+        }
+
+        .module-nav a:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .module-nav a.next {
+            margin-left: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+
+            .toc ol,
+            .algo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sc {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+
+            .mc {
+                width: 26px;
+                height: 26px;
+                font-size: 0.72rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<nav>
-  <a class="nav-brand" href="index.html">DSA: Zero to Hero</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="heaps.html">Heaps</a></li>
-    <li><a href="sorting.html" class="active">Sorting</a></li>
-    <li><a href="binary-search.html">Binary Search</a></li>
-  </ul>
-</nav>
+    <common-header accent="#c84b31"></common-header>
 
-<header class="hero">
-  <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Algorithms &rsaquo; Sorting</p>
-  <h1>Algorithms:<br/><span>Sorting</span></h1>
-  <div class="hero-meta">
-    <span class="tag">Bubble · Merge · Quick</span>
-    <span class="tag green">O(n log n) Optimal</span>
-    <span class="tag blue">Divide &amp; Conquer</span>
-    <span class="tag amber">Intermediate</span>
-  </div>
-  <p class="hero-desc">The algorithms that bring order to chaos — understanding how and why each sort works reveals the deeper logic of divide-and-conquer, comparison bounds, and real-world trade-offs.</p>
-</header>
-
-<div class="toc-wrapper">
-  <div class="toc">
-    <h2>Contents</h2>
-    <ol>
-      <li><a href="#definition">Formal Definition</a></li>
-      <li><a href="#explanation">The Four Key Algorithms</a></li>
-      <li><a href="#code">Code Snippets</a></li>
-      <li><a href="#diagram">Visual Diagrams</a></li>
-      <li><a href="#analogy">Analogy (Plain English)</a></li>
-      <li><a href="#real-world">Real-World Applications</a></li>
-      <li><a href="#interview">Interview Question</a></li>
-    </ol>
-  </div>
-</div>
-
-<main>
-
-  <!-- 1. DEFINITION -->
-  <section id="definition">
-    <div class="section-header">
-      <div class="section-number">1</div>
-      <h2>Formal Definition</h2>
-    </div>
-    <div class="section-body">
-      <div class="definition-box">
-        A <strong>sorting algorithm</strong> is a procedure that rearranges the elements of a collection into a defined order — typically ascending or descending — according to a comparison function. A sorting algorithm is <em>stable</em> if elements with equal keys maintain their original relative order. It is <em>in-place</em> if it uses only O(1) auxiliary space beyond the input. The theoretical lower bound for comparison-based sorting is <strong>Ω(n log n)</strong> — any algorithm that sorts by comparing elements must make at least n log n comparisons in the worst case. Non-comparison sorts (Counting Sort, Radix Sort) can break this bound by exploiting key structure.
-      </div>
-      <p>The central challenge of sorting is not just producing the right answer, but doing so with the right <strong>time complexity, space complexity, and stability</strong> trade-off for the specific situation. No single algorithm is best for all cases — understanding each one's strengths and weaknesses is the mark of an experienced engineer.</p>
-    </div>
-  </section>
-
-  <!-- 2. EXPLANATION -->
-  <section id="explanation">
-    <div class="section-header">
-      <div class="section-number">2</div>
-      <h2>The Four Key Algorithms</h2>
-    </div>
-    <div class="section-body">
-
-      <div class="algo-grid">
-        <div class="algo-card bubble">
-          <span class="badge slow">O(n²) — Slow</span>
-          <h3>🫧 Bubble Sort</h3>
-          <ul>
-            <li>Repeatedly compares adjacent pairs, swaps if out of order</li>
-            <li>Each full pass "bubbles" the largest unsorted element to its correct position at the end</li>
-            <li>Stable ✓ &nbsp;|&nbsp; In-place ✓</li>
-            <li>Best case O(n) if already sorted (with early exit)</li>
-            <li><strong>Never used in production</strong> — only for teaching</li>
-          </ul>
+    <header class="hero">
+        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Algorithms &rsaquo; Sorting</p>
+        <h1>Algorithms:<br /><span>Sorting</span></h1>
+        <div class="hero-meta">
+            <span class="tag">Bubble · Merge · Quick</span>
+            <span class="tag green">O(n log n) Optimal</span>
+            <span class="tag blue">Divide &amp; Conquer</span>
+            <span class="tag amber">Intermediate</span>
         </div>
-        <div class="algo-card insert">
-          <span class="badge avg">O(n²) avg · O(n) best</span>
-          <h3>🃏 Insertion Sort</h3>
-          <ul>
-            <li>Builds a sorted portion one element at a time by inserting each new element into its correct position within the sorted portion</li>
-            <li>Stable ✓ &nbsp;|&nbsp; In-place ✓</li>
-            <li>Excellent on small arrays (n &lt; 20) or nearly sorted data</li>
-            <li><strong>Used inside Timsort</strong> (Python's sort) for small runs</li>
-          </ul>
-        </div>
-        <div class="algo-card merge">
-          <span class="badge fast">O(n log n) — Always</span>
-          <h3>🔀 Merge Sort</h3>
-          <ul>
-            <li>Divide array in half recursively until single elements, then merge sorted halves back together</li>
-            <li>Stable ✓ &nbsp;|&nbsp; In-place ✗ (needs O(n) extra space)</li>
-            <li>Guaranteed O(n log n) in all cases — no bad inputs</li>
-            <li><strong>Preferred for linked lists</strong> and stable sorting requirements</li>
-          </ul>
-        </div>
-        <div class="algo-card quick">
-          <span class="badge fast">O(n log n) avg</span>
-          <h3>⚡ Quick Sort</h3>
-          <ul>
-            <li>Pick a pivot, partition array so all smaller values are left, all larger values are right, then recurse on both halves</li>
-            <li>Stable ✗ &nbsp;|&nbsp; In-place ✓</li>
-            <li>O(n²) worst case (sorted input with bad pivot choice) but rare with randomised pivot</li>
-            <li><strong>Fastest in practice</strong> — excellent cache performance, small constants</li>
-          </ul>
-        </div>
-      </div>
+        <p class="hero-desc">The algorithms that bring order to chaos — understanding how and why each sort works
+            reveals the deeper logic of divide-and-conquer, comparison bounds, and real-world trade-offs.</p>
+    </header>
 
-      <table class="ops-table" style="margin-top:1.4rem;">
-        <thead>
-          <tr><th>Algorithm</th><th>Best</th><th>Average</th><th>Worst</th><th>Space</th><th>Stable</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Bubble Sort</strong></td>
-            <td class="complexity on">O(n)</td>
-            <td class="complexity on2">O(n²)</td>
-            <td class="complexity on2">O(n²)</td>
-            <td class="complexity o1">O(1)</td>
-            <td class="check">✓</td>
-          </tr>
-          <tr>
-            <td><strong>Insertion Sort</strong></td>
-            <td class="complexity on">O(n)</td>
-            <td class="complexity on2">O(n²)</td>
-            <td class="complexity on2">O(n²)</td>
-            <td class="complexity o1">O(1)</td>
-            <td class="check">✓</td>
-          </tr>
-          <tr>
-            <td><strong>Merge Sort</strong></td>
-            <td class="complexity onlogn">O(n log n)</td>
-            <td class="complexity onlogn">O(n log n)</td>
-            <td class="complexity onlogn">O(n log n)</td>
-            <td class="complexity on">O(n)</td>
-            <td class="check">✓</td>
-          </tr>
-          <tr>
-            <td><strong>Quick Sort</strong></td>
-            <td class="complexity onlogn">O(n log n)</td>
-            <td class="complexity onlogn">O(n log n)</td>
-            <td class="complexity on2">O(n²)</td>
-            <td class="complexity onlogn">O(log n)</td>
-            <td class="cross">✗</td>
-          </tr>
-          <tr>
-            <td><strong>Heap Sort</strong></td>
-            <td class="complexity onlogn">O(n log n)</td>
-            <td class="complexity onlogn">O(n log n)</td>
-            <td class="complexity onlogn">O(n log n)</td>
-            <td class="complexity o1">O(1)</td>
-            <td class="cross">✗</td>
-          </tr>
-          <tr>
-            <td><strong>Timsort</strong> (Python/Java)</td>
-            <td class="complexity on">O(n)</td>
-            <td class="complexity onlogn">O(n log n)</td>
-            <td class="complexity onlogn">O(n log n)</td>
-            <td class="complexity on">O(n)</td>
-            <td class="check">✓</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div class="callout" style="margin-top:1.2rem;">
-        <span class="callout-icon">💡</span>
-        <p><strong>Why O(n log n) is the lower bound:</strong> Any comparison-based sort on n elements must make at least log₂(n!) comparisons. By Stirling's approximation, log₂(n!) ≈ n log₂ n. This is a mathematical proof that no comparison sort can do better than O(n log n) in the worst case — Merge Sort and Heap Sort achieve this optimum exactly.</p>
-      </div>
-
-      <div class="callout amber" style="margin-top:0.8rem;">
-        <span class="callout-icon">⚠️</span>
-        <p><strong>Stability matters in practice.</strong> A stable sort preserves the original order of equal elements. If you sort a list of employees first by department and then by salary, a stable salary sort keeps employees within each department in their original department-sorted order. An unstable sort could scramble this. JavaScript's <code class="inline">Array.sort()</code> is guaranteed stable as of V8 7.0+ (Chrome 70+, Node 11+).</p>
-      </div>
+    <div class="toc-wrapper">
+        <div class="toc">
+            <h2>Contents</h2>
+            <ol>
+                <li><a href="#definition">Formal Definition</a></li>
+                <li><a href="#explanation">The Four Key Algorithms</a></li>
+                <li><a href="#code">Code Snippets</a></li>
+                <li><a href="#diagram">Visual Diagrams</a></li>
+                <li><a href="#analogy">Analogy (Plain English)</a></li>
+                <li><a href="#real-world">Real-World Applications</a></li>
+                <li><a href="#interview">Interview Question</a></li>
+            </ol>
+        </div>
     </div>
-  </section>
 
-  <!-- 3. CODE -->
-  <section id="code">
-    <div class="section-header">
-      <div class="section-number">3</div>
-      <h2>Code Snippets</h2>
-    </div>
-    <div class="section-body">
-      <p>All four algorithms implemented cleanly in JavaScript. Read them in order — each one builds intuition for the next.</p>
+    <main>
 
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — Bubble Sort &amp; Insertion Sort</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── Bubble Sort — O(n²) ────────────────────────────────────────</span>
+        <!-- 1. DEFINITION -->
+        <section id="definition">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Formal Definition</h2>
+            </div>
+            <div class="section-body">
+                <div class="definition-box">
+                    A <strong>sorting algorithm</strong> is a procedure that rearranges the elements of a collection
+                    into a defined order — typically ascending or descending — according to a comparison function. A
+                    sorting algorithm is <em>stable</em> if elements with equal keys maintain their original relative
+                    order. It is <em>in-place</em> if it uses only O(1) auxiliary space beyond the input. The
+                    theoretical lower bound for comparison-based sorting is <strong>Ω(n log n)</strong> — any algorithm
+                    that sorts by comparing elements must make at least n log n comparisons in the worst case.
+                    Non-comparison sorts (Counting Sort, Radix Sort) can break this bound by exploiting key structure.
+                </div>
+                <p>The central challenge of sorting is not just producing the right answer, but doing so with the right
+                    <strong>time complexity, space complexity, and stability</strong> trade-off for the specific
+                    situation. No single algorithm is best for all cases — understanding each one's strengths and
+                    weaknesses is the mark of an experienced engineer.
+                </p>
+            </div>
+        </section>
+
+        <!-- 2. EXPLANATION -->
+        <section id="explanation">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>The Four Key Algorithms</h2>
+            </div>
+            <div class="section-body">
+
+                <div class="algo-grid">
+                    <div class="algo-card bubble">
+                        <span class="badge slow">O(n²) — Slow</span>
+                        <h3>🫧 Bubble Sort</h3>
+                        <ul>
+                            <li>Repeatedly compares adjacent pairs, swaps if out of order</li>
+                            <li>Each full pass "bubbles" the largest unsorted element to its correct position at the end
+                            </li>
+                            <li>Stable ✓ &nbsp;|&nbsp; In-place ✓</li>
+                            <li>Best case O(n) if already sorted (with early exit)</li>
+                            <li><strong>Never used in production</strong> — only for teaching</li>
+                        </ul>
+                    </div>
+                    <div class="algo-card insert">
+                        <span class="badge avg">O(n²) avg · O(n) best</span>
+                        <h3>🃏 Insertion Sort</h3>
+                        <ul>
+                            <li>Builds a sorted portion one element at a time by inserting each new element into its
+                                correct position within the sorted portion</li>
+                            <li>Stable ✓ &nbsp;|&nbsp; In-place ✓</li>
+                            <li>Excellent on small arrays (n &lt; 20) or nearly sorted data</li>
+                            <li><strong>Used inside Timsort</strong> (Python's sort) for small runs</li>
+                        </ul>
+                    </div>
+                    <div class="algo-card merge">
+                        <span class="badge fast">O(n log n) — Always</span>
+                        <h3>🔀 Merge Sort</h3>
+                        <ul>
+                            <li>Divide array in half recursively until single elements, then merge sorted halves back
+                                together</li>
+                            <li>Stable ✓ &nbsp;|&nbsp; In-place ✗ (needs O(n) extra space)</li>
+                            <li>Guaranteed O(n log n) in all cases — no bad inputs</li>
+                            <li><strong>Preferred for linked lists</strong> and stable sorting requirements</li>
+                        </ul>
+                    </div>
+                    <div class="algo-card quick">
+                        <span class="badge fast">O(n log n) avg</span>
+                        <h3>⚡ Quick Sort</h3>
+                        <ul>
+                            <li>Pick a pivot, partition array so all smaller values are left, all larger values are
+                                right, then recurse on both halves</li>
+                            <li>Stable ✗ &nbsp;|&nbsp; In-place ✓</li>
+                            <li>O(n²) worst case (sorted input with bad pivot choice) but rare with randomised pivot
+                            </li>
+                            <li><strong>Fastest in practice</strong> — excellent cache performance, small constants</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <table class="ops-table" style="margin-top:1.4rem;">
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Best</th>
+                            <th>Average</th>
+                            <th>Worst</th>
+                            <th>Space</th>
+                            <th>Stable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Bubble Sort</strong></td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity on2">O(n²)</td>
+                            <td class="complexity on2">O(n²)</td>
+                            <td class="complexity o1">O(1)</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Insertion Sort</strong></td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity on2">O(n²)</td>
+                            <td class="complexity on2">O(n²)</td>
+                            <td class="complexity o1">O(1)</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Merge Sort</strong></td>
+                            <td class="complexity onlogn">O(n log n)</td>
+                            <td class="complexity onlogn">O(n log n)</td>
+                            <td class="complexity onlogn">O(n log n)</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="check">✓</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Quick Sort</strong></td>
+                            <td class="complexity onlogn">O(n log n)</td>
+                            <td class="complexity onlogn">O(n log n)</td>
+                            <td class="complexity on2">O(n²)</td>
+                            <td class="complexity onlogn">O(log n)</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Heap Sort</strong></td>
+                            <td class="complexity onlogn">O(n log n)</td>
+                            <td class="complexity onlogn">O(n log n)</td>
+                            <td class="complexity onlogn">O(n log n)</td>
+                            <td class="complexity o1">O(1)</td>
+                            <td class="cross">✗</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Timsort</strong> (Python/Java)</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity onlogn">O(n log n)</td>
+                            <td class="complexity onlogn">O(n log n)</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="check">✓</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="callout" style="margin-top:1.2rem;">
+                    <span class="callout-icon">💡</span>
+                    <p><strong>Why O(n log n) is the lower bound:</strong> Any comparison-based sort on n elements must
+                        make at least log₂(n!) comparisons. By Stirling's approximation, log₂(n!) ≈ n log₂ n. This is a
+                        mathematical proof that no comparison sort can do better than O(n log n) in the worst case —
+                        Merge Sort and Heap Sort achieve this optimum exactly.</p>
+                </div>
+
+                <div class="callout amber" style="margin-top:0.8rem;">
+                    <span class="callout-icon">⚠️</span>
+                    <p><strong>Stability matters in practice.</strong> A stable sort preserves the original order of
+                        equal elements. If you sort a list of employees first by department and then by salary, a stable
+                        salary sort keeps employees within each department in their original department-sorted order. An
+                        unstable sort could scramble this. JavaScript's <code class="inline">Array.sort()</code> is
+                        guaranteed stable as of V8 7.0+ (Chrome 70+, Node 11+).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CODE -->
+        <section id="code">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>Code Snippets</h2>
+            </div>
+            <div class="section-body">
+                <p>All four algorithms implemented cleanly in JavaScript. Read them in order — each one builds intuition
+                    for the next.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Bubble Sort &amp; Insertion Sort</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Bubble Sort — O(n²) ────────────────────────────────────────</span>
 <span class="kw">function</span> <span class="fn">bubbleSort</span>(arr) {
   <span class="kw">const</span> n = arr.<span class="prop">length</span>;
   <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; n - <span class="num">1</span>; i++) {
@@ -417,14 +1134,14 @@
 
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">bubbleSort</span>([<span class="num">5</span>, <span class="num">3</span>, <span class="num">8</span>, <span class="num">1</span>, <span class="num">4</span>]));     <span class="cm">// [1, 3, 4, 5, 8]</span>
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">insertionSort</span>([<span class="num">5</span>, <span class="num">3</span>, <span class="num">8</span>, <span class="num">1</span>, <span class="num">4</span>])); <span class="cm">// [1, 3, 4, 5, 8]</span></code></pre>
-      </div>
+                </div>
 
-      <div class="code-block" style="margin-top:1.2rem;">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — Merge Sort</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── Merge Sort — O(n log n) guaranteed, O(n) space ─────────────</span>
+                <div class="code-block" style="margin-top:1.2rem;">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Merge Sort</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Merge Sort — O(n log n) guaranteed, O(n) space ─────────────</span>
 <span class="kw">function</span> <span class="fn">mergeSort</span>(arr) {
   <span class="kw">if</span> (arr.<span class="prop">length</span> &lt;= <span class="num">1</span>) <span class="kw">return</span> arr;   <span class="cm">// base case: already sorted</span>
 
@@ -452,14 +1169,14 @@
 
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">mergeSort</span>([<span class="num">38</span>, <span class="num">27</span>, <span class="num">43</span>, <span class="num">3</span>, <span class="num">9</span>, <span class="num">82</span>, <span class="num">10</span>]));
 <span class="cm">// [3, 9, 10, 27, 38, 43, 82]</span></code></pre>
-      </div>
+                </div>
 
-      <div class="code-block" style="margin-top:1.2rem;">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — Quick Sort</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── Quick Sort — O(n log n) avg, O(n²) worst ───────────────────</span>
+                <div class="code-block" style="margin-top:1.2rem;">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Quick Sort</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Quick Sort — O(n log n) avg, O(n²) worst ───────────────────</span>
 <span class="kw">function</span> <span class="fn">quickSort</span>(arr, lo = <span class="num">0</span>, hi = arr.<span class="prop">length</span> - <span class="num">1</span>) {
   <span class="kw">if</span> (lo >= hi) <span class="kw">return</span> arr;  <span class="cm">// base case: 0 or 1 elements</span>
 
@@ -494,244 +1211,351 @@
   [arr[randIdx], arr[hi]] = [arr[hi], arr[randIdx]];  <span class="cm">// swap to end</span>
   <span class="kw">return</span> <span class="fn">partition</span>(arr, lo, hi);                      <span class="cm">// then partition</span>
 }</code></pre>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. DIAGRAM -->
-  <section id="diagram">
-    <div class="section-header">
-      <div class="section-number">4</div>
-      <h2>Visual Diagram</h2>
-    </div>
-    <div class="section-body">
-      <p>Step-by-step visualisation of each algorithm on the same input array: <strong>[5, 3, 8, 1, 4]</strong>.</p>
-
-      <!-- Bubble Sort steps -->
-      <div class="diagram-area">
-        <div class="mem-label">Bubble Sort — Pass 1 on [5, 3, 8, 1, 4]</div>
-        <div class="sort-steps">
-          <div class="sort-row">
-            <span class="sort-label">Start:</span>
-            <div class="sort-arr">
-              <div class="sc">5</div><div class="sc">3</div><div class="sc">8</div><div class="sc">1</div><div class="sc">4</div>
+                </div>
             </div>
-          </div>
-          <div class="sort-row">
-            <span class="sort-label">5&gt;3, swap:</span>
-            <div class="sort-arr">
-              <div class="sc swapped">3</div><div class="sc swapped">5</div><div class="sc">8</div><div class="sc">1</div><div class="sc">4</div>
+        </section>
+
+        <!-- 4. DIAGRAM -->
+        <section id="diagram">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Visual Diagram</h2>
             </div>
-          </div>
-          <div class="sort-row">
-            <span class="sort-label">5&lt;8, ok:</span>
-            <div class="sort-arr">
-              <div class="sc">3</div><div class="sc comparing">5</div><div class="sc comparing">8</div><div class="sc">1</div><div class="sc">4</div>
+            <div class="section-body">
+                <p>Step-by-step visualisation of each algorithm on the same input array: <strong>[5, 3, 8, 1,
+                        4]</strong>.</p>
+
+                <!-- Bubble Sort steps -->
+                <div class="diagram-area">
+                    <div class="mem-label">Bubble Sort — Pass 1 on [5, 3, 8, 1, 4]</div>
+                    <div class="sort-steps">
+                        <div class="sort-row">
+                            <span class="sort-label">Start:</span>
+                            <div class="sort-arr">
+                                <div class="sc">5</div>
+                                <div class="sc">3</div>
+                                <div class="sc">8</div>
+                                <div class="sc">1</div>
+                                <div class="sc">4</div>
+                            </div>
+                        </div>
+                        <div class="sort-row">
+                            <span class="sort-label">5&gt;3, swap:</span>
+                            <div class="sort-arr">
+                                <div class="sc swapped">3</div>
+                                <div class="sc swapped">5</div>
+                                <div class="sc">8</div>
+                                <div class="sc">1</div>
+                                <div class="sc">4</div>
+                            </div>
+                        </div>
+                        <div class="sort-row">
+                            <span class="sort-label">5&lt;8, ok:</span>
+                            <div class="sort-arr">
+                                <div class="sc">3</div>
+                                <div class="sc comparing">5</div>
+                                <div class="sc comparing">8</div>
+                                <div class="sc">1</div>
+                                <div class="sc">4</div>
+                            </div>
+                        </div>
+                        <div class="sort-row">
+                            <span class="sort-label">8&gt;1, swap:</span>
+                            <div class="sort-arr">
+                                <div class="sc">3</div>
+                                <div class="sc">5</div>
+                                <div class="sc swapped">1</div>
+                                <div class="sc swapped">8</div>
+                                <div class="sc">4</div>
+                            </div>
+                        </div>
+                        <div class="sort-row">
+                            <span class="sort-label">8&gt;4, swap:</span>
+                            <div class="sort-arr">
+                                <div class="sc">3</div>
+                                <div class="sc">5</div>
+                                <div class="sc">1</div>
+                                <div class="sc swapped">4</div>
+                                <div class="sc sorted">8</div>
+                            </div>
+                            <span class="sort-note">← 8 bubbled to end ✓</span>
+                        </div>
+                    </div>
+                    <p class="diagram-caption">After pass 1, the largest element (8) is in its final position. Each pass
+                        guarantees one more element is sorted at the end.</p>
+                </div>
+
+                <!-- Merge Sort diagram -->
+                <p><strong>Merge Sort</strong> — divide until single elements, then merge pairwise back up:</p>
+
+                <div class="diagram-area">
+                    <div class="mem-label">Merge Sort on [38, 27, 43, 3]</div>
+
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;width:100%;">
+                        <!-- Level 0: full array -->
+                        <div class="merge-level">
+                            <div class="merge-chunk">
+                                <div class="mc">38</div>
+                                <div class="mc">27</div>
+                                <div class="mc">43</div>
+                                <div class="mc">3</div>
+                            </div>
+                        </div>
+                        <div style="color:var(--muted);font-size:0.8rem;font-family:'JetBrains Mono',monospace;">↓ split
+                        </div>
+
+                        <!-- Level 1: two halves -->
+                        <div class="merge-level">
+                            <div class="merge-chunk">
+                                <div class="mc a">38</div>
+                                <div class="mc a">27</div>
+                            </div>
+                            <div style="width:1.5rem;"></div>
+                            <div class="merge-chunk">
+                                <div class="mc b">43</div>
+                                <div class="mc b">3</div>
+                            </div>
+                        </div>
+                        <div style="color:var(--muted);font-size:0.8rem;font-family:'JetBrains Mono',monospace;">↓ split
+                            again</div>
+
+                        <!-- Level 2: single elements -->
+                        <div class="merge-level">
+                            <div class="merge-chunk">
+                                <div class="mc a">38</div>
+                            </div>
+                            <div class="merge-chunk">
+                                <div class="mc a">27</div>
+                            </div>
+                            <div style="width:1rem;"></div>
+                            <div class="merge-chunk">
+                                <div class="mc b">43</div>
+                            </div>
+                            <div class="merge-chunk">
+                                <div class="mc b">3</div>
+                            </div>
+                        </div>
+                        <div style="color:var(--muted);font-size:0.8rem;font-family:'JetBrains Mono',monospace;">↓ merge
+                            pairs</div>
+
+                        <!-- Level 3: merged pairs -->
+                        <div class="merge-level">
+                            <div class="merge-chunk">
+                                <div class="mc merged">27</div>
+                                <div class="mc merged">38</div>
+                            </div>
+                            <div style="width:1.5rem;"></div>
+                            <div class="merge-chunk">
+                                <div class="mc merged">3</div>
+                                <div class="mc merged">43</div>
+                            </div>
+                        </div>
+                        <div style="color:var(--muted);font-size:0.8rem;font-family:'JetBrains Mono',monospace;">↓ final
+                            merge</div>
+
+                        <!-- Level 4: final sorted -->
+                        <div class="merge-level">
+                            <div class="merge-chunk">
+                                <div class="mc sorted">3</div>
+                                <div class="mc sorted">27</div>
+                                <div class="mc sorted">38</div>
+                                <div class="mc sorted">43</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="diagram-caption">log₂(4) = 2 levels of splitting. Each merge level does O(n) work. Total:
+                        O(n log n).</p>
+                </div>
+
+                <!-- Quick Sort diagram -->
+                <p><strong>Quick Sort</strong> — pick a pivot, partition into less-than and greater-than, recurse:</p>
+
+                <div class="diagram-area">
+                    <div class="mem-label">Quick Sort — partitioning [3, 6, 8, 10, 1, 2, 1] with pivot = 1 (last)</div>
+                    <div class="sort-steps">
+                        <div class="sort-row">
+                            <span class="sort-label">Array:</span>
+                            <div class="sort-arr">
+                                <div class="sc">3</div>
+                                <div class="sc">6</div>
+                                <div class="sc">8</div>
+                                <div class="sc">10</div>
+                                <div class="sc">1</div>
+                                <div class="sc">2</div>
+                                <div class="sc pivot">1</div>
+                            </div>
+                            <span class="sort-note">pivot = 1</span>
+                        </div>
+                        <div class="sort-row">
+                            <span class="sort-label">After partition:</span>
+                            <div class="sort-arr">
+                                <div class="sc left">1</div>
+                                <div class="sc pivot">1</div>
+                                <div class="sc right">3</div>
+                                <div class="sc right">6</div>
+                                <div class="sc right">8</div>
+                                <div class="sc right">10</div>
+                                <div class="sc right">2</div>
+                            </div>
+                            <span class="sort-note">pivot in final pos</span>
+                        </div>
+                    </div>
+                    <div
+                        style="margin-top:0.8rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--muted);text-align:center;">
+                        Recurse left [1] &nbsp;·&nbsp; Recurse right [3, 6, 8, 10, 2] → repeat
+                    </div>
+                    <p class="diagram-caption">The pivot lands in its final sorted position after each partition. No
+                        element left of the pivot is ever larger than it again.</p>
+                </div>
             </div>
-          </div>
-          <div class="sort-row">
-            <span class="sort-label">8&gt;1, swap:</span>
-            <div class="sort-arr">
-              <div class="sc">3</div><div class="sc">5</div><div class="sc swapped">1</div><div class="sc swapped">8</div><div class="sc">4</div>
+        </section>
+
+        <!-- 5. ANALOGY -->
+        <section id="analogy">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Plain English Analogy</h2>
             </div>
-          </div>
-          <div class="sort-row">
-            <span class="sort-label">8&gt;4, swap:</span>
-            <div class="sort-arr">
-              <div class="sc">3</div><div class="sc">5</div><div class="sc">1</div><div class="sc swapped">4</div><div class="sc sorted">8</div>
+            <div class="section-body">
+                <div class="analogy-card">
+                    <div class="analogy-icon">🃏</div>
+                    <h3>Sorting a Hand of Playing Cards</h3>
+                    <p>Imagine you're dealt a random hand of 7 cards and need to arrange them by value. Most people use
+                        something close to <strong>Insertion Sort</strong> naturally: you pick up one card at a time and
+                        slide it into the correct position among the cards you're already holding. This works
+                        beautifully for small hands — but imagine sorting 1,000 cards this way. Every new card might
+                        shift hundreds of existing ones. That's O(n²).</p>
+                    <p>Now imagine you have a tournament director sorting 1,000 cards. They'd use something closer to
+                        <strong>Merge Sort</strong>: split the deck in half, hand each half to an assistant to sort, and
+                        when both halves come back sorted, interleave them together — like two sorted piles merged by
+                        always taking the smaller top card. The splitting and merging happens at log n levels, each
+                        level touching all n cards once: O(n log n).
+                    </p>
+                    <p><strong>Quick Sort</strong> is like the fastest card-sorter in the room: they grab one card and
+                        say "everyone with a lower value, stand left; higher, stand right." Then they do the same thing
+                        recursively on each side. With a lucky pivot choice it's lightning fast; with an unlucky one
+                        (like always picking the smallest card), it degrades to the slow approach.</p>
+                    <ul>
+                        <li><strong>Sliding one card into position</strong> = insertion sort step</li>
+                        <li><strong>Splitting and merging two sorted piles</strong> = merge sort</li>
+                        <li><strong>Dividing around a reference card</strong> = quick sort partition</li>
+                        <li><strong>The O(n log n) insight</strong> = divide and conquer halves the remaining work at
+                            each step</li>
+                    </ul>
+                </div>
             </div>
-            <span class="sort-note">← 8 bubbled to end ✓</span>
-          </div>
-        </div>
-        <p class="diagram-caption">After pass 1, the largest element (8) is in its final position. Each pass guarantees one more element is sorted at the end.</p>
-      </div>
+        </section>
 
-      <!-- Merge Sort diagram -->
-      <p><strong>Merge Sort</strong> — divide until single elements, then merge pairwise back up:</p>
-
-      <div class="diagram-area">
-        <div class="mem-label">Merge Sort on [38, 27, 43, 3]</div>
-
-        <div style="display:flex;flex-direction:column;align-items:center;gap:0.8rem;width:100%;">
-          <!-- Level 0: full array -->
-          <div class="merge-level">
-            <div class="merge-chunk">
-              <div class="mc">38</div><div class="mc">27</div><div class="mc">43</div><div class="mc">3</div>
+        <!-- 6. REAL WORLD -->
+        <section id="real-world">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Real-World Coding Applications</h2>
             </div>
-          </div>
-          <div style="color:var(--muted);font-size:0.8rem;font-family:'JetBrains Mono',monospace;">↓ split</div>
-
-          <!-- Level 1: two halves -->
-          <div class="merge-level">
-            <div class="merge-chunk">
-              <div class="mc a">38</div><div class="mc a">27</div>
+            <div class="section-body">
+                <p>Sorting is foundational — it underlies search, data presentation, database operations, and algorithm
+                    design at every level.</p>
+                <div class="rw-grid">
+                    <div class="rw-card">
+                        <div class="rw-icon">🐍</div>
+                        <h4>Language Built-in Sorts</h4>
+                        <p>Python uses <strong>Timsort</strong> (merge + insertion hybrid). V8 (JavaScript) switched to
+                            Timsort in 2019. Java's <code class="inline">Arrays.sort()</code> uses a dual-pivot
+                            quicksort for primitives and Timsort for objects.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🗄️</div>
+                        <h4>Database ORDER BY</h4>
+                        <p>SQL databases use external merge sort for large datasets that don't fit in memory. The sorted
+                            order on disk enables efficient range scans and index creation.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🔍</div>
+                        <h4>Binary Search Pre-condition</h4>
+                        <p>Binary search requires a sorted array. Any time you sort once and search many times, the O(n
+                            log n) sort cost is amortised over O(log n) lookups — essential in database indexing.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">📊</div>
+                        <h4>Data Visualisation</h4>
+                        <p>Every leaderboard, ranking table, analytics dashboard, and feed ranking system sorts data
+                            before rendering. Efficient sorting is what makes real-time dashboards responsive.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🤖</div>
+                        <h4>Machine Learning Pipelines</h4>
+                        <p>Decision tree algorithms sort feature values at every split. Gradient boosted trees (XGBoost,
+                            LightGBM) spend most of their compute time on sorting — optimised with histogram-based
+                            approximations.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🌐</div>
+                        <h4>Merge in Version Control</h4>
+                        <p>Git's merge and diff algorithms sort and merge line sequences. The patience diff algorithm
+                            (used by git) is a form of merge applied to lines of code sorted by their content.</p>
+                    </div>
+                </div>
             </div>
-            <div style="width:1.5rem;"></div>
-            <div class="merge-chunk">
-              <div class="mc b">43</div><div class="mc b">3</div>
+        </section>
+
+        <!-- 7. INTERVIEW -->
+        <section id="interview">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2>Classic Interview Question</h2>
             </div>
-          </div>
-          <div style="color:var(--muted);font-size:0.8rem;font-family:'JetBrains Mono',monospace;">↓ split again</div>
+            <div class="section-body">
 
-          <!-- Level 2: single elements -->
-          <div class="merge-level">
-            <div class="merge-chunk"><div class="mc a">38</div></div>
-            <div class="merge-chunk"><div class="mc a">27</div></div>
-            <div style="width:1rem;"></div>
-            <div class="merge-chunk"><div class="mc b">43</div></div>
-            <div class="merge-chunk"><div class="mc b">3</div></div>
-          </div>
-          <div style="color:var(--muted);font-size:0.8rem;font-family:'JetBrains Mono',monospace;">↓ merge pairs</div>
+                <div class="interview-problem">
+                    <h3>🔢 Sort Colors (Dutch National Flag Problem)</h3>
+                    <p>Given an array <code class="inline">nums</code> containing only <code class="inline">0</code>,
+                        <code class="inline">1</code>, and <code class="inline">2</code> (representing red, white, and
+                        blue), sort them in-place so all 0s come first, then 1s, then 2s. You must solve this in
+                        <strong>one pass</strong> with <strong>O(1) extra space</strong>.
+                    </p>
+                    <p style="margin-top:0.6rem;">Example: <code class="inline">[2,0,2,1,1,0]</code> → <code
+                            class="inline">[0,0,1,1,2,2]</code></p>
+                    <span class="difficulty-badge">🔥 Medium — LeetCode #75 · tests deep understanding of in-place
+                        partitioning</span>
+                </div>
 
-          <!-- Level 3: merged pairs -->
-          <div class="merge-level">
-            <div class="merge-chunk">
-              <div class="mc merged">27</div><div class="mc merged">38</div>
-            </div>
-            <div style="width:1.5rem;"></div>
-            <div class="merge-chunk">
-              <div class="mc merged">3</div><div class="mc merged">43</div>
-            </div>
-          </div>
-          <div style="color:var(--muted);font-size:0.8rem;font-family:'JetBrains Mono',monospace;">↓ final merge</div>
+                <p><strong>Why this question?</strong> It's Dijkstra's Dutch National Flag algorithm — a generalisation
+                    of quicksort's partition step. It requires maintaining three sections simultaneously using three
+                    pointers, all in a single pass. It tests whether you understand in-place partitioning at a deeper
+                    level than just "call sort()".</p>
 
-          <!-- Level 4: final sorted -->
-          <div class="merge-level">
-            <div class="merge-chunk">
-              <div class="mc sorted">3</div><div class="mc sorted">27</div><div class="mc sorted">38</div><div class="mc sorted">43</div>
-            </div>
-          </div>
-        </div>
-        <p class="diagram-caption">log₂(4) = 2 levels of splitting. Each merge level does O(n) work. Total: O(n log n).</p>
-      </div>
+                <p><strong>The three-pointer approach:</strong></p>
+                <ul class="step-list">
+                    <li>
+                        <div class="step-num">1</div><span>Maintain three pointers: <code class="inline">low</code>
+                            (boundary of 0s), <code class="inline">mid</code> (current element), <code
+                                class="inline">high</code> (boundary of 2s).</span>
+                    </li>
+                    <li>
+                        <div class="step-num">2</div><span>If <code class="inline">nums[mid] === 0</code>: swap with
+                            <code class="inline">nums[low]</code>, advance both <code class="inline">low</code> and
+                            <code class="inline">mid</code>.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">3</div><span>If <code class="inline">nums[mid] === 1</code>: it's in the
+                            right zone — just advance <code class="inline">mid</code>.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">4</div><span>If <code class="inline">nums[mid] === 2</code>: swap with
+                            <code class="inline">nums[high]</code>, decrement <code class="inline">high</code>. Don't
+                            advance <code class="inline">mid</code> — the swapped value needs checking.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">5</div><span>Stop when <code class="inline">mid &gt; high</code>.</span>
+                    </li>
+                </ul>
 
-      <!-- Quick Sort diagram -->
-      <p><strong>Quick Sort</strong> — pick a pivot, partition into less-than and greater-than, recurse:</p>
-
-      <div class="diagram-area">
-        <div class="mem-label">Quick Sort — partitioning [3, 6, 8, 10, 1, 2, 1] with pivot = 1 (last)</div>
-        <div class="sort-steps">
-          <div class="sort-row">
-            <span class="sort-label">Array:</span>
-            <div class="sort-arr">
-              <div class="sc">3</div><div class="sc">6</div><div class="sc">8</div><div class="sc">10</div><div class="sc">1</div><div class="sc">2</div><div class="sc pivot">1</div>
-            </div>
-            <span class="sort-note">pivot = 1</span>
-          </div>
-          <div class="sort-row">
-            <span class="sort-label">After partition:</span>
-            <div class="sort-arr">
-              <div class="sc left">1</div><div class="sc pivot">1</div><div class="sc right">3</div><div class="sc right">6</div><div class="sc right">8</div><div class="sc right">10</div><div class="sc right">2</div>
-            </div>
-            <span class="sort-note">pivot in final pos</span>
-          </div>
-        </div>
-        <div style="margin-top:0.8rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:var(--muted);text-align:center;">
-          Recurse left [1] &nbsp;·&nbsp; Recurse right [3, 6, 8, 10, 2] → repeat
-        </div>
-        <p class="diagram-caption">The pivot lands in its final sorted position after each partition. No element left of the pivot is ever larger than it again.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 5. ANALOGY -->
-  <section id="analogy">
-    <div class="section-header">
-      <div class="section-number">5</div>
-      <h2>Plain English Analogy</h2>
-    </div>
-    <div class="section-body">
-      <div class="analogy-card">
-        <div class="analogy-icon">🃏</div>
-        <h3>Sorting a Hand of Playing Cards</h3>
-        <p>Imagine you're dealt a random hand of 7 cards and need to arrange them by value. Most people use something close to <strong>Insertion Sort</strong> naturally: you pick up one card at a time and slide it into the correct position among the cards you're already holding. This works beautifully for small hands — but imagine sorting 1,000 cards this way. Every new card might shift hundreds of existing ones. That's O(n²).</p>
-        <p>Now imagine you have a tournament director sorting 1,000 cards. They'd use something closer to <strong>Merge Sort</strong>: split the deck in half, hand each half to an assistant to sort, and when both halves come back sorted, interleave them together — like two sorted piles merged by always taking the smaller top card. The splitting and merging happens at log n levels, each level touching all n cards once: O(n log n).</p>
-        <p><strong>Quick Sort</strong> is like the fastest card-sorter in the room: they grab one card and say "everyone with a lower value, stand left; higher, stand right." Then they do the same thing recursively on each side. With a lucky pivot choice it's lightning fast; with an unlucky one (like always picking the smallest card), it degrades to the slow approach.</p>
-        <ul>
-          <li><strong>Sliding one card into position</strong> = insertion sort step</li>
-          <li><strong>Splitting and merging two sorted piles</strong> = merge sort</li>
-          <li><strong>Dividing around a reference card</strong> = quick sort partition</li>
-          <li><strong>The O(n log n) insight</strong> = divide and conquer halves the remaining work at each step</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. REAL WORLD -->
-  <section id="real-world">
-    <div class="section-header">
-      <div class="section-number">6</div>
-      <h2>Real-World Coding Applications</h2>
-    </div>
-    <div class="section-body">
-      <p>Sorting is foundational — it underlies search, data presentation, database operations, and algorithm design at every level.</p>
-      <div class="rw-grid">
-        <div class="rw-card">
-          <div class="rw-icon">🐍</div>
-          <h4>Language Built-in Sorts</h4>
-          <p>Python uses <strong>Timsort</strong> (merge + insertion hybrid). V8 (JavaScript) switched to Timsort in 2019. Java's <code class="inline">Arrays.sort()</code> uses a dual-pivot quicksort for primitives and Timsort for objects.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🗄️</div>
-          <h4>Database ORDER BY</h4>
-          <p>SQL databases use external merge sort for large datasets that don't fit in memory. The sorted order on disk enables efficient range scans and index creation.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🔍</div>
-          <h4>Binary Search Pre-condition</h4>
-          <p>Binary search requires a sorted array. Any time you sort once and search many times, the O(n log n) sort cost is amortised over O(log n) lookups — essential in database indexing.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">📊</div>
-          <h4>Data Visualisation</h4>
-          <p>Every leaderboard, ranking table, analytics dashboard, and feed ranking system sorts data before rendering. Efficient sorting is what makes real-time dashboards responsive.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🤖</div>
-          <h4>Machine Learning Pipelines</h4>
-          <p>Decision tree algorithms sort feature values at every split. Gradient boosted trees (XGBoost, LightGBM) spend most of their compute time on sorting — optimised with histogram-based approximations.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🌐</div>
-          <h4>Merge in Version Control</h4>
-          <p>Git's merge and diff algorithms sort and merge line sequences. The patience diff algorithm (used by git) is a form of merge applied to lines of code sorted by their content.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 7. INTERVIEW -->
-  <section id="interview">
-    <div class="section-header">
-      <div class="section-number">7</div>
-      <h2>Classic Interview Question</h2>
-    </div>
-    <div class="section-body">
-
-      <div class="interview-problem">
-        <h3>🔢 Sort Colors (Dutch National Flag Problem)</h3>
-        <p>Given an array <code class="inline">nums</code> containing only <code class="inline">0</code>, <code class="inline">1</code>, and <code class="inline">2</code> (representing red, white, and blue), sort them in-place so all 0s come first, then 1s, then 2s. You must solve this in <strong>one pass</strong> with <strong>O(1) extra space</strong>.</p>
-        <p style="margin-top:0.6rem;">Example: <code class="inline">[2,0,2,1,1,0]</code> → <code class="inline">[0,0,1,1,2,2]</code></p>
-        <span class="difficulty-badge">🔥 Medium — LeetCode #75 · tests deep understanding of in-place partitioning</span>
-      </div>
-
-      <p><strong>Why this question?</strong> It's Dijkstra's Dutch National Flag algorithm — a generalisation of quicksort's partition step. It requires maintaining three sections simultaneously using three pointers, all in a single pass. It tests whether you understand in-place partitioning at a deeper level than just "call sort()".</p>
-
-      <p><strong>The three-pointer approach:</strong></p>
-      <ul class="step-list">
-        <li><div class="step-num">1</div><span>Maintain three pointers: <code class="inline">low</code> (boundary of 0s), <code class="inline">mid</code> (current element), <code class="inline">high</code> (boundary of 2s).</span></li>
-        <li><div class="step-num">2</div><span>If <code class="inline">nums[mid] === 0</code>: swap with <code class="inline">nums[low]</code>, advance both <code class="inline">low</code> and <code class="inline">mid</code>.</span></li>
-        <li><div class="step-num">3</div><span>If <code class="inline">nums[mid] === 1</code>: it's in the right zone — just advance <code class="inline">mid</code>.</span></li>
-        <li><div class="step-num">4</div><span>If <code class="inline">nums[mid] === 2</code>: swap with <code class="inline">nums[high]</code>, decrement <code class="inline">high</code>. Don't advance <code class="inline">mid</code> — the swapped value needs checking.</span></li>
-        <li><div class="step-num">5</div><span>Stop when <code class="inline">mid &gt; high</code>.</span></li>
-      </ul>
-
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — Sort Colors (Dutch National Flag)</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── Dutch National Flag — O(n) time, O(1) space, one pass ──────</span>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Sort Colors (Dutch National Flag)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Dutch National Flag — O(n) time, O(1) space, one pass ──────</span>
 <span class="kw">function</span> <span class="fn">sortColors</span>(nums) {
   <span class="kw">let</span> low  = <span class="num">0</span>;                    <span class="cm">// next position for 0</span>
   <span class="kw">let</span> mid  = <span class="num">0</span>;                    <span class="cm">// current element being examined</span>
@@ -763,35 +1587,44 @@
 
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">sortColors</span>([<span class="num">2</span>, <span class="num">0</span>, <span class="num">2</span>, <span class="num">1</span>, <span class="num">1</span>, <span class="num">0</span>]));  <span class="cm">// [0, 0, 1, 1, 2, 2]</span>
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">sortColors</span>([<span class="num">2</span>, <span class="num">0</span>, <span class="num">1</span>]));            <span class="cm">// [0, 1, 2]</span></code></pre>
-      </div>
+                </div>
 
-      <div class="callout green" style="margin-top:1rem;">
-        <span class="callout-icon">✅</span>
-        <p><strong>Interview tip:</strong> Start by noting the naïve approach — a two-pass counting sort (count 0s, 1s, 2s, then overwrite) is O(n) time but uses O(1) extra space and two passes. The Dutch National Flag does it in one pass. Draw the three regions on a whiteboard: <code class="inline">[0…0 | 1…1 | ? | 2…2]</code> and show how <code class="inline">low</code>, <code class="inline">mid</code>, and <code class="inline">high</code> maintain these invariants. The key insight — why you don't advance <code class="inline">mid</code> after swapping with <code class="inline">high</code> — is the detail that separates candidates who understand the algorithm from those who've just memorised it.</p>
-      </div>
+                <div class="callout green" style="margin-top:1rem;">
+                    <span class="callout-icon">✅</span>
+                    <p><strong>Interview tip:</strong> Start by noting the naïve approach — a two-pass counting sort
+                        (count 0s, 1s, 2s, then overwrite) is O(n) time but uses O(1) extra space and two passes. The
+                        Dutch National Flag does it in one pass. Draw the three regions on a whiteboard: <code
+                            class="inline">[0…0 | 1…1 | ? | 2…2]</code> and show how <code class="inline">low</code>,
+                        <code class="inline">mid</code>, and <code class="inline">high</code> maintain these invariants.
+                        The key insight — why you don't advance <code class="inline">mid</code> after swapping with
+                        <code class="inline">high</code> — is the detail that separates candidates who understand the
+                        algorithm from those who've just memorised it.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="module-nav">
+        <a href="heaps.html">← Heaps &amp; Priority Queues</a>
+        <a href="binary-search.html" class="next">Binary Search →</a>
     </div>
-  </section>
 
-</main>
+    <footer>
+        <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+        <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
+    </footer>
 
-<div class="module-nav">
-  <a href="heaps.html">← Heaps &amp; Priority Queues</a>
-  <a href="binary-search.html" class="next">Binary Search →</a>
-</div>
-
-<footer>
-  <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
-  <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
-</footer>
-
-<script>
-  function copyCode(btn) {
-    const pre = btn.closest('.code-block').querySelector('pre');
-    navigator.clipboard.writeText(pre.innerText).then(() => {
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy', 2000);
-    });
-  }
-</script>
+    <script>
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+    </script>
 </body>
+
 </html>

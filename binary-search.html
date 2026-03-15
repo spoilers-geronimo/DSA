@@ -1,343 +1,1794 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Binary Search — DSA Zero to Hero</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
-    :root {
-      --cream:#FAF7F2; --white:#FFFFFF;
-      --ink:#1A1A1A; --ink-light:#4A4A4A; --ink-muted:#888;
-      --accent:#8B2FC9; --accent-light:#EEE0FA;
-      --border:#E8E2D8; --code-bg:#1E1E2E;
-    }
-    html { scroll-behavior:smooth; }
-    body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--ink); }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Binary Search — DSA Zero to Hero</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    nav { position:sticky; top:0; z-index:100; background:rgba(250,247,242,0.96); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); padding:0 5vw; display:flex; align-items:center; justify-content:space-between; height:64px; }
-    .nav-logo { font-family:'Playfair Display',serif; font-weight:900; font-size:1.3rem; color:var(--ink); text-decoration:none; }
-    .nav-logo span { color:var(--accent); }
-    .nav-back { display:flex; align-items:center; gap:0.4rem; text-decoration:none; color:var(--ink-light); font-size:0.87rem; font-weight:500; transition:color 0.2s; }
-    .nav-back:hover { color:var(--accent); }
+        :root {
+            --bg: #f9f6f1;
+            --surface: #ffffff;
+            --border: #e4ddd3;
+            --text: #1a1612;
+            --muted: #6b6055;
+            --accent: #c84b31;
+            --accent2: #2d6a4f;
+            --accent3: #1d3557;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tag-bg: #fce8e4;
+            --tag-text: #c84b31;
+            --highlight: #fff3cd;
+        }
 
-    .concept-hero { background:var(--white); border-bottom:1px solid var(--border); padding:3rem 5vw 2.5rem; }
-    .concept-hero-inner { max-width:900px; margin:0 auto; }
-    .breadcrumb { font-size:0.73rem; color:var(--ink-muted); margin-bottom:1rem; display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap; }
-    .breadcrumb a { color:var(--accent); text-decoration:none; }
-    .concept-badge { display:inline-block; background:var(--accent-light); color:var(--accent); font-size:0.7rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; padding:0.28rem 0.75rem; border-radius:20px; margin-bottom:1rem; }
-    .concept-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,3.8rem); font-weight:900; letter-spacing:-1.5px; line-height:1.05; margin-bottom:0.85rem; }
-    .concept-subtitle { font-size:1rem; color:var(--ink-light); line-height:1.75; max-width:600px; }
-    .concept-meta { display:flex; gap:1.5rem; margin-top:1.5rem; flex-wrap:wrap; }
-    .meta-item { display:flex; flex-direction:column; gap:2px; }
-    .meta-label { font-size:0.67rem; color:var(--ink-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.1em; }
-    .meta-value { font-size:0.88rem; font-weight:600; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .progress-nav { position:sticky; top:64px; z-index:99; background:rgba(250,247,242,0.96); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); padding:0 5vw; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-    .progress-list { max-width:900px; margin:0 auto; display:flex; list-style:none; }
-    .progress-list a { display:flex; align-items:center; gap:0.45rem; padding:0.85rem 1rem; text-decoration:none; font-size:0.8rem; font-weight:500; color:var(--ink-muted); border-bottom:2px solid transparent; white-space:nowrap; transition:color 0.2s, border-color 0.2s; }
-    .progress-list a:hover, .progress-list a.active { color:var(--accent); border-bottom-color:var(--accent); }
-    .step-badge { width:19px; height:19px; border-radius:50%; background:var(--accent-light); color:var(--accent); font-size:0.62rem; font-weight:700; display:flex; align-items:center; justify-content:center; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
 
-    .content-wrapper { max-width:900px; margin:0 auto; padding:3.5rem 5vw 5rem; }
-    .section-block { margin-bottom:4rem; padding-bottom:4rem; border-bottom:1px solid var(--border); }
-    .section-block:last-child { border-bottom:none; }
-    .section-label { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.1rem; }
-    .label-num { width:30px; height:30px; border-radius:50%; background:var(--accent); color:white; font-weight:700; font-size:0.78rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-    .label-text { font-size:0.68rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--ink-muted); }
-    .section-heading { font-family:'Playfair Display',serif; font-size:clamp(1.5rem,3vw,1.9rem); font-weight:900; letter-spacing:-0.5px; margin-bottom:1rem; }
-    .prose { font-size:0.96rem; line-height:1.85; color:var(--ink-light); }
-    .prose strong { color:var(--ink); font-weight:600; }
-    .prose em { color:var(--accent); font-style:italic; }
-    .prose + .prose { margin-top:1rem; }
-    .spacer { height:1rem; }
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(249, 246, 241, 0.92);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            height: 58px;
+        }
 
-    .definition-box { background:var(--white); border:1.5px solid var(--border); border-left:4px solid var(--accent); border-radius:8px; padding:1.3rem 1.5rem; margin:1.3rem 0; }
-    .definition-box p { font-size:0.98rem; line-height:1.78; color:var(--ink); }
-    .definition-box cite { display:block; margin-top:0.7rem; font-size:0.77rem; color:var(--ink-muted); font-style:normal; }
-    code.ic { background:var(--accent-light); color:var(--accent); padding:0.1em 0.42em; border-radius:3px; font-family:'DM Mono',monospace; font-size:0.87em; }
+        .nav-brand {
+            font-family: 'Lora', serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
 
-    .code-block { background:var(--code-bg); border-radius:10px; overflow:hidden; margin:1.3rem 0; box-shadow:0 4px 24px rgba(0,0,0,0.15); }
-    .code-header { display:flex; align-items:center; justify-content:space-between; padding:0.75rem 1.2rem; border-bottom:1px solid rgba(255,255,255,0.07); }
-    .code-dots { display:flex; gap:6px; }
-    .code-dots span { width:10px; height:10px; border-radius:50%; }
-    .dr{background:#F38BA8;} .dy{background:#F9E2AF;} .dg{background:#A6E3A1;}
-    .code-lang { font-family:'DM Mono',monospace; font-size:0.7rem; color:#6C7086; }
-    .code-body { padding:1.3rem 1.4rem; font-family:'DM Mono',monospace; font-size:0.8rem; line-height:1.9; color:#CDD6F4; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-    .code-body pre { margin:0; white-space:pre; }
-    .kw{color:#CBA6F7;} .fn{color:#89B4FA;} .st{color:#A6E3A1;} .nm{color:#FAB387;} .cm{color:#6C7086;}
+        .nav-links {
+            display: flex;
+            gap: 1.6rem;
+            list-style: none;
+        }
 
-    .info-box { background:var(--accent-light); border-radius:8px; padding:1rem 1.3rem; margin:1.3rem 0; display:flex; gap:0.75rem; align-items:flex-start; }
-    .info-icon { font-size:1rem; flex-shrink:0; margin-top:0.1rem; }
-    .info-text { font-size:0.88rem; line-height:1.7; color:var(--ink-light); }
-    .info-text strong { color:var(--accent); }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: color .2s;
+        }
 
-    /* Binary search step diagram */
-    .diagram-box { background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:2rem 1.5rem; margin:1.3rem 0; overflow-x:auto; -webkit-overflow-scrolling:touch; }
-    .diagram-title { font-size:0.7rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:1.3rem; text-align:center; }
-    .diagram-caption { text-align:center; margin-top:1.1rem; font-size:0.82rem; color:var(--ink-light); line-height:1.55; }
-    .bs-step { margin-bottom:1.8rem; }
-    .bs-lbl { font-size:0.72rem; font-weight:700; color:var(--ink-muted); margin-bottom:0.55rem; letter-spacing:0.07em; text-transform:uppercase; }
-    .bs-row { display:flex; justify-content:center; min-width:max-content; }
-    .bs-cell { width:50px; height:50px; border:2px solid var(--border); background:var(--white); display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:0.85rem; font-weight:600; color:var(--ink); }
-    .bs-cell.range { background:var(--accent-light); border-color:var(--accent); color:var(--accent); }
-    .bs-cell.mid   { background:var(--accent); color:white; border-color:var(--accent); }
-    .bs-cell.elim  { background:#F5F5F5; color:#CCC; border-color:#E0E0E0; }
-    .bs-cell.found { background:#1A6B4A; color:white; border-color:#1A6B4A; }
-    .bs-sublbl { font-size:0.52rem; opacity:0.8; }
-    .bs-note { text-align:center; font-size:0.82rem; color:var(--ink-light); margin-top:0.6rem; }
-    .bs-note strong { color:var(--accent); }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--accent);
+        }
 
-    .analogy-box { background:linear-gradient(135deg,#F8F0FF,#F0E4FF); border:1.5px solid #D4B0F0; border-radius:12px; padding:2rem; margin:1.3rem 0; position:relative; }
-    .analogy-box::before { content:'🎯'; position:absolute; top:-1rem; left:1.4rem; font-size:1.5rem; background:var(--cream); padding:0 0.25rem; }
-    .analogy-title { font-family:'Playfair Display',serif; font-size:1.12rem; font-weight:700; color:var(--accent); margin-bottom:0.7rem; padding-top:0.4rem; }
-    .analogy-text { font-size:0.94rem; line-height:1.85; color:var(--ink-light); }
-    .analogy-text + .analogy-text { margin-top:0.85rem; }
-    .hi { background:rgba(139,47,201,0.1); padding:0.15rem 0.38rem; border-radius:4px; color:var(--accent); font-weight:600; }
+        .hero {
+            padding: 5rem 2rem 3rem;
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
 
-    .takeaway-box { background:var(--ink); color:white; border-radius:10px; padding:1.8rem; margin-top:1.8rem; }
-    .takeaway-box h4 { font-family:'Playfair Display',serif; font-size:1.12rem; margin-bottom:0.75rem; color:#CBA6F7; }
-    .takeaway-box ul { list-style:none; display:flex; flex-direction:column; gap:0.5rem; }
-    .takeaway-box li { font-size:0.87rem; color:#CDD6F4; padding-left:1.3rem; position:relative; line-height:1.6; }
-    .takeaway-box li::before { content:'✓'; position:absolute; left:0; color:#CBA6F7; font-weight:700; }
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
 
-    .page-nav { display:flex; justify-content:space-between; gap:1rem; margin-top:3.5rem; flex-wrap:wrap; }
-    .page-nav-btn { flex:1; min-width:150px; display:flex; align-items:center; gap:0.85rem; background:var(--white); border:1.5px solid var(--border); border-radius:10px; padding:1.1rem 1.3rem; text-decoration:none; color:inherit; transition:border-color 0.2s, box-shadow 0.2s, transform 0.2s; }
-    .page-nav-btn:hover { border-color:var(--accent); box-shadow:0 4px 18px rgba(139,47,201,0.15); transform:translateY(-2px); }
-    .page-nav-btn.next { justify-content:flex-end; text-align:right; }
-    .nav-btn-label { font-size:0.68rem; color:var(--ink-muted); font-weight:700; text-transform:uppercase; letter-spacing:0.1em; }
-    .nav-btn-title { font-weight:700; font-size:0.95rem; margin-top:2px; }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-    @media (max-width:640px) {
-      .concept-meta { gap:1rem; }
-      .bs-cell { width:40px; height:40px; font-size:0.75rem; }
-      .page-nav { flex-direction:column; }
-      .page-nav-btn, .page-nav-btn.next { min-width:100%; justify-content:flex-start; text-align:left; }
-    }
-  </style>
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .tag.green {
+            background: #e0f0e9;
+            color: var(--accent2);
+        }
+
+        .tag.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
+
+        .tag.amber {
+            background: #fff0d4;
+            color: #a05c00;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        .toc-wrapper {
+            max-width: 860px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.4rem 1.8rem;
+        }
+
+        .toc h2 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .toc ol {
+            padding-left: 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 2rem;
+        }
+
+        .toc a {
+            color: var(--accent3);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            background: #faf9f7;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-body {
+            padding: 1.8rem;
+        }
+
+        .section-body p {
+            margin-bottom: 1rem;
+            color: var(--muted);
+        }
+
+        .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-body strong {
+            color: var(--text);
+        }
+
+        .definition-box {
+            background: var(--highlight);
+            border: 1px solid #ffe08a;
+            border-left: 4px solid #f5a623;
+            border-radius: 8px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.02rem;
+            color: #3d2c00;
+            line-height: 1.65;
+        }
+
+        /* Variant cards */
+        .variant-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .variant-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .variant-card.classic {
+            border-top: 3px solid var(--accent3);
+        }
+
+        .variant-card.leftmost {
+            border-top: 3px solid var(--accent2);
+        }
+
+        .variant-card.rightmost {
+            border-top: 3px solid var(--accent);
+        }
+
+        .variant-card.answer {
+            border-top: 3px solid #a05c00;
+        }
+
+        .variant-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            color: var(--text);
+        }
+
+        .variant-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .variant-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        .ops-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .ops-table th {
+            background: #f0ece6;
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .ops-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            vertical-align: top;
+        }
+
+        .ops-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ops-table tr:hover td {
+            background: #faf8f5;
+        }
+
+        code.inline {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f0ece6;
+            color: var(--accent);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .complexity {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .o1 {
+            color: var(--accent2);
+            font-weight: 700;
+        }
+
+        .on {
+            color: #c47a00;
+            font-weight: 700;
+        }
+
+        .ologn {
+            color: var(--accent3);
+            font-weight: 700;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.1rem;
+            background: #181825;
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #a6adc8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 0.25rem 0.65rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            transition: background .2s;
+        }
+
+        .copy-btn:hover {
+            background: #45475a;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem 1.4rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.65;
+        }
+
+        pre code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--code-text);
+        }
+
+        .kw {
+            color: #cba6f7;
+        }
+
+        .fn {
+            color: #89b4fa;
+        }
+
+        .str {
+            color: #a6e3a1;
+        }
+
+        .num {
+            color: #fab387;
+        }
+
+        .cm {
+            color: #6c7086;
+            font-style: italic;
+        }
+
+        .cl {
+            color: #f38ba8;
+        }
+
+        .prop {
+            color: #89dceb;
+        }
+
+        /* ── SEARCH DIAGRAM ── */
+        .diagram-area {
+            background: #f9f6f1;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.8rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+            overflow-x: auto;
+        }
+
+        .diagram-caption {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .mem-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* Search array cells */
+        .search-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            width: 100%;
+            max-width: 560px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .search-row {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .sr-label {
+            width: 72px;
+            font-size: 0.72rem;
+            color: var(--muted);
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .sr-arr {
+            display: flex;
+            gap: 0;
+        }
+
+        .sc {
+            width: 44px;
+            height: 42px;
+            border: 1.5px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            background: var(--surface);
+            color: var(--text);
+            margin-right: -1.5px;
+        }
+
+        .sc:first-child {
+            border-radius: 6px 0 0 6px;
+        }
+
+        .sc:last-child {
+            border-radius: 0 6px 6px 0;
+            margin-right: 0;
+        }
+
+        .sc .si {
+            font-size: 0.58rem;
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        .sc.mid {
+            background: #dce8f5;
+            border-color: var(--accent3);
+            color: var(--accent3);
+            z-index: 2;
+        }
+
+        .sc.found {
+            background: #e0f0e9;
+            border-color: var(--accent2);
+            color: var(--accent2);
+            z-index: 2;
+        }
+
+        .sc.elim {
+            background: #f5f1ec;
+            color: #b8b0a8;
+            border-color: #d8d0c5;
+        }
+
+        .sc.active {
+            background: var(--surface);
+        }
+
+        .sr-note {
+            font-size: 0.74rem;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+
+        /* Pointer row */
+        .ptr-row {
+            display: flex;
+            gap: 0;
+        }
+
+        .ptr-cell {
+            width: 44px;
+            text-align: center;
+            font-size: 0.62rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            height: 16px;
+            line-height: 16px;
+        }
+
+        .ptr-cell.lo {
+            color: var(--accent);
+        }
+
+        .ptr-cell.hi {
+            color: var(--accent2);
+        }
+
+        .ptr-cell.mid-p {
+            color: var(--accent3);
+        }
+
+        /* Linear vs binary comparison */
+        .vs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .vs-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .vs-card.linear {
+            border-top: 3px solid var(--accent);
+        }
+
+        .vs-card.binary {
+            border-top: 3px solid var(--accent2);
+        }
+
+        .vs-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .vs-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .vs-card li {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Log reduction visual */
+        .log-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            width: 100%;
+            max-width: 420px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .log-row {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+        }
+
+        .log-bar-wrap {
+            flex: 1;
+            height: 20px;
+            background: #f0ece6;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .log-bar {
+            height: 100%;
+            background: var(--accent3);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            padding-left: 6px;
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 700;
+            transition: width 0.3s;
+        }
+
+        .log-label {
+            width: 90px;
+            color: var(--muted);
+            flex-shrink: 0;
+        }
+
+        .log-steps {
+            width: 60px;
+            color: var(--accent3);
+            font-weight: 700;
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: #eef4ff;
+            border: 1px solid #b8d0f5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .callout.green {
+            background: #e8f5ee;
+            border-color: #a8d5ba;
+            border-left-color: var(--accent2);
+        }
+
+        .callout.amber {
+            background: #fff8e6;
+            border-color: #ffe08a;
+            border-left-color: #f5a623;
+        }
+
+        .callout.red {
+            background: #fef2f0;
+            border-color: #f5c6bb;
+            border-left-color: var(--accent);
+        }
+
+        .callout-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--accent3);
+        }
+
+        .callout.green p {
+            color: var(--accent2);
+        }
+
+        .callout.amber p {
+            color: #7a4800;
+        }
+
+        .callout.red p {
+            color: #8a2010;
+        }
+
+        .analogy-card {
+            background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%);
+            border: 1px solid #f0d9b5;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .analogy-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .analogy-card p {
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card ul {
+            padding-left: 1.3rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .analogy-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        .rw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .rw-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem;
+            background: var(--surface);
+        }
+
+        .rw-card .rw-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rw-card h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+
+        .rw-card p {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        .interview-problem {
+            background: #f0f4ff;
+            border: 1px solid #c0cff5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .interview-problem h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            color: var(--accent3);
+            margin-bottom: 0.5rem;
+        }
+
+        .interview-problem p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            margin-top: 0.6rem;
+            background: #fde8e4;
+            color: var(--accent);
+            border-radius: 20px;
+            padding: 0.18rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 1rem 0;
+        }
+
+        .step-list li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            font-size: 0.93rem;
+            color: var(--muted);
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Completion banner */
+        .completion-banner {
+            background: linear-gradient(135deg, #1d3557 0%, #2d6a4f 100%);
+            border-radius: 12px;
+            padding: 2rem 2rem;
+            text-align: center;
+            color: #fff;
+            margin-top: 1rem;
+        }
+
+        .completion-banner h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .completion-banner p {
+            opacity: 0.85;
+            font-size: 0.95rem;
+            max-width: 520px;
+            margin: 0 auto 1.4rem;
+            line-height: 1.7;
+        }
+
+        .banner-modules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1.4rem;
+        }
+
+        .banner-tag {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .banner-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fff;
+            color: var(--accent3);
+            text-decoration: none;
+            padding: 0.75rem 1.6rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .banner-cta:hover {
+            opacity: 0.9;
+        }
+
+        .module-nav {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .module-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            transition: border-color .2s, color .2s;
+        }
+
+        .module-nav a:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .module-nav a.next {
+            margin-left: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+
+            .toc ol,
+            .variant-grid,
+            .vs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .sc {
+                width: 34px;
+                height: 36px;
+                font-size: 0.76rem;
+            }
+
+            .ptr-cell {
+                width: 34px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<nav>
-  <a class="nav-logo" href="index.html">DSA <span>Zero→Hero</span></a>
-  <a class="nav-back" href="index.html">← Back to Home</a>
-</nav>
+    <common-header accent="#c84b31"></common-header>
 
-<div class="concept-hero">
-  <div class="concept-hero-inner">
-    <div class="breadcrumb"><a href="index.html">Home</a> › <span>Chapter 3: Algorithms</span> › <span>Binary Search</span></div>
-    <div class="concept-badge">🔍 Module 10 · Algorithm</div>
-    <h1 class="concept-title">Binary Search</h1>
-    <p class="concept-subtitle">The art of halving your problem at every step — devastatingly fast on sorted data, and impossibly elegant in its simplicity.</p>
-    <div class="concept-meta">
-      <div class="meta-item"><span class="meta-label">Difficulty</span><span class="meta-value">⬤⬤○ Intermediate</span></div>
-      <div class="meta-item"><span class="meta-label">Time</span><span class="meta-value" style="font-family:'DM Mono',monospace;color:#1A6B4A;">O(log n)</span></div>
-      <div class="meta-item"><span class="meta-label">Requires</span><span class="meta-value">Sorted array</span></div>
-      <div class="meta-item"><span class="meta-label">Read time</span><span class="meta-value">~8 min</span></div>
-    </div>
-  </div>
-</div>
 
-<nav class="progress-nav">
-  <ul class="progress-list">
-    <li><a href="#definition" class="active"><span class="step-badge">1</span> Definition</a></li>
-    <li><a href="#explanation"><span class="step-badge">2</span> Explanation</a></li>
-    <li><a href="#code"><span class="step-badge">3</span> Code</a></li>
-    <li><a href="#diagram"><span class="step-badge">4</span> Diagram</a></li>
-    <li><a href="#analogy"><span class="step-badge">5</span> Analogy</a></li>
-  </ul>
-</nav>
+    <header class="hero">
+        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Algorithms &rsaquo; Binary Search</p>
+        <h1>Algorithms:<br /><span>Binary Search</span></h1>
+        <div class="hero-meta">
+            <span class="tag">Divide &amp; Conquer</span>
+            <span class="tag green">O(log n)</span>
+            <span class="tag blue">Requires Sorted Input</span>
+            <span class="tag amber">Intermediate</span>
+        </div>
+        <p class="hero-desc">The most elegant search algorithm — cut the problem in half with every comparison.
+            Mastering binary search unlocks an entire class of O(log n) solutions.</p>
+    </header>
 
-<div class="content-wrapper">
-
-  <!-- 1. DEFINITION -->
-  <div id="definition" class="section-block">
-    <div class="section-label"><div class="label-num">1</div><div class="label-text">Formal Definition</div></div>
-    <h2 class="section-heading">What is Binary Search?</h2>
-    <div class="definition-box">
-      <p><strong>Binary Search</strong> is a search algorithm that finds the position of a target value within a <em>sorted array</em> by repeatedly halving the search interval. At each iteration it compares the target with the <strong>middle element</strong>: if equal, the search is complete; if the target is less, it continues in the left half; if greater, in the right half. This repeats until the element is found or the interval becomes empty, yielding a time complexity of <strong>O(log₂ n)</strong>.</p>
-      <cite>— Standard Computer Science Definition</cite>
-    </div>
-    <p class="prose"><strong>Key insight:</strong> for an array of 1,000,000 elements, binary search finds the answer in at most <em>20 comparisons</em>. Linear search could need up to 1,000,000.</p>
-  </div>
-
-  <!-- 2. EXPLANATION -->
-  <div id="explanation" class="section-block">
-    <div class="section-label"><div class="label-num">2</div><div class="label-text">Explanation</div></div>
-    <h2 class="section-heading">The Divide-and-Conquer Idea</h2>
-    <p class="prose">Binary search exploits one critical property of sorted arrays: <strong>if you look at the middle element and your target is smaller, the target cannot possibly be in the right half.</strong> So you discard it entirely and repeat on the left half — and vice versa.</p>
-    <div class="spacer"></div>
-    <p class="prose">With every comparison you <strong>halve the remaining search space</strong>. Starting with 1,024 elements: step 1 → 512, step 2 → 256, step 3 → 128 … step 10 → 1. This halving pattern gives <em>O(log₂ n)</em> — the number of times you can halve n before reaching 1.</p>
-
-    <div class="info-box">
-      <div class="info-icon">⚠️</div>
-      <div class="info-text"><strong>Critical requirement:</strong> Binary search only works on a <strong>sorted</strong> collection. On unsorted data you must sort first (O(n log n)) or fall back to linear search (O(n)).</div>
+    <div class="toc-wrapper">
+        <div class="toc">
+            <h2>Contents</h2>
+            <ol>
+                <li><a href="#definition">Formal Definition</a></li>
+                <li><a href="#explanation">Explanation &amp; Variants</a></li>
+                <li><a href="#code">Code Snippet</a></li>
+                <li><a href="#diagram">Visual Diagram</a></li>
+                <li><a href="#analogy">Analogy (Plain English)</a></li>
+                <li><a href="#real-world">Real-World Applications</a></li>
+                <li><a href="#interview">Interview Question</a></li>
+            </ol>
+        </div>
     </div>
 
-    <p class="prose">The algorithm tracks three indices: <code class="ic">lo</code> (left boundary), <code class="ic">hi</code> (right boundary), and <code class="ic">mid = Math.floor((lo + hi) / 2)</code>. The loop continues while <code class="ic">lo &lt;= hi</code>. If the loop exits without finding the target, it returns <code class="ic">-1</code>.</p>
-  </div>
+    <main>
 
-  <!-- 3. CODE -->
-  <div id="code" class="section-block">
-    <div class="section-label"><div class="label-num">3</div><div class="label-text">Code Snippet</div></div>
-    <h2 class="section-heading">Binary Search in JavaScript</h2>
-    <p class="prose">Both the iterative and recursive approaches, with a step-by-step trace in the comments.</p>
+        <!-- 1. DEFINITION -->
+        <section id="definition">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Formal Definition</h2>
+            </div>
+            <div class="section-body">
+                <div class="definition-box">
+                    <strong>Binary Search</strong> is a search algorithm that operates on a <em>sorted</em> collection
+                    by repeatedly halving the search space. Given a sorted array and a target value, the algorithm
+                    compares the target to the <em>middle element</em>: if they are equal, the search succeeds; if the
+                    target is less than the middle, the search continues on the left half; if greater, on the right
+                    half. This process repeats, eliminating half of the remaining candidates at each step, until the
+                    target is found or the search space is exhausted. Binary search runs in <strong>O(log n)</strong>
+                    time and <strong>O(1)</strong> auxiliary space (iterative), making it asymptotically optimal for
+                    search on sorted data.
+                </div>
+                <p>The critical pre-condition is <strong>monotonicity</strong>: the collection must be sorted (or
+                    satisfy some monotone predicate) for the halving logic to be valid. Without this, eliminating half
+                    the search space at each step is unjustified — and the algorithm produces wrong answers silently.
+                </p>
+            </div>
+        </section>
 
-    <div class="code-block">
-      <div class="code-header">
-        <div class="code-dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
-        <span class="code-lang">JavaScript — Iterative &amp; Recursive</span>
-      </div>
-      <div class="code-body"><pre><span class="cm">// ── Iterative Binary Search — preferred in practice ──</span>
+        <!-- 2. EXPLANATION -->
+        <section id="explanation">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>Plain English Explanation &amp; Variants</h2>
+            </div>
+            <div class="section-body">
+                <p>Binary search is built on one powerful idea: <strong>if the collection is sorted, one comparison
+                        tells you which half the answer is in</strong>. You then discard the other half entirely. Repeat
+                    this and after just log₂(n) comparisons, you've either found the target or proven it doesn't exist.
+                </p>
+
+                <p>The O(log n) reduction is dramatic in practice. Linear search on one billion elements takes up to one
+                    billion comparisons. Binary search takes at most <strong>30</strong>.</p>
+
+                <div class="vs-grid">
+                    <div class="vs-card linear">
+                        <h3>🐌 Linear Search — O(n)</h3>
+                        <ul>
+                            <li>Scans every element from left to right</li>
+                            <li>Works on unsorted or sorted data</li>
+                            <li>1,000,000,000 elements → up to 1,000,000,000 checks</li>
+                            <li>Use when data is small, unsorted, or changes frequently</li>
+                        </ul>
+                    </div>
+                    <div class="vs-card binary">
+                        <h3>🚀 Binary Search — O(log n)</h3>
+                        <ul>
+                            <li>Requires sorted data — checks the midpoint each time</li>
+                            <li>Eliminates half the remaining candidates per step</li>
+                            <li>1,000,000,000 elements → at most <strong>30</strong> checks</li>
+                            <li>Use when data is sorted and searched repeatedly</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Log reduction visual -->
+                <div style="margin: 1.4rem 0 0.2rem;">
+                    <div class="mem-label" style="margin-bottom:0.6rem;">Binary search steps needed for n elements</div>
+                    <div class="log-visual">
+                        <div class="log-row">
+                            <span class="log-label">n = 10</span>
+                            <div class="log-bar-wrap">
+                                <div class="log-bar" style="width:13%;">4</div>
+                            </div>
+                            <span class="log-steps">4 steps</span>
+                        </div>
+                        <div class="log-row">
+                            <span class="log-label">n = 100</span>
+                            <div class="log-bar-wrap">
+                                <div class="log-bar" style="width:23%;">7</div>
+                            </div>
+                            <span class="log-steps">7 steps</span>
+                        </div>
+                        <div class="log-row">
+                            <span class="log-label">n = 1,000</span>
+                            <div class="log-bar-wrap">
+                                <div class="log-bar" style="width:33%;">10</div>
+                            </div>
+                            <span class="log-steps">10 steps</span>
+                        </div>
+                        <div class="log-row">
+                            <span class="log-label">n = 1M</span>
+                            <div class="log-bar-wrap">
+                                <div class="log-bar" style="width:67%;">20</div>
+                            </div>
+                            <span class="log-steps">20 steps</span>
+                        </div>
+                        <div class="log-row">
+                            <span class="log-label">n = 1B</span>
+                            <div class="log-bar-wrap">
+                                <div class="log-bar" style="width:100%;">30</div>
+                            </div>
+                            <span class="log-steps">30 steps</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p style="margin-top:1.4rem;">Binary search extends far beyond simple value lookup. There are four main
+                    patterns you must know:</p>
+
+                <div class="variant-grid">
+                    <div class="variant-card classic">
+                        <h3>🎯 Classic — Find Exact Value</h3>
+                        <ul>
+                            <li>Return index of target, or −1 if not found</li>
+                            <li>Standard <code class="inline">left ≤ right</code> loop</li>
+                            <li>Mid: <code class="inline">left + ⌊(right−left)/2⌋</code></li>
+                            <li>The template every other variant builds on</li>
+                        </ul>
+                    </div>
+                    <div class="variant-card leftmost">
+                        <h3>◀️ Lower Bound — First Occurrence</h3>
+                        <ul>
+                            <li>Find the leftmost index where <code class="inline">arr[i] ≥ target</code></li>
+                            <li>When mid equals target, don't stop — keep narrowing left</li>
+                            <li>Returns the first of many duplicate values</li>
+                            <li>Use: find insertion point, first occurrence of duplicates</li>
+                        </ul>
+                    </div>
+                    <div class="variant-card rightmost">
+                        <h3>▶️ Upper Bound — Last Occurrence</h3>
+                        <ul>
+                            <li>Find the rightmost index where <code class="inline">arr[i] ≤ target</code></li>
+                            <li>When mid equals target, keep narrowing right</li>
+                            <li>Returns the last of many duplicate values</li>
+                            <li>Use: count occurrences, range queries</li>
+                        </ul>
+                    </div>
+                    <div class="variant-card answer">
+                        <h3>🔢 Search on Answer Space</h3>
+                        <ul>
+                            <li>The "array" is an abstract range of possible answers, not a literal array</li>
+                            <li>Binary search on a monotone condition: <em>is answer ≥ x feasible?</em></li>
+                            <li>Find the minimum x where the condition is true</li>
+                            <li>Use: minimise maximum, allocate resources, capacity problems</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <table class="ops-table" style="margin-top:1.4rem;">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Description</th>
+                            <th>Time</th>
+                            <th>Space</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Search (iterative)</td>
+                            <td>Find target in sorted array</td>
+                            <td class="complexity ologn">O(log n)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Search (recursive)</td>
+                            <td>Same, but using the call stack</td>
+                            <td class="complexity ologn">O(log n)</td>
+                            <td class="complexity ologn">O(log n)</td>
+                        </tr>
+                        <tr>
+                            <td>Lower / upper bound</td>
+                            <td>Find first / last occurrence</td>
+                            <td class="complexity ologn">O(log n)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Search on answer</td>
+                            <td>Binary search on a range of possible values</td>
+                            <td class="complexity ologn">O(log n · f(n))</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="callout" style="margin-top:1.2rem;">
+                    <span class="callout-icon">💡</span>
+                    <p><strong>Why <code class="inline">mid = left + (right - left) / 2</code> instead of <code
+                                class="inline">(left + right) / 2</code>?</strong> If <code class="inline">left</code>
+                        and <code class="inline">right</code> are both large integers near <code
+                            class="inline">INT_MAX</code>, their sum overflows a 32-bit integer. The subtraction form
+                        avoids this. It's one of the most famous bugs in programming history — it existed in Java's
+                        standard library <code class="inline">Arrays.binarySearch()</code> for nine years.</p>
+                </div>
+
+                <div class="callout amber" style="margin-top:0.8rem;">
+                    <span class="callout-icon">⚠️</span>
+                    <p><strong>Off-by-one errors are the #1 binary search bug.</strong> Choosing <code
+                            class="inline">left ≤ right</code> vs <code class="inline">left &lt; right</code>, updating
+                        <code class="inline">left = mid + 1</code> vs <code class="inline">left = mid</code>, and
+                        returning <code class="inline">left</code> vs <code class="inline">right</code> — each variant
+                        serves a different purpose. Pick one template, understand it deeply, and apply it consistently
+                        rather than guessing loop conditions each time.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CODE -->
+        <section id="code">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>Code Snippet</h2>
+            </div>
+            <div class="section-body">
+                <p>Four templates — master these and you can solve any binary search variant. Each builds on the
+                    previous one.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Classic Binary Search</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Template 1: Classic — find exact value ──────────────────────</span>
+<span class="cm">// Returns index of target, or -1 if not found.</span>
 <span class="kw">function</span> <span class="fn">binarySearch</span>(arr, target) {
-  <span class="kw">let</span> lo = <span class="nm">0</span>;
-  <span class="kw">let</span> hi = arr.length - <span class="nm">1</span>;
+  <span class="kw">let</span> left  = <span class="num">0</span>;
+  <span class="kw">let</span> right = arr.<span class="prop">length</span> - <span class="num">1</span>;
 
-  <span class="kw">while</span> (lo &lt;= hi) {
-    <span class="kw">const</span> mid = Math.<span class="fn">floor</span>((lo + hi) / <span class="nm">2</span>);
+  <span class="kw">while</span> (left &lt;= right) {                       <span class="cm">// ≤ includes the case left === right</span>
+    <span class="kw">const</span> mid = left + Math.<span class="fn">floor</span>((right - left) / <span class="num">2</span>); <span class="cm">// overflow-safe midpoint</span>
 
-    <span class="kw">if</span> (arr[mid] === target) {
-      <span class="kw">return</span> mid;           <span class="cm">// ✅ found — return index</span>
-    } <span class="kw">else if</span> (arr[mid] &lt; target) {
-      lo = mid + <span class="nm">1</span>;         <span class="cm">// target is in the RIGHT half</span>
+    <span class="kw">if</span>      (arr[mid] === target) <span class="kw">return</span> mid;    <span class="cm">// found!</span>
+    <span class="kw">else if</span> (arr[mid] &lt;  target) left  = mid + <span class="num">1</span>; <span class="cm">// target in right half</span>
+    <span class="kw">else</span>                         right = mid - <span class="num">1</span>; <span class="cm">// target in left half</span>
+  }
+
+  <span class="kw">return</span> -<span class="num">1</span>;  <span class="cm">// not found</span>
+}
+
+<span class="kw">const</span> arr = [<span class="num">2</span>, <span class="num">5</span>, <span class="num">8</span>, <span class="num">12</span>, <span class="num">16</span>, <span class="num">23</span>, <span class="num">38</span>, <span class="num">56</span>, <span class="num">72</span>, <span class="num">91</span>];
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">binarySearch</span>(arr, <span class="num">23</span>));   <span class="cm">// 5</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">binarySearch</span>(arr, <span class="num">10</span>));   <span class="cm">// -1</span></code></pre>
+                </div>
+
+                <div class="code-block" style="margin-top:1.2rem;">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Lower Bound, Upper Bound &amp; Search on Answer</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Template 2: Lower Bound — first index where arr[i] >= target ─</span>
+<span class="kw">function</span> <span class="fn">lowerBound</span>(arr, target) {
+  <span class="kw">let</span> left = <span class="num">0</span>, right = arr.<span class="prop">length</span>;    <span class="cm">// right = length, not length-1</span>
+
+  <span class="kw">while</span> (left &lt; right) {               <span class="cm">// strictly less-than</span>
+    <span class="kw">const</span> mid = left + Math.<span class="fn">floor</span>((right - left) / <span class="num">2</span>);
+    <span class="kw">if</span> (arr[mid] &lt; target) left  = mid + <span class="num">1</span>;
+    <span class="kw">else</span>                   right = mid;  <span class="cm">// keep mid as candidate</span>
+  }
+  <span class="kw">return</span> left;  <span class="cm">// first valid position</span>
+}
+
+<span class="cm">// ─── Template 3: Upper Bound — last index where arr[i] <= target ──</span>
+<span class="kw">function</span> <span class="fn">upperBound</span>(arr, target) {
+  <span class="kw">let</span> left = <span class="num">0</span>, right = arr.<span class="prop">length</span>;
+
+  <span class="kw">while</span> (left &lt; right) {
+    <span class="kw">const</span> mid = left + Math.<span class="fn">floor</span>((right - left) / <span class="num">2</span>);
+    <span class="kw">if</span> (arr[mid] &lt;= target) left  = mid + <span class="num">1</span>;
+    <span class="kw">else</span>                    right = mid;
+  }
+  <span class="kw">return</span> left - <span class="num">1</span>;  <span class="cm">// last valid position</span>
+}
+
+<span class="cm">// Count occurrences of target in sorted array</span>
+<span class="kw">function</span> <span class="fn">countOccurrences</span>(arr, target) {
+  <span class="kw">const</span> lo = <span class="fn">lowerBound</span>(arr, target);
+  <span class="kw">const</span> hi = <span class="fn">upperBound</span>(arr, target);
+  <span class="kw">return</span> (lo &lt;= hi && arr[lo] === target) ? hi - lo + <span class="num">1</span> : <span class="num">0</span>;
+}
+
+<span class="kw">const</span> sorted = [<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">4</span>, <span class="num">5</span>];
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">lowerBound</span>(sorted, <span class="num">2</span>));        <span class="cm">// 1 (first 2)</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">upperBound</span>(sorted, <span class="num">2</span>));        <span class="cm">// 3 (last 2)</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">countOccurrences</span>(sorted, <span class="num">2</span>));  <span class="cm">// 3</span>
+
+<span class="cm">// ─── Template 4: Search on Answer Space ──────────────────────────</span>
+<span class="cm">// "What is the minimum capacity k such that we can ship all packages</span>
+<span class="cm">//  within D days?" — The answer range [max, sum] is monotone:</span>
+<span class="cm">// if capacity k works, then k+1 also works. Binary search for min k.</span>
+<span class="kw">function</span> <span class="fn">shipWithinDays</span>(weights, days) {
+  <span class="kw">let</span> lo = Math.<span class="fn">max</span>(...weights);              <span class="cm">// min possible capacity</span>
+  <span class="kw">let</span> hi = weights.<span class="fn">reduce</span>((a, b) => a + b);  <span class="cm">// max needed (ship all in 1 day)</span>
+
+  <span class="kw">function</span> <span class="fn">canShip</span>(cap) {
+    <span class="kw">let</span> daysNeeded = <span class="num">1</span>, load = <span class="num">0</span>;
+    <span class="kw">for</span> (<span class="kw">const</span> w <span class="kw">of</span> weights) {
+      <span class="kw">if</span> (load + w > cap) { daysNeeded++; load = <span class="num">0</span>; }
+      load += w;
+    }
+    <span class="kw">return</span> daysNeeded &lt;= days;
+  }
+
+  <span class="kw">while</span> (lo &lt; hi) {
+    <span class="kw">const</span> mid = lo + Math.<span class="fn">floor</span>((hi - lo) / <span class="num">2</span>);
+    <span class="kw">if</span> (<span class="fn">canShip</span>(mid)) hi = mid;    <span class="cm">// feasible — try smaller</span>
+    <span class="kw">else</span>              lo = mid + <span class="num">1</span>; <span class="cm">// not feasible — need more capacity</span>
+  }
+  <span class="kw">return</span> lo;  <span class="cm">// minimum feasible capacity</span>
+}
+
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">shipWithinDays</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span>,<span class="num">7</span>,<span class="num">8</span>,<span class="num">9</span>,<span class="num">10</span>], <span class="num">5</span>)); <span class="cm">// 15</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. DIAGRAM -->
+        <section id="diagram">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Visual Diagram</h2>
+            </div>
+            <div class="section-body">
+                <p>Binary search on a 10-element array searching for target <strong>23</strong>. Each step eliminates
+                    half the remaining search space.</p>
+
+                <div class="diagram-area">
+                    <div class="mem-label">Binary Search for 23 in [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]</div>
+                    <div class="search-steps">
+
+                        <!-- Step 1 -->
+                        <div style="display:flex;flex-direction:column;gap:1px;">
+                            <div class="ptr-row">
+                                <div class="ptr-cell lo">lo</div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell mid-p">mid</div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell hi">hi</div>
+                            </div>
+                            <div class="search-row">
+                                <span class="sr-label">Step 1:</span>
+                                <div class="sr-arr">
+                                    <div class="sc active"><span>2</span><span class="si">0</span></div>
+                                    <div class="sc active"><span>5</span><span class="si">1</span></div>
+                                    <div class="sc active"><span>8</span><span class="si">2</span></div>
+                                    <div class="sc active"><span>12</span><span class="si">3</span></div>
+                                    <div class="sc mid"><span>16</span><span class="si">4</span></div>
+                                    <div class="sc active"><span>23</span><span class="si">5</span></div>
+                                    <div class="sc active"><span>38</span><span class="si">6</span></div>
+                                    <div class="sc active"><span>56</span><span class="si">7</span></div>
+                                    <div class="sc active"><span>72</span><span class="si">8</span></div>
+                                    <div class="sc active"><span>91</span><span class="si">9</span></div>
+                                </div>
+                                <span class="sr-note">mid=4, arr[4]=16 &lt; 23 → left=5</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div style="display:flex;flex-direction:column;gap:1px;">
+                            <div class="ptr-row">
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell lo">lo</div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell mid-p">mid</div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell hi">hi</div>
+                            </div>
+                            <div class="search-row">
+                                <span class="sr-label">Step 2:</span>
+                                <div class="sr-arr">
+                                    <div class="sc elim"><span>2</span><span class="si">0</span></div>
+                                    <div class="sc elim"><span>5</span><span class="si">1</span></div>
+                                    <div class="sc elim"><span>8</span><span class="si">2</span></div>
+                                    <div class="sc elim"><span>12</span><span class="si">3</span></div>
+                                    <div class="sc elim"><span>16</span><span class="si">4</span></div>
+                                    <div class="sc active"><span>23</span><span class="si">5</span></div>
+                                    <div class="sc active"><span>38</span><span class="si">6</span></div>
+                                    <div class="sc mid"><span>56</span><span class="si">7</span></div>
+                                    <div class="sc active"><span>72</span><span class="si">8</span></div>
+                                    <div class="sc active"><span>91</span><span class="si">9</span></div>
+                                </div>
+                                <span class="sr-note">mid=7, arr[7]=56 &gt; 23 → right=6</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div style="display:flex;flex-direction:column;gap:1px;">
+                            <div class="ptr-row">
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell lo">lo</div>
+                                <div class="ptr-cell mid-p">mid</div>
+                                <div class="ptr-cell hi">hi</div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                            </div>
+                            <div class="search-row">
+                                <span class="sr-label">Step 3:</span>
+                                <div class="sr-arr">
+                                    <div class="sc elim"><span>2</span><span class="si">0</span></div>
+                                    <div class="sc elim"><span>5</span><span class="si">1</span></div>
+                                    <div class="sc elim"><span>8</span><span class="si">2</span></div>
+                                    <div class="sc elim"><span>12</span><span class="si">3</span></div>
+                                    <div class="sc elim"><span>16</span><span class="si">4</span></div>
+                                    <div class="sc active"><span>23</span><span class="si">5</span></div>
+                                    <div class="sc mid"><span>38</span><span class="si">6</span></div>
+                                    <div class="sc elim"><span>56</span><span class="si">7</span></div>
+                                    <div class="sc elim"><span>72</span><span class="si">8</span></div>
+                                    <div class="sc elim"><span>91</span><span class="si">9</span></div>
+                                </div>
+                                <span class="sr-note">mid=6, arr[6]=38 &gt; 23 → right=5</span>
+                            </div>
+                        </div>
+
+                        <!-- Step 4 — found -->
+                        <div style="display:flex;flex-direction:column;gap:1px;">
+                            <div class="ptr-row">
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell lo" style="color:var(--accent2);">lo=hi</div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                                <div class="ptr-cell"></div>
+                            </div>
+                            <div class="search-row">
+                                <span class="sr-label">Step 4:</span>
+                                <div class="sr-arr">
+                                    <div class="sc elim"><span>2</span><span class="si">0</span></div>
+                                    <div class="sc elim"><span>5</span><span class="si">1</span></div>
+                                    <div class="sc elim"><span>8</span><span class="si">2</span></div>
+                                    <div class="sc elim"><span>12</span><span class="si">3</span></div>
+                                    <div class="sc elim"><span>16</span><span class="si">4</span></div>
+                                    <div class="sc found"><span>23</span><span class="si">5</span></div>
+                                    <div class="sc elim"><span>38</span><span class="si">6</span></div>
+                                    <div class="sc elim"><span>56</span><span class="si">7</span></div>
+                                    <div class="sc elim"><span>72</span><span class="si">8</span></div>
+                                    <div class="sc elim"><span>91</span><span class="si">9</span></div>
+                                </div>
+                                <span class="sr-note">mid=5, arr[5]=23 === 23 ✓ return 5</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="diagram-caption">Found 23 in just 4 comparisons out of 10 elements. Linear search could
+                        have taken up to 10 checks. The greyed-out cells are eliminated — never examined again.</p>
+                </div>
+
+                <p>The search space shrinks geometrically: 10 → 5 → 3 → 2 → 1. This is the logarithmic reduction in
+                    action.</p>
+
+                <div class="diagram-area">
+                    <div class="mem-label">Search space reduction — each step halves the remaining candidates</div>
+                    <svg viewBox="0 0 460 140" style="width:100%;max-width:460px;" xmlns="http://www.w3.org/2000/svg"
+                        font-family="DM Sans, sans-serif">
+                        <!-- Step bars -->
+                        <rect x="10" y="20" width="440" height="22" rx="4" fill="#dce8f5" stroke="#1d3557"
+                            stroke-width="1.5" />
+                        <text x="235" y="35" text-anchor="middle" font-size="11" fill="#1d3557" font-weight="600">Start:
+                            10 candidates</text>
+
+                        <rect x="10" y="52" width="220" height="22" rx="4" fill="#dce8f5" stroke="#1d3557"
+                            stroke-width="1.5" />
+                        <rect x="232" y="52" width="218" height="22" rx="4" fill="#f0ece6" stroke="#d0c8be"
+                            stroke-width="1" stroke-dasharray="4" />
+                        <text x="120" y="67" text-anchor="middle" font-size="11" fill="#1d3557" font-weight="600">5
+                            remain (right half)</text>
+                        <text x="341" y="67" text-anchor="middle" font-size="11" fill="#b0a898">5 eliminated</text>
+
+                        <rect x="10" y="84" width="110" height="22" rx="4" fill="#dce8f5" stroke="#1d3557"
+                            stroke-width="1.5" />
+                        <rect x="122" y="84" width="328" height="22" rx="4" fill="#f0ece6" stroke="#d0c8be"
+                            stroke-width="1" stroke-dasharray="4" />
+                        <text x="65" y="99" text-anchor="middle" font-size="11" fill="#1d3557" font-weight="600">~3
+                            remain</text>
+
+                        <rect x="10" y="116" width="55" height="22" rx="4" fill="#e0f0e9" stroke="#2d6a4f"
+                            stroke-width="2" />
+                        <rect x="67" y="116" width="383" height="22" rx="4" fill="#f0ece6" stroke="#d0c8be"
+                            stroke-width="1" stroke-dasharray="4" />
+                        <text x="38" y="131" text-anchor="middle" font-size="11" fill="#2d6a4f"
+                            font-weight="700">Found!</text>
+
+                        <!-- Arrows -->
+                        <text x="456" y="35" font-size="10" fill="#6b6055">step 1</text>
+                        <text x="456" y="67" font-size="10" fill="#6b6055">step 2</text>
+                        <text x="456" y="99" font-size="10" fill="#6b6055">step 3</text>
+                        <text x="456" y="131" font-size="10" fill="#2d6a4f" font-weight="600">step 4</text>
+                    </svg>
+                    <p class="diagram-caption">Each step the blue (active) region shrinks by roughly half. After
+                        log₂(10) ≈ 4 steps, a single candidate remains.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. ANALOGY -->
+        <section id="analogy">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Plain English Analogy</h2>
+            </div>
+            <div class="section-body">
+                <div class="analogy-card">
+                    <div class="analogy-icon">📖</div>
+                    <h3>Finding a Word in a Dictionary</h3>
+                    <p>Nobody searches a paper dictionary by reading from page 1 to the end. You open to the
+                        <strong>middle</strong>, check whether the word you want comes before or after that page, then
+                        flip to the middle of whichever half remains. You repeat this, halving the book each time, until
+                        you land on your word.
+                    </p>
+                    <p>That is binary search. A 1,000-page dictionary requires at most <strong>10 flips</strong> to find
+                        any word — because 2¹⁰ = 1,024. A million-page book? At most 20 flips. A billion-page book? 30.
+                    </p>
+                    <p>The crucial requirement is that the dictionary is <strong>alphabetically ordered</strong> —
+                        without ordering, opening to the middle tells you nothing. This is why binary search requires
+                        sorted data: ordering is what makes "the target must be in this half" a valid deduction.</p>
+                    <ul>
+                        <li><strong>Dictionary page</strong> = an element in the array</li>
+                        <li><strong>Alphabetical order</strong> = sorted array</li>
+                        <li><strong>Opening to the middle</strong> = computing the midpoint</li>
+                        <li><strong>"Before A, search left half"</strong> = <code class="inline">right = mid - 1</code>
+                        </li>
+                        <li><strong>"After Z, search right half"</strong> = <code class="inline">left = mid + 1</code>
+                        </li>
+                        <li><strong>Finding the word</strong> = <code class="inline">arr[mid] === target</code>, return
+                            index</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. REAL WORLD -->
+        <section id="real-world">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Real-World Coding Applications</h2>
+            </div>
+            <div class="section-body">
+                <p>Binary search appears wherever you have sorted data and need to find, insert, or validate efficiently
+                    — far beyond just "find a number in an array."</p>
+                <div class="rw-grid">
+                    <div class="rw-card">
+                        <div class="rw-icon">🗄️</div>
+                        <h4>Database Index Lookups</h4>
+                        <p>B-Tree database indexes perform binary search at each tree level. Every <code
+                                class="inline">WHERE id = 42</code> query traverses a sorted structure using binary
+                            search — this is why indexed queries are O(log n) instead of O(n).</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">📦</div>
+                        <h4>Package Version Resolution</h4>
+                        <p>npm, pip, and cargo use binary search when resolving semantic version ranges like <code
+                                class="inline">^2.3.0</code>. They binary-search a sorted list of available versions to
+                            find the best compatible match.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🎮</div>
+                        <h4>Game AI Difficulty Tuning</h4>
+                        <p>Game engines binary-search a difficulty parameter space: "what is the minimum AI skill level
+                            at which the win rate exceeds 50%?" — a classic search-on-answer application.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">⚙️</div>
+                        <h4>System Calls (mmap, munmap)</h4>
+                        <p>The Linux kernel stores virtual memory areas in a sorted red-black tree (balanced BST), then
+                            uses binary search to find the VMA containing a given address — O(log n) per page fault.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🌡️</div>
+                        <h4>Scientific Root-Finding</h4>
+                        <p>The bisection method — a binary search applied to continuous functions — is used to find
+                            roots of equations, equilibrium points, and parameter values in numerical simulations.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🔬</div>
+                        <h4>Debugging with Git Bisect</h4>
+                        <p><code class="inline">git bisect</code> uses binary search on your commit history to find
+                            which commit introduced a bug. It halves the remaining commits each step, finding the
+                            culprit in O(log n) test runs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. INTERVIEW -->
+        <section id="interview">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2>Classic Interview Question</h2>
+            </div>
+            <div class="section-body">
+
+                <div class="interview-problem">
+                    <h3>🔍 Search in Rotated Sorted Array</h3>
+                    <p>An integer array was sorted in ascending order, then rotated at an unknown pivot index. Given the
+                        rotated array <code class="inline">nums</code> and a target value, return its index or <code
+                            class="inline">-1</code> if not found. You must achieve <strong>O(log n)</strong> runtime.
+                    </p>
+                    <p style="margin-top:0.6rem;">Example: <code class="inline">nums = [4,5,6,7,0,1,2]</code>, <code
+                            class="inline">target = 0</code> → <code class="inline">4</code></p>
+                    <p style="margin-top:0.3rem;">Example: <code class="inline">nums = [4,5,6,7,0,1,2]</code>, <code
+                            class="inline">target = 3</code> → <code class="inline">-1</code></p>
+                    <span class="difficulty-badge">🔥 Medium — LeetCode #33 · the most important binary search interview
+                        question</span>
+                </div>
+
+                <p><strong>Why this question?</strong> It's the definitive test of binary search understanding. The
+                    array is partially sorted — the standard template breaks. You need to identify which half is still
+                    sorted and use that to decide where to search. It separates candidates who've memorised the
+                    algorithm from those who truly understand it.</p>
+
+                <p><strong>The key insight:</strong> Even in a rotated array, at least one of the two halves (left or
+                    right of mid) is always fully sorted. Use that sorted half's range to determine which half to
+                    recurse into.</p>
+
+                <ul class="step-list">
+                    <li>
+                        <div class="step-num">1</div><span>Compute <code class="inline">mid</code> as usual. If <code
+                                class="inline">nums[mid] === target</code>, return <code
+                                class="inline">mid</code>.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">2</div><span>Check if the <strong>left half</strong> is sorted: <code
+                                class="inline">nums[left] ≤ nums[mid]</code>.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">3</div><span>If yes, check if target falls within the left sorted range
+                            <code class="inline">[nums[left], nums[mid])</code>. If so, move right pointer; otherwise,
+                            move left pointer.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">4</div><span>Otherwise, the <strong>right half</strong> is sorted. Check
+                            if target falls in <code class="inline">(nums[mid], nums[right]]</code>. Adjust pointers
+                            accordingly.</span>
+                    </li>
+                </ul>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Search in Rotated Sorted Array</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Search in Rotated Sorted Array — O(log n) ───────────────────</span>
+<span class="kw">function</span> <span class="fn">search</span>(nums, target) {
+  <span class="kw">let</span> left  = <span class="num">0</span>;
+  <span class="kw">let</span> right = nums.<span class="prop">length</span> - <span class="num">1</span>;
+
+  <span class="kw">while</span> (left &lt;= right) {
+    <span class="kw">const</span> mid = left + Math.<span class="fn">floor</span>((right - left) / <span class="num">2</span>);
+
+    <span class="kw">if</span> (nums[mid] === target) <span class="kw">return</span> mid;   <span class="cm">// found</span>
+
+    <span class="cm">// Determine which half is SORTED</span>
+    <span class="kw">if</span> (nums[left] &lt;= nums[mid]) {
+      <span class="cm">// LEFT half is sorted [left … mid]</span>
+      <span class="kw">if</span> (nums[left] &lt;= target && target &lt; nums[mid]) {
+        right = mid - <span class="num">1</span>;   <span class="cm">// target is in the sorted left half</span>
+      } <span class="kw">else</span> {
+        left  = mid + <span class="num">1</span>;   <span class="cm">// target must be in right half</span>
+      }
     } <span class="kw">else</span> {
-      hi = mid - <span class="nm">1</span>;         <span class="cm">// target is in the LEFT half</span>
+      <span class="cm">// RIGHT half is sorted [mid … right]</span>
+      <span class="kw">if</span> (nums[mid] &lt; target && target &lt;= nums[right]) {
+        left  = mid + <span class="num">1</span>;   <span class="cm">// target is in the sorted right half</span>
+      } <span class="kw">else</span> {
+        right = mid - <span class="num">1</span>;   <span class="cm">// target must be in left half</span>
+      }
     }
   }
 
-  <span class="kw">return</span> -<span class="nm">1</span>;              <span class="cm">// ❌ not found</span>
+  <span class="kw">return</span> -<span class="num">1</span>;  <span class="cm">// not found</span>
 }
 
-<span class="cm">// ── Recursive Binary Search ───────────────────────────</span>
-<span class="kw">function</span> <span class="fn">binarySearchRec</span>(arr, target, lo = <span class="nm">0</span>, hi = arr.length - <span class="nm">1</span>) {
-  <span class="kw">if</span> (lo &gt; hi) <span class="kw">return</span> -<span class="nm">1</span>;            <span class="cm">// base case: not found</span>
+<span class="cm">// ─── Test cases ──────────────────────────────────────────────────</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">search</span>([<span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span>,<span class="num">7</span>,<span class="num">0</span>,<span class="num">1</span>,<span class="num">2</span>], <span class="num">0</span>));   <span class="cm">// 4 ✓</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">search</span>([<span class="num">4</span>,<span class="num">5</span>,<span class="num">6</span>,<span class="num">7</span>,<span class="num">0</span>,<span class="num">1</span>,<span class="num">2</span>], <span class="num">3</span>));   <span class="cm">// -1 ✓</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">search</span>([<span class="num">1</span>], <span class="num">0</span>));                <span class="cm">// -1 ✓</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">search</span>([<span class="num">3</span>,<span class="num">1</span>], <span class="num">1</span>));             <span class="cm">// 1 ✓</span>
 
-  <span class="kw">const</span> mid = Math.<span class="fn">floor</span>((lo + hi) / <span class="nm">2</span>);
+<span class="cm">// ─── Walkthrough: [4,5,6,7,0,1,2], target=0 ─────────────────────</span>
+<span class="cm">// left=0, right=6, mid=3 → nums[3]=7 ≠ 0</span>
+<span class="cm">//   Left sorted? nums[0]=4 ≤ nums[3]=7 → YES</span>
+<span class="cm">//   Is 0 in [4,7)? NO → left = 4</span>
+<span class="cm">// left=4, right=6, mid=5 → nums[5]=1 ≠ 0</span>
+<span class="cm">//   Left sorted? nums[4]=0 ≤ nums[5]=1 → YES</span>
+<span class="cm">//   Is 0 in [0,1)? YES → right = 4</span>
+<span class="cm">// left=4, right=4, mid=4 → nums[4]=0 === 0 → return 4 ✓</span></code></pre>
+                </div>
 
-  <span class="kw">if</span> (arr[mid] === target) <span class="kw">return</span> mid;
-  <span class="kw">if</span> (arr[mid] &lt; target)
-    <span class="kw">return</span> <span class="fn">binarySearchRec</span>(arr, target, mid + <span class="nm">1</span>, hi);  <span class="cm">// right half</span>
-  <span class="kw">return</span>   <span class="fn">binarySearchRec</span>(arr, target, lo, mid - <span class="nm">1</span>);  <span class="cm">// left half</span>
-}
+                <div class="callout green" style="margin-top:1rem;">
+                    <span class="callout-icon">✅</span>
+                    <p><strong>Interview tip:</strong> Draw the array <code class="inline">[4,5,6,7,0,1,2]</code> and
+                        mark where the rotation pivot is. Show that any <code class="inline">mid</code> split always
+                        leaves one side fully sorted. Walk through the two cases slowly — interviewers specifically
+                        listen for whether you correctly describe the sorted-half check. Also mention that this
+                        technique extends directly to "Find Minimum in Rotated Sorted Array" (LeetCode #153) by changing
+                        what you're looking for at each step.</p>
+                </div>
 
-<span class="cm">// ── Demo ─────────────────────────────────────────────</span>
-<span class="kw">const</span> sorted = [<span class="nm">3</span>, <span class="nm">8</span>, <span class="nm">15</span>, <span class="nm">27</span>, <span class="nm">42</span>, <span class="nm">56</span>, <span class="nm">74</span>, <span class="nm">91</span>];
-<span class="cm">//               [0] [1]  [2]  [3]  [4]  [5]  [6]  [7]</span>
+            </div>
+        </section>
 
-console.log(<span class="fn">binarySearch</span>(sorted, <span class="nm">42</span>)); <span class="cm">// 4</span>
-console.log(<span class="fn">binarySearch</span>(sorted, <span class="nm">99</span>)); <span class="cm">// -1</span>
+    </main>
 
-<span class="cm">/*
-  Trace: binarySearch(sorted, 42)
-  ─────────────────────────────────────────
-  Step 1: lo=0, hi=7  → mid=3, arr[3]=27  &lt; 42  → lo=4
-  Step 2: lo=4, hi=7  → mid=5, arr[5]=56  &gt; 42  → hi=4
-  Step 3: lo=4, hi=4  → mid=4, arr[4]=42 === 42 → return 4 ✅
-  Total comparisons: 3  (vs up to 8 for linear search)
-*/</span></pre></div>
+    <div class="module-nav">
+        <a href="sorting.html">← Sorting Algorithms</a>
+        <a href="index.html" class="next">Course Home →</a>
     </div>
-  </div>
 
-  <!-- 4. DIAGRAM -->
-  <div id="diagram" class="section-block">
-    <div class="section-label"><div class="label-num">4</div><div class="label-text">Visual Diagram</div></div>
-    <h2 class="section-heading">Step-by-Step: Searching for 42</h2>
-    <p class="prose">Array: [3, 8, 15, 27, 42, 56, 74, 91] — 8 elements, target = <strong>42</strong>.</p>
+    <footer>
+        <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+        <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
+    </footer>
 
-    <div class="diagram-box">
-      <div class="diagram-title">Binary Search Trace — target = 42</div>
-
-      <div class="bs-step">
-        <div class="bs-lbl">Step 1 — lo=0, hi=7, mid=3</div>
-        <div style="overflow-x:auto;"><div class="bs-row">
-          <div class="bs-cell range"><span>3</span><span class="bs-sublbl">0</span></div>
-          <div class="bs-cell range"><span>8</span><span class="bs-sublbl">1</span></div>
-          <div class="bs-cell range"><span>15</span><span class="bs-sublbl">2</span></div>
-          <div class="bs-cell mid"><span>27</span><span class="bs-sublbl">mid</span></div>
-          <div class="bs-cell range"><span>42</span><span class="bs-sublbl">4</span></div>
-          <div class="bs-cell range"><span>56</span><span class="bs-sublbl">5</span></div>
-          <div class="bs-cell range"><span>74</span><span class="bs-sublbl">6</span></div>
-          <div class="bs-cell range"><span>91</span><span class="bs-sublbl">7</span></div>
-        </div></div>
-        <div class="bs-note">arr[3] = 27 &lt; 42 → <strong>target in right half</strong> → set lo = 4</div>
-      </div>
-
-      <div class="bs-step">
-        <div class="bs-lbl">Step 2 — lo=4, hi=7, mid=5</div>
-        <div style="overflow-x:auto;"><div class="bs-row">
-          <div class="bs-cell elim"><span>3</span><span class="bs-sublbl">0</span></div>
-          <div class="bs-cell elim"><span>8</span><span class="bs-sublbl">1</span></div>
-          <div class="bs-cell elim"><span>15</span><span class="bs-sublbl">2</span></div>
-          <div class="bs-cell elim"><span>27</span><span class="bs-sublbl">3</span></div>
-          <div class="bs-cell range"><span>42</span><span class="bs-sublbl">4</span></div>
-          <div class="bs-cell mid"><span>56</span><span class="bs-sublbl">mid</span></div>
-          <div class="bs-cell range"><span>74</span><span class="bs-sublbl">6</span></div>
-          <div class="bs-cell range"><span>91</span><span class="bs-sublbl">7</span></div>
-        </div></div>
-        <div class="bs-note">arr[5] = 56 &gt; 42 → <strong>target in left half</strong> → set hi = 4</div>
-      </div>
-
-      <div class="bs-step">
-        <div class="bs-lbl">Step 3 — lo=4, hi=4, mid=4</div>
-        <div style="overflow-x:auto;"><div class="bs-row">
-          <div class="bs-cell elim"><span>3</span><span class="bs-sublbl">0</span></div>
-          <div class="bs-cell elim"><span>8</span><span class="bs-sublbl">1</span></div>
-          <div class="bs-cell elim"><span>15</span><span class="bs-sublbl">2</span></div>
-          <div class="bs-cell elim"><span>27</span><span class="bs-sublbl">3</span></div>
-          <div class="bs-cell found"><span>42</span><span class="bs-sublbl">✓</span></div>
-          <div class="bs-cell elim"><span>56</span><span class="bs-sublbl">5</span></div>
-          <div class="bs-cell elim"><span>74</span><span class="bs-sublbl">6</span></div>
-          <div class="bs-cell elim"><span>91</span><span class="bs-sublbl">7</span></div>
-        </div></div>
-        <div class="bs-note">arr[4] = 42 === 42 → <strong>✅ Found at index 4</strong> — only 3 comparisons!</div>
-      </div>
-
-      <div class="diagram-caption">Linear search: up to <strong>8 comparisons</strong>. Binary search: just <strong style="color:#8B2FC9;">3</strong>.<br>This gap grows massively — for 1 million elements: linear needs ≤1,000,000 steps; binary needs ≤20.</div>
-    </div>
-  </div>
-
-  <!-- 5. ANALOGY -->
-  <div id="analogy" class="section-block">
-    <div class="section-label"><div class="label-num">5</div><div class="label-text">Analogy for a 14-year-old</div></div>
-    <h2 class="section-heading">Think of It Like the Number-Guessing Game</h2>
-    <div class="analogy-box">
-      <div class="analogy-title">🎯 The Number-Guessing Game</div>
-      <p class="analogy-text">You've played this game: <em>"I'm thinking of a number between 1 and 100. Guess it — I'll say higher or lower."</em></p>
-      <p class="analogy-text"><strong>A bad strategy:</strong> start guessing 1, 2, 3, 4... You might need 99 guesses. That's linear search.</p>
-      <p class="analogy-text"><strong>A smart strategy:</strong> <span class="hi">always guess the middle.</span> Start with 50. "Too low!" → guess 75. "Too high!" → guess 62. "Too low!" → guess 68...</p>
-      <p class="analogy-text">Every guess <span class="hi">cuts the remaining possibilities in half</span>. You can find any number from 1 to 100 in at most <strong>7 guesses</strong>. For 1 to 1,000,000? Just 20 guesses. That's O(log n).</p>
-      <p class="analogy-text">But this only works because the numbers are <span class="hi">in order</span>. If your friend said "too high" but the number could be anywhere randomly — your strategy breaks completely. That's why binary search <strong>requires a sorted array</strong>.</p>
-    </div>
-    <div class="takeaway-box">
-      <h4>🎯 Key Takeaways</h4>
-      <ul>
-        <li>Binary search only works on sorted arrays — this is non-negotiable.</li>
-        <li>Each step eliminates half the remaining search space.</li>
-        <li>Time complexity is O(log₂ n) — incredibly fast for large datasets.</li>
-        <li>For 1,000,000 items: binary search needs ≤20 steps; linear needs ≤1,000,000.</li>
-        <li>The iterative version is preferred — it avoids call stack overhead from recursion.</li>
-        <li>Use <code class="ic" style="background:rgba(255,255,255,0.12);color:#CBA6F7;">Math.floor((lo + hi) / 2)</code>, not <code class="ic" style="background:rgba(255,255,255,0.12);color:#CBA6F7;">(lo + hi) / 2</code>, to avoid off-by-one errors.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="page-nav">
-    <a href="sorting.html" class="page-nav-btn"><span>←</span><div><div class="nav-btn-label">Previous</div><div class="nav-btn-title">Sorting Algorithms</div></div></a>
-    <a href="index.html" class="page-nav-btn next"><div><div class="nav-btn-label">Back to</div><div class="nav-btn-title">Home</div></div><span>→</span></a>
-  </div>
-
-</div>
-
-<script>
-  const secs = document.querySelectorAll('[id]');
-  const links = document.querySelectorAll('.progress-list a');
-  window.addEventListener('scroll', () => {
-    let cur = '';
-    secs.forEach(s => { if (window.scrollY >= s.offsetTop - 120) cur = s.id; });
-    links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur));
-  }, { passive:true });
-</script>
+    <script>
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+    </script>
 </body>
+
 </html>

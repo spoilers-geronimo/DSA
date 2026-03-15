@@ -1,558 +1,972 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Arrays — DSA Zero to Hero</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arrays — DSA Zero to Hero</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="header.css">
+    <script src="header.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    :root {
-      --bg:        #f9f6f1;
-      --surface:   #ffffff;
-      --border:    #e4ddd3;
-      --text:      #1a1612;
-      --muted:     #6b6055;
-      --accent:    #c84b31;
-      --accent2:   #2d6a4f;
-      --accent3:   #1d3557;
-      --code-bg:   #1e1e2e;
-      --code-text: #cdd6f4;
-      --tag-bg:    #fce8e4;
-      --tag-text:  #c84b31;
-      --highlight: #fff3cd;
-    }
+        :root {
+            --bg: #f9f6f1;
+            --surface: #ffffff;
+            --border: #e4ddd3;
+            --text: #1a1612;
+            --muted: #6b6055;
+            --accent: #c84b31;
+            --accent2: #2d6a4f;
+            --accent3: #1d3557;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tag-bg: #fce8e4;
+            --tag-text: #c84b31;
+            --highlight: #fff3cd;
+        }
 
-    html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      font-size: 16px;
-    }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
 
-    /* ── NAV ── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(249,246,241,0.92);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem;
-      height: 58px;
-    }
-    .nav-brand {
-      font-family: 'Lora', serif;
-      font-weight: 700; font-size: 1.1rem;
-      color: var(--accent);
-      text-decoration: none;
-      letter-spacing: -0.02em;
-    }
-    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
-    .nav-links a {
-      text-decoration: none;
-      color: var(--muted);
-      font-size: 0.88rem; font-weight: 500;
-      transition: color .2s;
-    }
-    .nav-links a:hover { color: var(--accent); }
-    .nav-links a.active { color: var(--accent); }
 
-    /* ── HERO ── */
-    .hero {
-      padding: 5rem 2rem 3rem;
-      max-width: 860px; margin: 0 auto;
-      text-align: center;
-    }
-    .breadcrumb {
-      font-size: 0.8rem; color: var(--muted);
-      margin-bottom: 1.2rem; letter-spacing: 0.06em; text-transform: uppercase;
-    }
-    .breadcrumb a { color: var(--accent); text-decoration: none; }
-    .hero h1 {
-      font-family: 'Lora', serif;
-      font-size: clamp(2.4rem, 5vw, 3.4rem);
-      font-weight: 700; line-height: 1.15;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      margin-bottom: 1rem;
-    }
-    .hero h1 span { color: var(--accent); }
-    .hero-meta {
-      display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center;
-      margin-bottom: 1rem;
-    }
-    .tag {
-      background: var(--tag-bg); color: var(--tag-text);
-      border-radius: 20px; padding: 0.2rem 0.8rem;
-      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em;
-    }
-    .tag.green { background: #e0f0e9; color: var(--accent2); }
-    .tag.blue  { background: #dce8f5; color: var(--accent3); }
-    .tag.amber { background: #fff0d4; color: #a05c00; }
-    .hero-desc {
-      font-size: 1.05rem; color: var(--muted);
-      max-width: 580px; margin: 0 auto;
-    }
 
-    /* ── TOC ── */
-    .toc-wrapper {
-      max-width: 860px; margin: 0 auto 3rem; padding: 0 2rem;
-    }
-    .toc {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      padding: 1.4rem 1.8rem;
-    }
-    .toc h2 {
-      font-family: 'Lora', serif; font-size: 0.9rem;
-      text-transform: uppercase; letter-spacing: 0.08em;
-      color: var(--muted); margin-bottom: 0.8rem;
-    }
-    .toc ol {
-      padding-left: 1.2rem;
-      display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2rem;
-    }
-    .toc a {
-      color: var(--accent3); text-decoration: none;
-      font-size: 0.9rem; font-weight: 500;
-    }
-    .toc a:hover { text-decoration: underline; }
+        /* ── HERO ── */
+        .hero {
+            padding: 6rem 2rem 4rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
 
-    /* ── MAIN LAYOUT ── */
-    main {
-      max-width: 860px; margin: 0 auto;
-      padding: 0 2rem 6rem;
-      display: flex; flex-direction: column; gap: 3rem;
-    }
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
 
-    /* ── SECTIONS ── */
-    section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-    .section-header {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 1.2rem 1.8rem;
-      border-bottom: 1px solid var(--border);
-      background: #faf9f7;
-    }
-    .section-number {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: var(--accent); color: #fff;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.78rem; font-weight: 700; flex-shrink: 0;
-    }
-    .section-header h2 {
-      font-family: 'Lora', serif;
-      font-size: 1.15rem; font-weight: 700;
-      color: var(--text);
-    }
-    .section-body { padding: 1.8rem; }
-    .section-body p { margin-bottom: 1rem; color: var(--muted); }
-    .section-body p:last-child { margin-bottom: 0; }
-    .section-body strong { color: var(--text); }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-    /* ── DEFINITION BOX ── */
-    .definition-box {
-      background: var(--highlight);
-      border: 1px solid #ffe08a;
-      border-left: 4px solid #f5a623;
-      border-radius: 8px;
-      padding: 1.2rem 1.4rem;
-      margin-bottom: 1.2rem;
-      font-family: 'Lora', serif;
-      font-style: italic;
-      font-size: 1.02rem;
-      color: #3d2c00;
-      line-height: 1.65;
-    }
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
 
-    /* ── COMPARE CARDS ── */
-    .compare-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
-      margin: 1rem 0;
-    }
-    .compare-card {
-      border: 1px solid var(--border);
-      border-radius: 10px; padding: 1.2rem;
-    }
-    .compare-card.static { border-top: 3px solid var(--accent3); }
-    .compare-card.dynamic { border-top: 3px solid var(--accent2); }
-    .compare-card h3 {
-      font-family: 'Lora', serif; font-size: 1rem;
-      margin-bottom: 0.6rem; color: var(--text);
-    }
-    .compare-card ul {
-      padding-left: 1.1rem; color: var(--muted); font-size: 0.9rem;
-    }
-    .compare-card li { margin-bottom: 0.3rem; }
+        .hero h1 span {
+            color: var(--accent);
+        }
 
-    /* ── OPS TABLE ── */
-    .ops-table {
-      width: 100%; border-collapse: collapse; margin-top: 1rem;
-      font-size: 0.9rem;
-    }
-    .ops-table th {
-      background: #f0ece6;
-      text-align: left; padding: 0.6rem 1rem;
-      font-weight: 600; color: var(--text);
-      border-bottom: 2px solid var(--border);
-    }
-    .ops-table td {
-      padding: 0.6rem 1rem;
-      border-bottom: 1px solid var(--border);
-      color: var(--muted); vertical-align: top;
-    }
-    .ops-table tr:last-child td { border-bottom: none; }
-    .ops-table tr:hover td { background: #faf8f5; }
-    code.inline {
-      font-family: 'JetBrains Mono', monospace;
-      background: #f0ece6; color: var(--accent);
-      padding: 0.1em 0.4em; border-radius: 4px;
-      font-size: 0.85em;
-    }
-    .complexity { font-family: 'JetBrains Mono', monospace; }
-    .o1  { color: var(--accent2); font-weight: 700; }
-    .on  { color: #c47a00;        font-weight: 700; }
-    .ologn { color: var(--accent3); font-weight: 700; }
+        .hero-meta {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
 
-    /* ── CODE BLOCK ── */
-    .code-block {
-      background: var(--code-bg);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 1rem;
-    }
-    .code-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0.65rem 1.1rem;
-      background: #181825;
-    }
-    .code-lang {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem; color: #a6adc8;
-      letter-spacing: 0.06em; text-transform: uppercase;
-    }
-    .copy-btn {
-      background: #313244; border: none; color: #cdd6f4;
-      padding: 0.25rem 0.65rem; border-radius: 5px;
-      font-size: 0.75rem; cursor: pointer;
-      font-family: 'DM Sans', sans-serif; font-weight: 500;
-      transition: background .2s;
-    }
-    .copy-btn:hover { background: #45475a; }
-    pre {
-      margin: 0; padding: 1.5rem 1.4rem;
-      overflow-x: auto; font-size: 0.875rem;
-      line-height: 1.65;
-    }
-    pre code {
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--code-text);
-    }
-    .kw  { color: #cba6f7; }
-    .fn  { color: #89b4fa; }
-    .str { color: #a6e3a1; }
-    .num { color: #fab387; }
-    .cm  { color: #6c7086; font-style: italic; }
-    .cl  { color: #f38ba8; }
-    .prop{ color: #89dceb; }
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
 
-    /* ── DIAGRAM ── */
-    .diagram-area {
-      background: #f9f6f1;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 2rem 1.5rem;
-      display: flex; flex-direction: column; align-items: center;
-      gap: 1rem; margin-bottom: 1.4rem;
-      overflow-x: auto;
-    }
-    .array-row {
-      display: flex; align-items: stretch; gap: 0;
-    }
-    .arr-index-row {
-      display: flex; gap: 0; margin-bottom: 4px;
-    }
-    .arr-index {
-      width: 56px; text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem; color: var(--muted);
-    }
-    .arr-cell {
-      width: 56px; height: 48px;
-      border: 2px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.95rem; font-weight: 600;
-      background: var(--surface);
-      color: var(--text);
-      margin-right: -2px;
-    }
-    .arr-cell:first-child { border-radius: 6px 0 0 6px; }
-    .arr-cell:last-child  { border-radius: 0 6px 6px 0; margin-right: 0; }
-    .arr-cell.highlight { background: #fce8e4; border-color: var(--accent); color: var(--accent); z-index: 1; }
-    .arr-cell.empty { background: #f5f1ec; color: #c0b8af; border-style: dashed; }
-    .diagram-caption {
-      font-size: 0.82rem; color: var(--muted);
-      text-align: center; font-style: italic;
-    }
-    .mem-row {
-      display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
-      width: 100%;
-    }
-    .mem-label {
-      font-size: 0.78rem; color: var(--muted); font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.06em;
-    }
-    .mem-cells {
-      display: flex; gap: 0;
-    }
-    .mem-cell {
-      width: 72px; height: 44px;
-      border: 1.5px solid var(--border);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      font-family: 'JetBrains Mono', monospace;
-      background: var(--surface);
-      margin-right: -1.5px;
-    }
-    .mem-cell .val { font-size: 0.88rem; font-weight: 700; color: var(--text); }
-    .mem-cell .addr { font-size: 0.65rem; color: var(--muted); }
-    .mem-cell.active { background: #dce8f5; border-color: var(--accent3); }
-    .mem-cell.active .val { color: var(--accent3); }
+        .tag.green {
+            background: #e0f0e9;
+            color: var(--accent2);
+        }
 
-    /* ── CALLOUT ── */
-    .callout {
-      display: flex; gap: 0.8rem; align-items: flex-start;
-      background: #eef4ff; border: 1px solid #b8d0f5;
-      border-left: 4px solid var(--accent3);
-      border-radius: 8px; padding: 1rem 1.2rem;
-      margin-top: 1rem;
-    }
-    .callout.green {
-      background: #e8f5ee; border-color: #a8d5ba;
-      border-left-color: var(--accent2);
-    }
-    .callout.amber {
-      background: #fff8e6; border-color: #ffe08a;
-      border-left-color: #f5a623;
-    }
-    .callout-icon { font-size: 1.1rem; flex-shrink: 0; }
-    .callout p { margin: 0; font-size: 0.9rem; color: var(--accent3); }
-    .callout.green p { color: var(--accent2); }
-    .callout.amber p { color: #7a4800; }
+        .tag.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
 
-    /* ── ANALOGY ── */
-    .analogy-card {
-      background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%);
-      border: 1px solid #f0d9b5;
-      border-radius: 10px; padding: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    .analogy-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
-    .analogy-card h3 {
-      font-family: 'Lora', serif; font-size: 1.05rem;
-      margin-bottom: 0.5rem; color: var(--text);
-    }
-    .analogy-card p { color: var(--muted); margin-bottom: 0.6rem; }
-    .analogy-card ul { padding-left: 1.3rem; color: var(--muted); font-size: 0.95rem; }
-    .analogy-card li { margin-bottom: 0.3rem; }
+        .tag.amber {
+            background: #fff0d4;
+            color: #a05c00;
+        }
 
-    /* ── REAL WORLD ── */
-    .rw-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 1rem;
-    }
-    .rw-card {
-      border: 1px solid var(--border);
-      border-radius: 10px; padding: 1.1rem 1.2rem;
-      background: var(--surface);
-    }
-    .rw-card .rw-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
-    .rw-card h4 {
-      font-family: 'Lora', serif; font-size: 0.95rem;
-      margin-bottom: 0.35rem; color: var(--text);
-    }
-    .rw-card p { font-size: 0.86rem; color: var(--muted); margin: 0; }
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 580px;
+            margin: 0 auto;
+        }
 
-    footer {
-      text-align: center; padding: 2.5rem 1rem;
-      border-top: 1px solid var(--border);
-      color: var(--muted); font-size: 0.85rem;
-    }
-    footer a { color: var(--accent); text-decoration: none; }
+        /* ── TOC ── */
+        .toc-wrapper {
+            max-width: 1000px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
 
-    @media (max-width: 620px) {
-      .toc ol { grid-template-columns: 1fr; }
-      .compare-grid { grid-template-columns: 1fr; }
-      nav { padding: 0 1rem; }
-      .nav-links { gap: 1rem; }
-      .arr-cell { width: 44px; font-size: 0.82rem; }
-      .arr-index { width: 44px; }
-    }
-  </style>
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.4rem 1.8rem;
+        }
+
+        .toc h2 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .toc ol {
+            padding-left: 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 2rem;
+        }
+
+        .toc a {
+            color: var(--accent3);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── MAIN LAYOUT ── */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        /* ── SECTIONS ── */
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            background: #faf9f7;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-body {
+            padding: 1.8rem;
+        }
+
+        .section-body p {
+            margin-bottom: 1rem;
+            color: var(--muted);
+        }
+
+        .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-body strong {
+            color: var(--text);
+        }
+
+        /* ── DEFINITION BOX ── */
+        .definition-box {
+            background: var(--highlight);
+            border: 1px solid #ffe08a;
+            border-left: 4px solid #f5a623;
+            border-radius: 8px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.02rem;
+            color: #3d2c00;
+            line-height: 1.65;
+        }
+
+        /* ── COMPARE CARDS ── */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .compare-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .compare-card.static {
+            border-top: 3px solid var(--accent3);
+        }
+
+        .compare-card.dynamic {
+            border-top: 3px solid var(--accent2);
+        }
+
+        .compare-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            color: var(--text);
+        }
+
+        .compare-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .compare-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── OPS TABLE ── */
+        .ops-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .ops-table th {
+            background: #f0ece6;
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .ops-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            vertical-align: top;
+        }
+
+        .ops-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ops-table tr:hover td {
+            background: #faf8f5;
+        }
+
+        code.inline {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f0ece6;
+            color: var(--accent);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .complexity {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .o1 {
+            color: var(--accent2);
+            font-weight: 700;
+        }
+
+        .on {
+            color: #c47a00;
+            font-weight: 700;
+        }
+
+        .ologn {
+            color: var(--accent3);
+            font-weight: 700;
+        }
+
+        /* ── CODE BLOCK ── */
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.1rem;
+            background: #181825;
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #a6adc8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 0.25rem 0.65rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            transition: background .2s;
+        }
+
+        .copy-btn:hover {
+            background: #45475a;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem 1.4rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.65;
+        }
+
+        pre code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--code-text);
+        }
+
+        .kw {
+            color: #cba6f7;
+        }
+
+        .fn {
+            color: #89b4fa;
+        }
+
+        .str {
+            color: #a6e3a1;
+        }
+
+        .num {
+            color: #fab387;
+        }
+
+        .cm {
+            color: #6c7086;
+            font-style: italic;
+        }
+
+        .cl {
+            color: #f38ba8;
+        }
+
+        .prop {
+            color: #89dceb;
+        }
+
+        /* ── DIAGRAM ── */
+        .diagram-area {
+            background: #f9f6f1;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+            overflow-x: auto;
+        }
+
+        .array-row {
+            display: flex;
+            align-items: stretch;
+            gap: 0;
+        }
+
+        .arr-index-row {
+            display: flex;
+            gap: 0;
+            margin-bottom: 4px;
+        }
+
+        .arr-index {
+            width: 56px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+        }
+
+        .arr-cell {
+            width: 56px;
+            height: 48px;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: var(--surface);
+            color: var(--text);
+            margin-right: -2px;
+        }
+
+        .arr-cell:first-child {
+            border-radius: 6px 0 0 6px;
+        }
+
+        .arr-cell:last-child {
+            border-radius: 0 6px 6px 0;
+            margin-right: 0;
+        }
+
+        .arr-cell.highlight {
+            background: #fce8e4;
+            border-color: var(--accent);
+            color: var(--accent);
+            z-index: 1;
+        }
+
+        .arr-cell.empty {
+            background: #f5f1ec;
+            color: #c0b8af;
+            border-style: dashed;
+        }
+
+        .diagram-caption {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .mem-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            width: 100%;
+        }
+
+        .mem-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .mem-cells {
+            display: flex;
+            gap: 0;
+        }
+
+        .mem-cell {
+            width: 72px;
+            height: 44px;
+            border: 1.5px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--surface);
+            margin-right: -1.5px;
+        }
+
+        .mem-cell .val {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .mem-cell .addr {
+            font-size: 0.65rem;
+            color: var(--muted);
+        }
+
+        .mem-cell.active {
+            background: #dce8f5;
+            border-color: var(--accent3);
+        }
+
+        .mem-cell.active .val {
+            color: var(--accent3);
+        }
+
+        /* ── CALLOUT ── */
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: #eef4ff;
+            border: 1px solid #b8d0f5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .callout.green {
+            background: #e8f5ee;
+            border-color: #a8d5ba;
+            border-left-color: var(--accent2);
+        }
+
+        .callout.amber {
+            background: #fff8e6;
+            border-color: #ffe08a;
+            border-left-color: #f5a623;
+        }
+
+        .callout-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--accent3);
+        }
+
+        .callout.green p {
+            color: var(--accent2);
+        }
+
+        .callout.amber p {
+            color: #7a4800;
+        }
+
+        /* ── ANALOGY ── */
+        .analogy-card {
+            background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%);
+            border: 1px solid #f0d9b5;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .analogy-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .analogy-card p {
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card ul {
+            padding-left: 1.3rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .analogy-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── REAL WORLD ── */
+        .rw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .rw-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem;
+            background: var(--surface);
+        }
+
+        .rw-card .rw-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rw-card h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+
+        .rw-card p {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+
+
+        .hero {
+            padding-top: 4rem;
+        }
+
+        .toc ol {
+            grid-template-columns: 1fr;
+        }
+
+        .compare-grid {
+            grid-template-columns: 1fr;
+        }
+
+
+
+        .arr-cell {
+            width: 44px;
+            font-size: 0.82rem;
+        }
+
+        .arr-index {
+            width: 44px;
+        }
+
+
+
+
+
+        @media (min-width: 1400px) {
+            body {
+                font-size: 22px;
+                line-height: 1.8;
+            }
+
+            .hero {
+                padding: 7rem 2rem 4rem;
+                max-width: 1500px;
+                width: 85%;
+            }
+
+            .hero h1 {
+                font-size: 3.8rem;
+                margin-bottom: 1.5rem;
+                letter-spacing: -0.04em;
+            }
+
+            .hero-desc {
+                font-size: 1.35rem;
+                max-width: 850px;
+            }
+
+            .toc-wrapper,
+            main {
+                max-width: 1500px;
+                width: 85%;
+                gap: 4.5rem;
+            }
+
+            .toc h2 {
+                font-size: 1rem;
+            }
+
+            .toc a {
+                font-size: 1.1rem;
+            }
+
+            .section-header {
+                padding: 1.8rem 2.2rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .section-body {
+                padding: 2.2rem;
+            }
+
+            .section-body p {
+                font-size: 1.1rem;
+                margin-bottom: 1.4rem;
+            }
+
+            .definition-box {
+                font-size: 1.2rem;
+                padding: 1.8rem;
+                margin-bottom: 1.8rem;
+            }
+
+            .compare-card {
+                padding: 1.8rem;
+            }
+
+            .compare-card h3 {
+                font-size: 1.25rem;
+            }
+
+            .compare-card ul {
+                font-size: 1.05rem;
+            }
+
+            .ops-table {
+                font-size: 1.05rem;
+            }
+
+            .ops-table th,
+            .ops-table td {
+                padding: 1.1rem;
+            }
+
+            pre {
+                font-size: 1rem;
+                padding: 2.2rem;
+            }
+
+
+        }
+    </style>
 </head>
+
 <body>
 
-<nav>
-  <a class="nav-brand" href="index.html">DSA: Zero to Hero</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="arrays.html" class="active">Arrays</a></li>
-    <li><a href="strings.html">Strings</a></li>
-    <li><a href="linked-lists.html">Linked Lists</a></li>
-    <li><a href="stacks.html">Stacks</a></li>
-  </ul>
-</nav>
+    <common-header accent="#c84b31"></common-header>
 
-<header class="hero">
-  <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Arrays</p>
-  <h1>Data Structures:<br/><span>Arrays</span></h1>
-  <div class="hero-meta">
-    <span class="tag">Static &amp; Dynamic</span>
-    <span class="tag green">O(1) Access</span>
-    <span class="tag blue">Contiguous Memory</span>
-    <span class="tag amber">Foundation of DSA</span>
-  </div>
-  <p class="hero-desc">The most fundamental data structure in all of computing — everything else is built on top of this idea.</p>
-</header>
-
-<div class="toc-wrapper">
-  <div class="toc">
-    <h2>Contents</h2>
-    <ol>
-      <li><a href="#definition">Definition</a></li>
-      <li><a href="#explanation">Explanation &amp; Operations</a></li>
-      <li><a href="#code">Code Snippet</a></li>
-      <li><a href="#diagram">Diagram</a></li>
-      <li><a href="#analogy">Analogy (Plain English)</a></li>
-      <li><a href="#real-world">Real-World Applications</a></li>
-    </ol>
-  </div>
-</div>
-
-<main>
-
-  <!-- 1. DEFINITION -->
-  <section id="definition">
-    <div class="section-header">
-      <div class="section-number">1</div>
-      <h2>Formal Definition</h2>
-    </div>
-    <div class="section-body">
-      <div class="definition-box">
-        An <strong>Array</strong> is a linear data structure that stores a collection of elements of the same type in <em>contiguous memory locations</em>. Each element is identified by a numeric <em>index</em>, beginning at zero. A <strong>static array</strong> has a fixed size determined at allocation time; a <strong>dynamic array</strong> (such as JavaScript's <code style="font-style:normal">Array</code> or Python's <code style="font-style:normal">list</code>) can resize itself automatically as elements are added or removed.
-      </div>
-      <p>The defining property of an array is <strong>random access</strong>: given any valid index, the element at that position can be read or written in constant time, because the memory address is computed directly as <code class="inline">base_address + (index × element_size)</code>.</p>
-    </div>
-  </section>
-
-  <!-- 2. EXPLANATION -->
-  <section id="explanation">
-    <div class="section-header">
-      <div class="section-number">2</div>
-      <h2>Formal Explanation &amp; Operations</h2>
-    </div>
-    <div class="section-body">
-      <div class="compare-grid">
-        <div class="compare-card static">
-          <h3>🔒 Static Array</h3>
-          <ul>
-            <li>Fixed size set at creation</li>
-            <li>Memory allocated once (stack or heap)</li>
-            <li>No overhead — compact, fast</li>
-            <li>Cannot grow or shrink</li>
-            <li>Common in C, C++, Java primitives</li>
-          </ul>
+    <header class="hero">
+        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Arrays</p>
+        <h1>Data Structures:<br /><span>Arrays</span></h1>
+        <div class="hero-meta">
+            <span class="tag">Static &amp; Dynamic</span>
+            <span class="tag green">O(1) Access</span>
+            <span class="tag blue">Contiguous Memory</span>
+            <span class="tag amber">Foundation of DSA</span>
         </div>
-        <div class="compare-card dynamic">
-          <h3>🔄 Dynamic Array</h3>
-          <ul>
-            <li>Grows automatically when full</li>
-            <li>Internally uses a static array</li>
-            <li>When full, allocates ~2× capacity and copies</li>
-            <li>Amortised O(1) append</li>
-            <li>JS <code class="inline">Array</code>, Python <code class="inline">list</code>, C++ <code class="inline">vector</code></li>
-          </ul>
+        <p class="hero-desc">The most fundamental data structure in all of computing — everything else is built on top
+            of this idea.</p>
+    </header>
+
+    <div class="toc-wrapper">
+        <div class="toc">
+            <h2>Contents</h2>
+            <ol>
+                <li><a href="#definition">Definition</a></li>
+                <li><a href="#explanation">Explanation &amp; Operations</a></li>
+                <li><a href="#code">Code Snippet</a></li>
+                <li><a href="#diagram">Diagram</a></li>
+                <li><a href="#analogy">Analogy (Plain English)</a></li>
+                <li><a href="#real-world">Real-World Applications</a></li>
+            </ol>
         </div>
-      </div>
-
-      <table class="ops-table">
-        <thead>
-          <tr><th>Operation</th><th>Description</th><th>Static</th><th>Dynamic</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code class="inline">arr[i]</code></td>
-            <td>Read or write element at index <em>i</em></td>
-            <td class="complexity o1">O(1)</td>
-            <td class="complexity o1">O(1)</td>
-          </tr>
-          <tr>
-            <td>Append (end)</td>
-            <td>Add element to the last position</td>
-            <td class="complexity on">O(n)*</td>
-            <td class="complexity o1">O(1) amort.</td>
-          </tr>
-          <tr>
-            <td>Insert (middle)</td>
-            <td>Insert at index <em>i</em>, shift elements right</td>
-            <td class="complexity on">O(n)</td>
-            <td class="complexity on">O(n)</td>
-          </tr>
-          <tr>
-            <td>Delete (middle)</td>
-            <td>Remove at index <em>i</em>, shift elements left</td>
-            <td class="complexity on">O(n)</td>
-            <td class="complexity on">O(n)</td>
-          </tr>
-          <tr>
-            <td>Search (unsorted)</td>
-            <td>Linear scan to find a value</td>
-            <td class="complexity on">O(n)</td>
-            <td class="complexity on">O(n)</td>
-          </tr>
-          <tr>
-            <td>Search (sorted)</td>
-            <td>Binary search on a sorted array</td>
-            <td class="complexity ologn">O(log n)</td>
-            <td class="complexity ologn">O(log n)</td>
-          </tr>
-        </tbody>
-      </table>
-      <p style="font-size:0.82rem; margin-top:0.5rem;">* Static arrays cannot append if full — a new larger array must be manually allocated.</p>
-
-      <div class="callout">
-        <span class="callout-icon">💡</span>
-        <p><strong>Why is access O(1)?</strong> The CPU computes the exact memory address of <code class="inline">arr[i]</code> as <code class="inline">base + i × sizeof(element)</code> in a single arithmetic instruction — no searching required, no matter how large the array is.</p>
-      </div>
     </div>
-  </section>
 
-  <!-- 3. CODE -->
-  <section id="code">
-    <div class="section-header">
-      <div class="section-number">3</div>
-      <h2>Code Snippet</h2>
-    </div>
-    <div class="section-body">
-      <p>The first example demonstrates static-like array usage and core operations. The second implements a minimal dynamic array from scratch to show how resizing works under the hood.</p>
+    <main>
 
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — Core Array Operations</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── Static-style Array (fixed-length) ──────────────────────────</span>
+        <!-- 1. DEFINITION -->
+        <section id="definition">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Formal Definition</h2>
+            </div>
+            <div class="section-body">
+                <div class="definition-box">
+                    An <strong>Array</strong> is a linear data structure that stores a collection of elements of the
+                    same type in <em>contiguous memory locations</em>. Each element is identified by a numeric
+                    <em>index</em>, beginning at zero. A <strong>static array</strong> has a fixed size determined at
+                    allocation time; a <strong>dynamic array</strong> (such as JavaScript's <code
+                        style="font-style:normal">Array</code> or Python's <code style="font-style:normal">list</code>)
+                    can resize itself automatically as elements are added or removed.
+                </div>
+                <p>The defining property of an array is <strong>random access</strong>: given any valid index, the
+                    element at that position can be read or written in constant time, because the memory address is
+                    computed directly as <code class="inline">base_address + (index × element_size)</code>.</p>
+            </div>
+        </section>
+
+        <!-- 2. EXPLANATION -->
+        <section id="explanation">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>Formal Explanation &amp; Operations</h2>
+            </div>
+            <div class="section-body">
+                <div class="compare-grid">
+                    <div class="compare-card static">
+                        <h3>🔒 Static Array</h3>
+                        <ul>
+                            <li>Fixed size set at creation</li>
+                            <li>Memory allocated once (stack or heap)</li>
+                            <li>No overhead — compact, fast</li>
+                            <li>Cannot grow or shrink</li>
+                            <li>Common in C, C++, Java primitives</li>
+                        </ul>
+                    </div>
+                    <div class="compare-card dynamic">
+                        <h3>🔄 Dynamic Array</h3>
+                        <ul>
+                            <li>Grows automatically when full</li>
+                            <li>Internally uses a static array</li>
+                            <li>When full, allocates ~2× capacity and copies</li>
+                            <li>Amortised O(1) append</li>
+                            <li>JS <code class="inline">Array</code>, Python <code class="inline">list</code>, C++ <code
+                                    class="inline">vector</code></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Description</th>
+                            <th>Static</th>
+                            <th>Dynamic</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code class="inline">arr[i]</code></td>
+                            <td>Read or write element at index <em>i</em></td>
+                            <td class="complexity o1">O(1)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Append (end)</td>
+                            <td>Add element to the last position</td>
+                            <td class="complexity on">O(n)*</td>
+                            <td class="complexity o1">O(1) amort.</td>
+                        </tr>
+                        <tr>
+                            <td>Insert (middle)</td>
+                            <td>Insert at index <em>i</em>, shift elements right</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity on">O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Delete (middle)</td>
+                            <td>Remove at index <em>i</em>, shift elements left</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity on">O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Search (unsorted)</td>
+                            <td>Linear scan to find a value</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity on">O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Search (sorted)</td>
+                            <td>Binary search on a sorted array</td>
+                            <td class="complexity ologn">O(log n)</td>
+                            <td class="complexity ologn">O(log n)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size:0.82rem; margin-top:0.5rem;">* Static arrays cannot append if full — a new larger
+                    array must be manually allocated.</p>
+
+                <div class="callout">
+                    <span class="callout-icon">💡</span>
+                    <p><strong>Why is access O(1)?</strong> The CPU computes the exact memory address of <code
+                            class="inline">arr[i]</code> as <code class="inline">base + i × sizeof(element)</code> in a
+                        single arithmetic instruction — no searching required, no matter how large the array is.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CODE -->
+        <section id="code">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>Code Snippet</h2>
+            </div>
+            <div class="section-body">
+                <p>The first example demonstrates static-like array usage and core operations. The second implements a
+                    minimal dynamic array from scratch to show how resizing works under the hood.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Core Array Operations</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Static-style Array (fixed-length) ──────────────────────────</span>
 <span class="kw">const</span> staticArr = <span class="kw">new</span> <span class="cl">Array</span>(<span class="num">5</span>).<span class="fn">fill</span>(<span class="num">0</span>);   <span class="cm">// [0, 0, 0, 0, 0]</span>
 staticArr[<span class="num">0</span>] = <span class="num">10</span>;
 staticArr[<span class="num">2</span>] = <span class="num">30</span>;
@@ -596,14 +1010,14 @@ nums.<span class="fn">splice</span>(<span class="num">2</span>, <span class="num
 <span class="kw">const</span> sorted = [<span class="num">2</span>, <span class="num">5</span>, <span class="num">8</span>, <span class="num">12</span>, <span class="num">16</span>, <span class="num">23</span>, <span class="num">38</span>, <span class="num">56</span>];
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">binarySearch</span>(sorted, <span class="num">23</span>));  <span class="cm">// 5</span>
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">binarySearch</span>(sorted, <span class="num">10</span>));  <span class="cm">// -1</span></code></pre>
-      </div>
+                </div>
 
-      <div class="code-block" style="margin-top: 1.2rem;">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — Dynamic Array from Scratch</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── DynamicArray: shows how resize/amortisation works ──────────</span>
+                <div class="code-block" style="margin-top: 1.2rem;">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Dynamic Array from Scratch</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── DynamicArray: shows how resize/amortisation works ──────────</span>
 <span class="kw">class</span> <span class="cl">DynamicArray</span> {
   <span class="fn">constructor</span>() {
     <span class="kw">this</span>.<span class="prop">data</span>     = <span class="kw">new</span> <span class="cl">Array</span>(<span class="num">2</span>);  <span class="cm">// Start with capacity 2</span>
@@ -643,157 +1057,186 @@ da.<span class="fn">push</span>(<span class="num">3</span>);  <span class="cm">/
 da.<span class="fn">push</span>(<span class="num">4</span>);  <span class="cm">// capacity: 4</span>
 da.<span class="fn">push</span>(<span class="num">5</span>);  <span class="cm">// → Resized to capacity: 8</span>
 <span class="fn">console</span>.<span class="fn">log</span>(da.<span class="fn">get</span>(<span class="num">2</span>)); <span class="cm">// 3</span></code></pre>
-      </div>
-    </div>
-  </section>
+                </div>
+            </div>
+        </section>
 
-  <!-- 4. DIAGRAM -->
-  <section id="diagram">
-    <div class="section-header">
-      <div class="section-number">4</div>
-      <h2>Diagram Explanation</h2>
-    </div>
-    <div class="section-body">
-      <p>Arrays live in <strong>contiguous memory</strong>. Each cell is exactly the same size, so the CPU can jump to any index instantly using arithmetic.</p>
+        <!-- 4. DIAGRAM -->
+        <section id="diagram">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Diagram Explanation</h2>
+            </div>
+            <div class="section-body">
+                <p>Arrays live in <strong>contiguous memory</strong>. Each cell is exactly the same size, so the CPU can
+                    jump to any index instantly using arithmetic.</p>
 
-      <div class="diagram-area">
-        <div class="mem-label">Array: [10, 20, 30, 40, 50] — contiguous memory layout</div>
-        <div class="arr-index-row">
-          <div class="arr-index">index 0</div>
-          <div class="arr-index">index 1</div>
-          <div class="arr-index">index 2</div>
-          <div class="arr-index">index 3</div>
-          <div class="arr-index">index 4</div>
-        </div>
-        <div class="array-row">
-          <div class="arr-cell">10</div>
-          <div class="arr-cell">20</div>
-          <div class="arr-cell highlight">30</div>
-          <div class="arr-cell">40</div>
-          <div class="arr-cell">50</div>
-        </div>
-        <div class="arr-index-row">
-          <div class="arr-index" style="font-size:0.65rem">0x100</div>
-          <div class="arr-index" style="font-size:0.65rem">0x104</div>
-          <div class="arr-index" style="font-size:0.65rem; color:var(--accent)">0x108 ←</div>
-          <div class="arr-index" style="font-size:0.65rem">0x10C</div>
-          <div class="arr-index" style="font-size:0.65rem">0x110</div>
-        </div>
-        <p class="diagram-caption">arr[2] = 30, stored at address 0x100 + (2 × 4 bytes) = 0x108 — direct jump, no iteration</p>
-      </div>
+                <div class="diagram-area">
+                    <div class="mem-label">Array: [10, 20, 30, 40, 50] — contiguous memory layout</div>
+                    <div class="arr-index-row">
+                        <div class="arr-index">index 0</div>
+                        <div class="arr-index">index 1</div>
+                        <div class="arr-index">index 2</div>
+                        <div class="arr-index">index 3</div>
+                        <div class="arr-index">index 4</div>
+                    </div>
+                    <div class="array-row">
+                        <div class="arr-cell">10</div>
+                        <div class="arr-cell">20</div>
+                        <div class="arr-cell highlight">30</div>
+                        <div class="arr-cell">40</div>
+                        <div class="arr-cell">50</div>
+                    </div>
+                    <div class="arr-index-row">
+                        <div class="arr-index" style="font-size:0.65rem">0x100</div>
+                        <div class="arr-index" style="font-size:0.65rem">0x104</div>
+                        <div class="arr-index" style="font-size:0.65rem; color:var(--accent)">0x108 ←</div>
+                        <div class="arr-index" style="font-size:0.65rem">0x10C</div>
+                        <div class="arr-index" style="font-size:0.65rem">0x110</div>
+                    </div>
+                    <p class="diagram-caption">arr[2] = 30, stored at address 0x100 + (2 × 4 bytes) = 0x108 — direct
+                        jump, no iteration</p>
+                </div>
 
-      <p>When a dynamic array <strong>runs out of capacity</strong>, it allocates a new block (typically 2×), copies all existing elements over, and then discards the old block.</p>
+                <p>When a dynamic array <strong>runs out of capacity</strong>, it allocates a new block (typically 2×),
+                    copies all existing elements over, and then discards the old block.</p>
 
-      <div class="diagram-area">
-        <div class="mem-label">Dynamic array: capacity 4, length 4 — FULL, about to resize</div>
-        <div class="arr-index-row">
-          <div class="arr-index">0</div><div class="arr-index">1</div>
-          <div class="arr-index">2</div><div class="arr-index">3</div>
-        </div>
-        <div class="array-row">
-          <div class="arr-cell">A</div><div class="arr-cell">B</div>
-          <div class="arr-cell">C</div><div class="arr-cell highlight">D</div>
-        </div>
-        <div class="mem-label" style="margin-top:1rem;">After resize: capacity 8, length 5 — new element E added</div>
-        <div class="arr-index-row">
-          <div class="arr-index">0</div><div class="arr-index">1</div>
-          <div class="arr-index">2</div><div class="arr-index">3</div>
-          <div class="arr-index">4</div><div class="arr-index">5</div>
-          <div class="arr-index">6</div><div class="arr-index">7</div>
-        </div>
-        <div class="array-row">
-          <div class="arr-cell">A</div><div class="arr-cell">B</div>
-          <div class="arr-cell">C</div><div class="arr-cell">D</div>
-          <div class="arr-cell highlight">E</div>
-          <div class="arr-cell empty">—</div>
-          <div class="arr-cell empty">—</div>
-          <div class="arr-cell empty">—</div>
-        </div>
-        <p class="diagram-caption">Capacity doubled to 8. Elements A–D copied over. E added. Empty slots reserved for future growth.</p>
-      </div>
-    </div>
-  </section>
+                <div class="diagram-area">
+                    <div class="mem-label">Dynamic array: capacity 4, length 4 — FULL, about to resize</div>
+                    <div class="arr-index-row">
+                        <div class="arr-index">0</div>
+                        <div class="arr-index">1</div>
+                        <div class="arr-index">2</div>
+                        <div class="arr-index">3</div>
+                    </div>
+                    <div class="array-row">
+                        <div class="arr-cell">A</div>
+                        <div class="arr-cell">B</div>
+                        <div class="arr-cell">C</div>
+                        <div class="arr-cell highlight">D</div>
+                    </div>
+                    <div class="mem-label" style="margin-top:1rem;">After resize: capacity 8, length 5 — new element E
+                        added</div>
+                    <div class="arr-index-row">
+                        <div class="arr-index">0</div>
+                        <div class="arr-index">1</div>
+                        <div class="arr-index">2</div>
+                        <div class="arr-index">3</div>
+                        <div class="arr-index">4</div>
+                        <div class="arr-index">5</div>
+                        <div class="arr-index">6</div>
+                        <div class="arr-index">7</div>
+                    </div>
+                    <div class="array-row">
+                        <div class="arr-cell">A</div>
+                        <div class="arr-cell">B</div>
+                        <div class="arr-cell">C</div>
+                        <div class="arr-cell">D</div>
+                        <div class="arr-cell highlight">E</div>
+                        <div class="arr-cell empty">—</div>
+                        <div class="arr-cell empty">—</div>
+                        <div class="arr-cell empty">—</div>
+                    </div>
+                    <p class="diagram-caption">Capacity doubled to 8. Elements A–D copied over. E added. Empty slots
+                        reserved for future growth.</p>
+                </div>
+            </div>
+        </section>
 
-  <!-- 5. ANALOGY -->
-  <section id="analogy">
-    <div class="section-header">
-      <div class="section-number">5</div>
-      <h2>Plain English Analogy</h2>
-    </div>
-    <div class="section-body">
-      <div class="analogy-card">
-        <div class="analogy-icon">🎬</div>
-        <h3>A Row of Numbered Seats in a Cinema</h3>
-        <p>Imagine a row of cinema seats, each with a number printed on it: Seat 0, Seat 1, Seat 2, and so on. If someone tells you "your friend is in seat 4", you walk directly to seat 4 — you don't check every seat from the beginning. That's <strong>O(1) random access</strong>.</p>
-        <p>A <strong>static array</strong> is like a row with exactly 10 seats — the cinema was built that way and the walls can't be moved. A <strong>dynamic array</strong> is like a flexible venue: when every seat is full and a new person arrives, the whole group moves to a room with twice as many seats.</p>
-        <ul>
-          <li><strong>Seat number</strong> = index</li>
-          <li><strong>Person in the seat</strong> = element</li>
-          <li><strong>"Go directly to seat 4"</strong> = O(1) access</li>
-          <li><strong>Moving everyone to a bigger room</strong> = dynamic resize (O(n), but rare)</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+        <!-- 5. ANALOGY -->
+        <section id="analogy">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Plain English Analogy</h2>
+            </div>
+            <div class="section-body">
+                <div class="analogy-card">
+                    <div class="analogy-icon">🎬</div>
+                    <h3>A Row of Numbered Seats in a Cinema</h3>
+                    <p>Imagine a row of cinema seats, each with a number printed on it: Seat 0, Seat 1, Seat 2, and so
+                        on. If someone tells you "your friend is in seat 4", you walk directly to seat 4 — you don't
+                        check every seat from the beginning. That's <strong>O(1) random access</strong>.</p>
+                    <p>A <strong>static array</strong> is like a row with exactly 10 seats — the cinema was built that
+                        way and the walls can't be moved. A <strong>dynamic array</strong> is like a flexible venue:
+                        when every seat is full and a new person arrives, the whole group moves to a room with twice as
+                        many seats.</p>
+                    <ul>
+                        <li><strong>Seat number</strong> = index</li>
+                        <li><strong>Person in the seat</strong> = element</li>
+                        <li><strong>"Go directly to seat 4"</strong> = O(1) access</li>
+                        <li><strong>Moving everyone to a bigger room</strong> = dynamic resize (O(n), but rare)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
 
-  <!-- 6. REAL WORLD -->
-  <section id="real-world">
-    <div class="section-header">
-      <div class="section-number">6</div>
-      <h2>Real-World Coding Applications</h2>
-    </div>
-    <div class="section-body">
-      <p>Arrays are so foundational that nearly every other data structure is built on top of them.</p>
-      <div class="rw-grid">
-        <div class="rw-card">
-          <div class="rw-icon">🖼️</div>
-          <h4>Image Pixels</h4>
-          <p>A digital image is a 2D array of pixels. Each cell stores RGB colour values. GPU shaders process these arrays in parallel at enormous speed.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">📊</div>
-          <h4>Spreadsheets &amp; Databases</h4>
-          <p>Table rows and columns in SQL databases and Excel are backed by arrays. Column-oriented databases store each column as a flat array for fast aggregation.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🔊</div>
-          <h4>Audio &amp; Video Buffers</h4>
-          <p>Audio waveforms are arrays of samples (e.g. 44,100 per second). Video frames are arrays of pixel arrays. Media players stream these at precise intervals.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🧮</div>
-          <h4>Machine Learning</h4>
-          <p>Neural networks operate entirely on multi-dimensional arrays (tensors). Libraries like NumPy and PyTorch wrap highly optimised C array operations.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🗃️</div>
-          <h4>Hash Tables</h4>
-          <p>The internal backing structure of a hash map (JavaScript objects, Python dicts) is an array. The hash function maps keys to array indices.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🔀</div>
-          <h4>Sorting Algorithms</h4>
-          <p>Almost every sorting algorithm (quicksort, mergesort, heapsort) operates on arrays. The contiguous layout enables cache-efficient comparisons and swaps.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+        <!-- 6. REAL WORLD -->
+        <section id="real-world">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Real-World Coding Applications</h2>
+            </div>
+            <div class="section-body">
+                <p>Arrays are so foundational that nearly every other data structure is built on top of them.</p>
+                <div class="rw-grid">
+                    <div class="rw-card">
+                        <div class="rw-icon">🖼️</div>
+                        <h4>Image Pixels</h4>
+                        <p>A digital image is a 2D array of pixels. Each cell stores RGB colour values. GPU shaders
+                            process these arrays in parallel at enormous speed.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">📊</div>
+                        <h4>Spreadsheets &amp; Databases</h4>
+                        <p>Table rows and columns in SQL databases and Excel are backed by arrays. Column-oriented
+                            databases store each column as a flat array for fast aggregation.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🔊</div>
+                        <h4>Audio &amp; Video Buffers</h4>
+                        <p>Audio waveforms are arrays of samples (e.g. 44,100 per second). Video frames are arrays of
+                            pixel arrays. Media players stream these at precise intervals.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🧮</div>
+                        <h4>Machine Learning</h4>
+                        <p>Neural networks operate entirely on multi-dimensional arrays (tensors). Libraries like NumPy
+                            and PyTorch wrap highly optimised C array operations.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🗃️</div>
+                        <h4>Hash Tables</h4>
+                        <p>The internal backing structure of a hash map (JavaScript objects, Python dicts) is an array.
+                            The hash function maps keys to array indices.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🔀</div>
+                        <h4>Sorting Algorithms</h4>
+                        <p>Almost every sorting algorithm (quicksort, mergesort, heapsort) operates on arrays. The
+                            contiguous layout enables cache-efficient comparisons and swaps.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-</main>
+    </main>
 
-<footer>
-  <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
-  <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
-</footer>
+    <footer>
+        <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+        <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
+    </footer>
 
-<script>
-  function copyCode(btn) {
-    const pre = btn.closest('.code-block').querySelector('pre');
-    navigator.clipboard.writeText(pre.innerText).then(() => {
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy', 2000);
-    });
-  }
-</script>
+    <script>
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+
+
+    </script>
 </body>
+
 </html>

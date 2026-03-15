@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linked Lists — DSA Zero to Hero</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="header.css">
+    <script src="header.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f9f6f1;
+            --surface: #ffffff;
+            --border: #e4ddd3;
+            --text: #1a1612;
+            --muted: #6b6055;
+            --accent: #c84b31;
+            --accent2: #2d6a4f;
+            --accent3: #1d3557;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tag-bg: #fce8e4;
+            --tag-text: #c84b31;
+            --highlight: #fff3cd;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
+
+
+
+        /* ── HERO ── */
+        .hero {
+            padding: 5rem 2rem 3rem;
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
+
+        .tag.green {
+            background: #e0f0e9;
+            color: var(--accent2);
+        }
+
+        .tag.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
+
+        .tag.amber {
+            background: #fff0d4;
+            color: #a05c00;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        /* ── TOC ── */
+        .toc-wrapper {
+            max-width: 860px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.4rem 1.8rem;
+        }
+
+        .toc h2 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .toc ol {
+            padding-left: 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 2rem;
+        }
+
+        .toc a {
+            color: var(--accent3);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── MAIN ── */
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        /* ── SECTIONS ── */
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            background: #faf9f7;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-body {
+            padding: 1.8rem;
+        }
+
+        .section-body p {
+            margin-bottom: 1rem;
+            color: var(--muted);
+        }
+
+        .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-body strong {
+            color: var(--text);
+        }
+
+        /* ── DEFINITION BOX ── */
+        .definition-box {
+            background: var(--highlight);
+            border: 1px solid #ffe08a;
+            border-left: 4px solid #f5a623;
+            border-radius: 8px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.02rem;
+            color: #3d2c00;
+            line-height: 1.65;
+        }
+
+        /* ── COMPARE CARDS ── */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .compare-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .compare-card.singly {
+            border-top: 3px solid var(--accent3);
+        }
+
+        .compare-card.doubly {
+            border-top: 3px solid var(--accent2);
+        }
+
+        .compare-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            color: var(--text);
+        }
+
+        .compare-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .compare-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── OPS TABLE ── */
+        .ops-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .ops-table th {
+            background: #f0ece6;
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .ops-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            vertical-align: top;
+        }
+
+        .ops-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ops-table tr:hover td {
+            background: #faf8f5;
+        }
+
+        code.inline {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f0ece6;
+            color: var(--accent);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .complexity {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .o1 {
+            color: var(--accent2);
+            font-weight: 700;
+        }
+
+        .on {
+            color: #c47a00;
+            font-weight: 700;
+        }
+
+        .ologn {
+            color: var(--accent3);
+            font-weight: 700;
+        }
+
+        .ona {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* ── CODE BLOCK ── */
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.1rem;
+            background: #181825;
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #a6adc8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 0.25rem 0.65rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            transition: background .2s;
+        }
+
+        .copy-btn:hover {
+            background: #45475a;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem 1.4rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.65;
+        }
+
+        pre code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--code-text);
+        }
+
+        .kw {
+            color: #cba6f7;
+        }
+
+        .fn {
+            color: #89b4fa;
+        }
+
+        .str {
+            color: #a6e3a1;
+        }
+
+        .num {
+            color: #fab387;
+        }
+
+        .cm {
+            color: #6c7086;
+            font-style: italic;
+        }
+
+        .cl {
+            color: #f38ba8;
+        }
+
+        .prop {
+            color: #89dceb;
+        }
+
+        /* ── DIAGRAM ── */
+        .diagram-area {
+            background: #f9f6f1;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+            overflow-x: auto;
+        }
+
+        /* Linked list node chains */
+        .ll-row {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex-wrap: nowrap;
+        }
+
+        .ll-node {
+            display: flex;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--surface);
+        }
+
+        .ll-node.highlight {
+            border-color: var(--accent);
+        }
+
+        .ll-data {
+            padding: 0.5rem 0.85rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+            border-right: 2px solid var(--border);
+            background: var(--surface);
+        }
+
+        .ll-node.highlight .ll-data {
+            background: #fce8e4;
+            color: var(--accent);
+            border-right-color: var(--accent);
+        }
+
+        .ll-ptr {
+            padding: 0.5rem 0.65rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            background: #faf8f5;
+        }
+
+        .ll-node.highlight .ll-ptr {
+            background: #fef3f0;
+            color: var(--accent);
+        }
+
+        .ll-arrow {
+            font-size: 1.3rem;
+            color: var(--muted);
+            margin: 0 0.4rem;
+            line-height: 1;
+            align-self: center;
+        }
+
+        .ll-arrow.accent {
+            color: var(--accent);
+        }
+
+        .ll-null {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            color: var(--muted);
+            align-self: center;
+            margin-left: 0.4rem;
+        }
+
+        /* Doubly-linked node */
+        .dll-node {
+            display: flex;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--surface);
+            align-items: stretch;
+        }
+
+        .dll-prev {
+            padding: 0.5rem 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+            background: #f0ece6;
+            border-right: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+        }
+
+        .dll-val {
+            padding: 0.5rem 0.75rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+            border-right: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+        }
+
+        .dll-next {
+            padding: 0.5rem 0.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+            background: #f0ece6;
+            display: flex;
+            align-items: center;
+        }
+
+        .dll-arrow {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 0.25rem;
+            gap: 2px;
+            font-size: 0.75rem;
+            color: var(--muted);
+        }
+
+        .diagram-caption {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .mem-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* head/tail labels */
+        .ll-label-row {
+            display: flex;
+            gap: 0;
+            align-items: flex-end;
+        }
+
+        .ll-label {
+            font-size: 0.72rem;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* ── CALLOUT ── */
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: #eef4ff;
+            border: 1px solid #b8d0f5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .callout.green {
+            background: #e8f5ee;
+            border-color: #a8d5ba;
+            border-left-color: var(--accent2);
+        }
+
+        .callout.amber {
+            background: #fff8e6;
+            border-color: #ffe08a;
+            border-left-color: #f5a623;
+        }
+
+        .callout.red {
+            background: #fef2f0;
+            border-color: #f5c6bb;
+            border-left-color: var(--accent);
+        }
+
+        .callout-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--accent3);
+        }
+
+        .callout.green p {
+            color: var(--accent2);
+        }
+
+        .callout.amber p {
+            color: #7a4800;
+        }
+
+        .callout.red p {
+            color: #8a2010;
+        }
+
+        /* ── ANALOGY ── */
+        .analogy-card {
+            background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%);
+            border: 1px solid #f0d9b5;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .analogy-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .analogy-card p {
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card ul {
+            padding-left: 1.3rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .analogy-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── REAL WORLD ── */
+        .rw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .rw-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem;
+            background: var(--surface);
+        }
+
+        .rw-card .rw-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rw-card h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+
+        .rw-card p {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── INTERVIEW ── */
+        .interview-problem {
+            background: #f0f4ff;
+            border: 1px solid #c0cff5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .interview-problem h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            color: var(--accent3);
+            margin-bottom: 0.5rem;
+        }
+
+        .interview-problem p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .interview-problem .difficulty-badge {
+            display: inline-block;
+            margin-top: 0.6rem;
+            background: #fff0d4;
+            color: #a05c00;
+            border-radius: 20px;
+            padding: 0.18rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 1rem 0;
+        }
+
+        .step-list li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            font-size: 0.93rem;
+            color: var(--muted);
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* ── NAV BETWEEN MODULES ── */
+        .module-nav {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .module-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            transition: border-color .2s, color .2s;
+        }
+
+        .module-nav a:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .module-nav a.next {
+            margin-left: auto;
+        }
+
+        @media (max-width: 620px) {
+            .toc ol {
+                grid-template-columns: 1fr;
+            }
+
+            .compare-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+
+            .ll-node .ll-data {
+                padding: 0.4rem 0.55rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <common-header accent="#c84b31"></common-header>
+
+    <header class="hero">
+        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Linked Lists</p>
+        <h1>Data Structures:<br /><span>Linked Lists</span></h1>
+        <div class="hero-meta">
+            <span class="tag">Singly &amp; Doubly</span>
+            <span class="tag green">O(1) Insert/Delete</span>
+            <span class="tag blue">Pointer-Based</span>
+            <span class="tag amber">Dynamic Size</span>
+        </div>
+        <p class="hero-desc">A chain of nodes connected by pointers — the foundation of dynamic memory allocation, and
+            the secret behind stacks, queues, and more.</p>
+    </header>
+
+    <div class="toc-wrapper">
+        <div class="toc">
+            <h2>Contents</h2>
+            <ol>
+                <li><a href="#definition">Formal Definition</a></li>
+                <li><a href="#explanation">Explanation &amp; Operations</a></li>
+                <li><a href="#code">Code Snippet</a></li>
+                <li><a href="#diagram">Visual Diagram</a></li>
+                <li><a href="#analogy">Analogy (Plain English)</a></li>
+                <li><a href="#real-world">Real-World Applications</a></li>
+                <li><a href="#interview">Interview Question</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <main>
+
+        <!-- 1. DEFINITION -->
+        <section id="definition">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Formal Definition</h2>
+            </div>
+            <div class="section-body">
+                <div class="definition-box">
+                    A <strong>Linked List</strong> is a linear data structure in which elements (called <em>nodes</em>)
+                    are stored in non-contiguous memory locations. Each node contains two fields: a <em>data</em> field
+                    holding the stored value, and a <em>pointer</em> (or reference) field pointing to the next node in
+                    the sequence. The list is accessed through a reference to its first node, called the <em>head</em>.
+                    The last node's pointer is <code style="font-style:normal">null</code>, signalling the end of the
+                    list. A <strong>doubly linked list</strong> augments each node with an additional pointer to its
+                    predecessor, enabling bidirectional traversal.
+                </div>
+                <p>Unlike arrays, linked lists <strong>do not require contiguous memory</strong>. Each node can sit
+                    anywhere in the heap. The trade-off: random access is gone — to reach node <em>k</em>, you must
+                    follow pointers from the head, one step at a time.</p>
+            </div>
+        </section>
+
+        <!-- 2. EXPLANATION -->
+        <section id="explanation">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>Plain English Explanation &amp; Operations</h2>
+            </div>
+            <div class="section-body">
+
+                <div class="compare-grid">
+                    <div class="compare-card singly">
+                        <h3>➡️ Singly Linked List</h3>
+                        <ul>
+                            <li>Each node holds <strong>data + one pointer</strong> (next)</li>
+                            <li>Traversal in one direction only (head → tail)</li>
+                            <li>Deleting a node requires the <em>previous</em> node's pointer</li>
+                            <li>Less memory — one pointer per node</li>
+                            <li>Used for stacks, simple queues, undo history</li>
+                        </ul>
+                    </div>
+                    <div class="compare-card doubly">
+                        <h3>⇄ Doubly Linked List</h3>
+                        <ul>
+                            <li>Each node holds <strong>data + two pointers</strong> (prev, next)</li>
+                            <li>Traversal in both directions</li>
+                            <li>Delete any node in O(1) with a direct reference to it</li>
+                            <li>More memory — two pointers per node</li>
+                            <li>Used for browser history, LRU cache, deques</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Description</th>
+                            <th>Singly</th>
+                            <th>Doubly</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Access by index</td>
+                            <td>Reach the <em>k</em>-th node</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity on">O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Prepend (head)</td>
+                            <td>Insert a new node at the front</td>
+                            <td class="complexity o1">O(1)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Append (tail)</td>
+                            <td>Insert at the end (with tail pointer)</td>
+                            <td class="complexity o1">O(1)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Insert (middle)</td>
+                            <td>Insert after a given node reference</td>
+                            <td class="complexity o1">O(1)*</td>
+                            <td class="complexity o1">O(1)*</td>
+                        </tr>
+                        <tr>
+                            <td>Delete (head)</td>
+                            <td>Remove the first node</td>
+                            <td class="complexity o1">O(1)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Delete (given reference)</td>
+                            <td>Remove a node you already have a pointer to</td>
+                            <td class="complexity on">O(n)**</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td>Search</td>
+                            <td>Find first node with a given value</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity on">O(n)</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size:0.82rem; margin-top:0.5rem;">* You must have a reference to the preceding node.
+                    Finding that node is O(n). <br />** Singly lists need to locate the previous node first — that walk
+                    is O(n).</p>
+
+                <div class="callout">
+                    <span class="callout-icon">💡</span>
+                    <p><strong>Array vs Linked List — the core trade-off:</strong> Arrays give you O(1) access at any
+                        index, but insertions/deletions in the middle are O(n) due to shifting. Linked lists flip this:
+                        insert or delete anywhere in O(1) once you have the node, but accessing the <em>k</em>-th
+                        element costs O(n) because you must walk the chain.</p>
+                </div>
+
+                <div class="callout amber" style="margin-top:0.8rem;">
+                    <span class="callout-icon">⚠️</span>
+                    <p><strong>Cache locality:</strong> Because linked list nodes are scattered in heap memory, the CPU
+                        cache cannot prefetch them the way it can with array elements. In practice, arrays are often
+                        faster even for insert-heavy workloads because of this cache advantage.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CODE -->
+        <section id="code">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>Code Snippet</h2>
+            </div>
+            <div class="section-body">
+                <p>The first snippet builds a minimal singly linked list class with all core operations. The second
+                    shows a doubly linked list — the foundation of most real-world list implementations.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Singly Linked List</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Node blueprint ─────────────────────────────────────────────</span>
+<span class="kw">class</span> <span class="cl">Node</span> {
+  <span class="fn">constructor</span>(value) {
+    <span class="kw">this</span>.<span class="prop">value</span> = value;
+    <span class="kw">this</span>.<span class="prop">next</span>  = <span class="kw">null</span>;   <span class="cm">// pointer to the next node</span>
+  }
+}
+
+<span class="cm">// ─── Singly Linked List ──────────────────────────────────────────</span>
+<span class="kw">class</span> <span class="cl">LinkedList</span> {
+  <span class="fn">constructor</span>() {
+    <span class="kw">this</span>.<span class="prop">head</span>   = <span class="kw">null</span>;
+    <span class="kw">this</span>.<span class="prop">tail</span>   = <span class="kw">null</span>;
+    <span class="kw">this</span>.<span class="prop">length</span> = <span class="num">0</span>;
+  }
+
+  <span class="cm">// O(1) — insert at end</span>
+  <span class="fn">append</span>(value) {
+    <span class="kw">const</span> node = <span class="kw">new</span> <span class="cl">Node</span>(value);
+    <span class="kw">if</span> (!<span class="kw">this</span>.<span class="prop">head</span>) {
+      <span class="kw">this</span>.<span class="prop">head</span> = <span class="kw">this</span>.<span class="prop">tail</span> = node;
+    } <span class="kw">else</span> {
+      <span class="kw">this</span>.<span class="prop">tail</span>.<span class="prop">next</span> = node;   <span class="cm">// wire old tail → new node</span>
+      <span class="kw">this</span>.<span class="prop">tail</span>      = node;   <span class="cm">// advance tail pointer</span>
+    }
+    <span class="kw">this</span>.<span class="prop">length</span>++;
+  }
+
+  <span class="cm">// O(1) — insert at front</span>
+  <span class="fn">prepend</span>(value) {
+    <span class="kw">const</span> node = <span class="kw">new</span> <span class="cl">Node</span>(value);
+    node.<span class="prop">next</span>  = <span class="kw">this</span>.<span class="prop">head</span>;  <span class="cm">// new node points to old head</span>
+    <span class="kw">this</span>.<span class="prop">head</span>   = node;
+    <span class="kw">if</span> (!<span class="kw">this</span>.<span class="prop">tail</span>) <span class="kw">this</span>.<span class="prop">tail</span> = node;
+    <span class="kw">this</span>.<span class="prop">length</span>++;
+  }
+
+  <span class="cm">// O(n) — delete by value</span>
+  <span class="fn">delete</span>(value) {
+    <span class="kw">if</span> (!<span class="kw">this</span>.<span class="prop">head</span>) <span class="kw">return</span>;
+    <span class="kw">if</span> (<span class="kw">this</span>.<span class="prop">head</span>.<span class="prop">value</span> === value) {
+      <span class="kw">this</span>.<span class="prop">head</span> = <span class="kw">this</span>.<span class="prop">head</span>.<span class="prop">next</span>;  <span class="cm">// skip head</span>
+      <span class="kw">this</span>.<span class="prop">length</span>--;
+      <span class="kw">return</span>;
+    }
+    <span class="kw">let</span> curr = <span class="kw">this</span>.<span class="prop">head</span>;
+    <span class="kw">while</span> (curr.<span class="prop">next</span>) {
+      <span class="kw">if</span> (curr.<span class="prop">next</span>.<span class="prop">value</span> === value) {
+        <span class="kw">if</span> (curr.<span class="prop">next</span> === <span class="kw">this</span>.<span class="prop">tail</span>) <span class="kw">this</span>.<span class="prop">tail</span> = curr;
+        curr.<span class="prop">next</span> = curr.<span class="prop">next</span>.<span class="prop">next</span>;  <span class="cm">// bypass the target node</span>
+        <span class="kw">this</span>.<span class="prop">length</span>--;
+        <span class="kw">return</span>;
+      }
+      curr = curr.<span class="prop">next</span>;
+    }
+  }
+
+  <span class="cm">// O(n) — access by index</span>
+  <span class="fn">get</span>(index) {
+    <span class="kw">let</span> curr = <span class="kw">this</span>.<span class="prop">head</span>, i = <span class="num">0</span>;
+    <span class="kw">while</span> (curr) {
+      <span class="kw">if</span> (i === index) <span class="kw">return</span> curr.<span class="prop">value</span>;
+      curr = curr.<span class="prop">next</span>;
+      i++;
+    }
+    <span class="kw">return null</span>;
+  }
+
+  <span class="cm">// Utility: convert to array for printing</span>
+  <span class="fn">toArray</span>() {
+    <span class="kw">const</span> result = [];
+    <span class="kw">let</span> curr = <span class="kw">this</span>.<span class="prop">head</span>;
+    <span class="kw">while</span> (curr) { result.<span class="fn">push</span>(curr.<span class="prop">value</span>); curr = curr.<span class="prop">next</span>; }
+    <span class="kw">return</span> result;
+  }
+}
+
+<span class="cm">// ─── Usage ───────────────────────────────────────────────────────</span>
+<span class="kw">const</span> list = <span class="kw">new</span> <span class="cl">LinkedList</span>();
+list.<span class="fn">append</span>(<span class="num">10</span>);
+list.<span class="fn">append</span>(<span class="num">20</span>);
+list.<span class="fn">append</span>(<span class="num">30</span>);
+list.<span class="fn">prepend</span>(<span class="num">5</span>);
+<span class="fn">console</span>.<span class="fn">log</span>(list.<span class="fn">toArray</span>());   <span class="cm">// [5, 10, 20, 30]</span>
+list.<span class="fn">delete</span>(<span class="num">20</span>);
+<span class="fn">console</span>.<span class="fn">log</span>(list.<span class="fn">toArray</span>());   <span class="cm">// [5, 10, 30]</span>
+<span class="fn">console</span>.<span class="fn">log</span>(list.<span class="fn">get</span>(<span class="num">1</span>));       <span class="cm">// 10</span></code></pre>
+                </div>
+
+                <div class="code-block" style="margin-top: 1.2rem;">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Doubly Linked List</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="kw">class</span> <span class="cl">DNode</span> {
+  <span class="fn">constructor</span>(value) {
+    <span class="kw">this</span>.<span class="prop">value</span> = value;
+    <span class="kw">this</span>.<span class="prop">prev</span>  = <span class="kw">null</span>;
+    <span class="kw">this</span>.<span class="prop">next</span>  = <span class="kw">null</span>;
+  }
+}
+
+<span class="kw">class</span> <span class="cl">DoublyLinkedList</span> {
+  <span class="fn">constructor</span>() {
+    <span class="kw">this</span>.<span class="prop">head</span> = <span class="kw">null</span>;
+    <span class="kw">this</span>.<span class="prop">tail</span> = <span class="kw">null</span>;
+  }
+
+  <span class="fn">append</span>(value) {
+    <span class="kw">const</span> node = <span class="kw">new</span> <span class="cl">DNode</span>(value);
+    <span class="kw">if</span> (!<span class="kw">this</span>.<span class="prop">tail</span>) {
+      <span class="kw">this</span>.<span class="prop">head</span> = <span class="kw">this</span>.<span class="prop">tail</span> = node;
+    } <span class="kw">else</span> {
+      node.<span class="prop">prev</span>      = <span class="kw">this</span>.<span class="prop">tail</span>;  <span class="cm">// back-pointer to old tail</span>
+      <span class="kw">this</span>.<span class="prop">tail</span>.<span class="prop">next</span> = node;
+      <span class="kw">this</span>.<span class="prop">tail</span>      = node;
+    }
+  }
+
+  <span class="cm">// O(1) delete — we already have the node, no walk needed</span>
+  <span class="fn">deleteNode</span>(node) {
+    <span class="kw">if</span> (node.<span class="prop">prev</span>) node.<span class="prop">prev</span>.<span class="prop">next</span> = node.<span class="prop">next</span>;
+    <span class="kw">else</span>            <span class="kw">this</span>.<span class="prop">head</span>       = node.<span class="prop">next</span>;
+
+    <span class="kw">if</span> (node.<span class="prop">next</span>) node.<span class="prop">next</span>.<span class="prop">prev</span> = node.<span class="prop">prev</span>;
+    <span class="kw">else</span>            <span class="kw">this</span>.<span class="prop">tail</span>       = node.<span class="prop">prev</span>;
+
+    node.<span class="prop">prev</span> = node.<span class="prop">next</span> = <span class="kw">null</span>;  <span class="cm">// help GC</span>
+  }
+}
+
+<span class="kw">const</span> dll = <span class="kw">new</span> <span class="cl">DoublyLinkedList</span>();
+dll.<span class="fn">append</span>(<span class="str">'A'</span>);
+dll.<span class="fn">append</span>(<span class="str">'B'</span>);
+dll.<span class="fn">append</span>(<span class="str">'C'</span>);
+<span class="cm">// dll.head → A ⇄ B ⇄ C ← dll.tail</span>
+dll.<span class="fn">deleteNode</span>(dll.<span class="prop">head</span>.<span class="prop">next</span>);   <span class="cm">// delete B in O(1)</span>
+<span class="cm">// dll.head → A ⇄ C ← dll.tail</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. DIAGRAM -->
+        <section id="diagram">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Visual Diagram</h2>
+            </div>
+            <div class="section-body">
+                <p>Unlike arrays, linked list nodes are <strong>scattered in heap memory</strong>. Each node carries a
+                    pointer to the next — that pointer is the only thing connecting them.</p>
+
+                <!-- Singly linked list -->
+                <div class="diagram-area">
+                    <div class="mem-label">Singly Linked List — head → 5 → 10 → 20 → 30 → null</div>
+
+                    <div style="display:flex; align-items:flex-end; gap:0; flex-wrap:nowrap;">
+                        <div
+                            style="display:flex; flex-direction:column; align-items:center; gap:2px; margin-right:0.4rem;">
+                            <span class="ll-label"
+                                style="font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--accent); font-weight:700;">head</span>
+                            <span style="font-size:1rem; color:var(--accent);">↓</span>
+                        </div>
+                        <div class="ll-row">
+                            <div class="ll-node highlight">
+                                <div class="ll-data">5</div>
+                                <div class="ll-ptr">next→</div>
+                            </div>
+                            <span class="ll-arrow accent">→</span>
+                            <div class="ll-node">
+                                <div class="ll-data">10</div>
+                                <div class="ll-ptr">next→</div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node">
+                                <div class="ll-data">20</div>
+                                <div class="ll-ptr">next→</div>
+                            </div>
+                            <span class="ll-arrow">→</span>
+                            <div class="ll-node">
+                                <div class="ll-data">30</div>
+                                <div class="ll-ptr">null</div>
+                            </div>
+                        </div>
+                        <div
+                            style="display:flex; flex-direction:column; align-items:center; gap:2px; margin-left:0.4rem;">
+                            <span class="ll-label"
+                                style="font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:var(--accent2); font-weight:700;">tail</span>
+                            <span style="font-size:1rem; color:var(--accent2);">↑</span>
+                        </div>
+                    </div>
+                    <p class="diagram-caption">Each box = one Node object in memory. The left half is the value; the
+                        right half is a pointer to the next node.</p>
+                </div>
+
+                <p>To <strong>insert</strong> a new node (e.g. 15) between 10 and 20, we just rewire two pointers — no
+                    shifting required:</p>
+
+                <div class="diagram-area">
+                    <div class="mem-label">Inserting 15 between 10 and 20</div>
+                    <div style="display:flex;align-items:center;gap:0.3rem;flex-wrap:nowrap;">
+                        <div class="ll-node">
+                            <div class="ll-data">5</div>
+                            <div class="ll-ptr">next→</div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node">
+                            <div class="ll-data">10</div>
+                            <div class="ll-ptr">next→</div>
+                        </div>
+                        <span class="ll-arrow accent" style="font-weight:900;">→</span>
+                        <div class="ll-node highlight">
+                            <div class="ll-data">15</div>
+                            <div class="ll-ptr">next→</div>
+                        </div>
+                        <span class="ll-arrow accent" style="font-weight:900;">→</span>
+                        <div class="ll-node">
+                            <div class="ll-data">20</div>
+                            <div class="ll-ptr">next→</div>
+                        </div>
+                        <span class="ll-arrow">→</span>
+                        <div class="ll-node">
+                            <div class="ll-data">30</div>
+                            <div class="ll-ptr">null</div>
+                        </div>
+                    </div>
+                    <p class="diagram-caption">Step 1: new node's next → 20. &nbsp; Step 2: node 10's next → new node.
+                        &nbsp; Zero elements moved.</p>
+                </div>
+
+                <p>A <strong>doubly linked list</strong> adds a back-pointer so you can walk in either direction — and
+                    delete any node in O(1) without hunting for its predecessor.</p>
+
+                <div class="diagram-area">
+                    <div class="mem-label">Doubly Linked List — prev &amp; next pointers</div>
+                    <div style="display:flex;align-items:center;flex-wrap:nowrap;gap:0.1rem;">
+
+                        <div class="dll-node">
+                            <div class="dll-prev">null</div>
+                            <div class="dll-val">A</div>
+                            <div class="dll-next">next→</div>
+                        </div>
+
+                        <div class="dll-arrow">
+                            <span>→</span>
+                            <span>←</span>
+                        </div>
+
+                        <div class="dll-node" style="border-color:var(--accent);">
+                            <div class="dll-prev" style="background:#fce8e4;color:var(--accent);">←prev</div>
+                            <div class="dll-val" style="color:var(--accent);">B</div>
+                            <div class="dll-next" style="background:#fce8e4;color:var(--accent);">next→</div>
+                        </div>
+
+                        <div class="dll-arrow">
+                            <span>→</span>
+                            <span>←</span>
+                        </div>
+
+                        <div class="dll-node">
+                            <div class="dll-prev">←prev</div>
+                            <div class="dll-val">C</div>
+                            <div class="dll-next">null</div>
+                        </div>
+
+                    </div>
+                    <p class="diagram-caption">Node B highlighted. To delete it: A.next = C and C.prev = A. No traversal
+                        needed — O(1).</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. ANALOGY -->
+        <section id="analogy">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Plain English Analogy</h2>
+            </div>
+            <div class="section-body">
+                <div class="analogy-card">
+                    <div class="analogy-icon">🚂</div>
+                    <h3>A Train with Detachable Carriages</h3>
+                    <p>Picture a freight train. Each carriage (node) carries some cargo (data) and is attached to the
+                        next carriage with a coupling hook (pointer). The train driver only knows where the first
+                        carriage is — the <strong>head</strong>.</p>
+                    <p>Now compare this to a cinema row (arrays). In the cinema, every seat is in a fixed, numbered
+                        spot. You can jump straight to seat 7. On the train, to reach the 7th carriage, you have to walk
+                        through carriages 1, 2, 3… one at a time — that's <strong>O(n) access</strong>.</p>
+                    <p>But here's where trains win: <strong>adding or removing a carriage in the middle takes one
+                            second</strong>. You unhook one coupling and re-hook two others. No seats need to shift.
+                        With a cinema row, every person after the gap has to move one seat — that's O(n) for a linked
+                        list insert.</p>
+                    <ul>
+                        <li><strong>Carriage</strong> = node</li>
+                        <li><strong>Cargo inside</strong> = the data value</li>
+                        <li><strong>Coupling hook</strong> = the <code class="inline">next</code> pointer</li>
+                        <li><strong>Engine (loco)</strong> = the <code class="inline">head</code> reference</li>
+                        <li><strong>Rear carriage</strong> = the <code class="inline">tail</code> reference</li>
+                        <li><strong>Unhook + rehook</strong> = O(1) insert / delete</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. REAL WORLD -->
+        <section id="real-world">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Real-World Coding Applications</h2>
+            </div>
+            <div class="section-body">
+                <p>Linked lists appear wherever you need fast insertion or deletion and don't need random index access.
+                </p>
+                <div class="rw-grid">
+                    <div class="rw-card">
+                        <div class="rw-icon">🌐</div>
+                        <h4>Browser History</h4>
+                        <p>Each page you visit is a node in a doubly linked list. The Back and Forward buttons simply
+                            walk prev/next pointers — O(1) navigation.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">↩️</div>
+                        <h4>Undo / Redo</h4>
+                        <p>Text editors (VS Code, Photoshop) store edit operations in a doubly linked list. Undo pops
+                            from the tail; redo follows the forward pointer.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">📦</div>
+                        <h4>Memory Allocators</h4>
+                        <p>The OS's free-list (blocks of available heap memory) is a linked list. When you call <code
+                                class="inline">malloc()</code>, the allocator walks this list and splices in your block.
+                        </p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">⚡</div>
+                        <h4>LRU Cache</h4>
+                        <p>A doubly linked list + hash map powers every LRU (Least Recently Used) cache. Moving a
+                            recently-used item to the front is O(1) with a node reference.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🎵</div>
+                        <h4>Music / Video Playlist</h4>
+                        <p>A playlist is a doubly linked list. Jump to previous track (prev) or next track (next) in
+                            O(1). Shuffle by rewiring a few pointers.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🔗</div>
+                        <h4>Hash Table Chaining</h4>
+                        <p>When two keys hash to the same bucket, each bucket stores a singly linked list of all
+                            colliding entries. This is the "chaining" collision strategy used in Java's <code
+                                class="inline">HashMap</code>.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. INTERVIEW -->
+        <section id="interview">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2>Classic Interview Question</h2>
+            </div>
+            <div class="section-body">
+
+                <div class="interview-problem">
+                    <h3>🔁 Reverse a Singly Linked List</h3>
+                    <p>Given the head of a singly linked list, reverse the list in-place and return the new head. You
+                        must do it in <strong>O(n) time</strong> and <strong>O(1) extra space</strong>.</p>
+                    <span class="difficulty-badge">⚡ Easy — but asked in ~70% of linked list rounds</span>
+                </div>
+
+                <p><strong>Why this question?</strong> It's simple enough to describe in one sentence but requires
+                    genuine understanding of pointer manipulation. A candidate who truly understands how <code
+                        class="inline">next</code> pointers work solves it cleanly; one who doesn't will tie themselves
+                    in knots.</p>
+
+                <p><strong>The approach — three-pointer technique:</strong></p>
+                <ul class="step-list">
+                    <li>
+                        <div class="step-num">1</div><span>Keep three pointers: <code class="inline">prev</code> (starts
+                            null), <code class="inline">curr</code> (starts at head), <code class="inline">next</code>
+                            (temporary).</span>
+                    </li>
+                    <li>
+                        <div class="step-num">2</div><span>Save <code class="inline">curr.next</code> into <code
+                                class="inline">next</code> before you overwrite it.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">3</div><span>Point <code class="inline">curr.next</code> backwards to
+                            <code class="inline">prev</code> — this is the reversal step.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">4</div><span>Advance <code class="inline">prev = curr</code> and <code
+                                class="inline">curr = next</code>, then repeat.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">5</div><span>When <code class="inline">curr</code> is null, <code
+                                class="inline">prev</code> is the new head.</span>
+                    </li>
+                </ul>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Reverse Linked List</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Iterative — O(n) time, O(1) space ─────────────────────────</span>
+<span class="kw">function</span> <span class="fn">reverseList</span>(head) {
+  <span class="kw">let</span> prev = <span class="kw">null</span>;
+  <span class="kw">let</span> curr = head;
+
+  <span class="kw">while</span> (curr !== <span class="kw">null</span>) {
+    <span class="kw">const</span> next = curr.<span class="prop">next</span>;   <span class="cm">// 1. save next before we overwrite it</span>
+    curr.<span class="prop">next</span>  = prev;          <span class="cm">// 2. reverse the arrow</span>
+    prev        = curr;          <span class="cm">// 3. advance prev</span>
+    curr        = next;          <span class="cm">// 4. advance curr</span>
+  }
+
+  <span class="kw">return</span> prev;  <span class="cm">// prev is now the new head</span>
+}
+
+<span class="cm">// ─── Walkthrough: 1 → 2 → 3 → null ─────────────────────────────</span>
+<span class="cm">// Start:   prev=null, curr=1</span>
+<span class="cm">// Step 1:  next=2,  1.next=null,  prev=1, curr=2</span>
+<span class="cm">// Step 2:  next=3,  2.next=1,     prev=2, curr=3</span>
+<span class="cm">// Step 3:  next=null, 3.next=2,   prev=3, curr=null</span>
+<span class="cm">// Done:    return 3  →  3 → 2 → 1 → null  ✓</span>
+
+<span class="cm">// ─── Bonus: Recursive version (O(n) time, O(n) stack space) ─────</span>
+<span class="kw">function</span> <span class="fn">reverseListRecursive</span>(head) {
+  <span class="kw">if</span> (!head || !head.<span class="prop">next</span>) <span class="kw">return</span> head;  <span class="cm">// base case</span>
+
+  <span class="kw">const</span> newHead = <span class="fn">reverseListRecursive</span>(head.<span class="prop">next</span>);
+  head.<span class="prop">next</span>.<span class="prop">next</span> = head;   <span class="cm">// make next node point back</span>
+  head.<span class="prop">next</span>     = <span class="kw">null</span>;   <span class="cm">// cut forward pointer</span>
+  <span class="kw">return</span> newHead;
+}</code></pre>
+                </div>
+
+                <div class="callout green" style="margin-top:1rem;">
+                    <span class="callout-icon">✅</span>
+                    <p><strong>Interview tip:</strong> Walk through the algorithm on a 3-node example before coding.
+                        Draw the pointer changes on a whiteboard. Interviewers want to see you reason about pointer
+                        mutations — off-by-one bugs here are a red flag. Also mention the recursive version to show
+                        depth, but note its O(n) stack space cost.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="module-nav">
+        <a href="arrays.html">← Arrays</a>
+        <a href="stacks.html" class="next">Stacks →</a>
+    </div>
+
+    <footer>
+        <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+        <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
+    </footer>
+
+    <script>
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>

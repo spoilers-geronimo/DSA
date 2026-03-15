@@ -1,378 +1,1065 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Priority Queues &amp; Heaps — DSA Zero to Hero</title>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #f9f6f1; --surface: #ffffff; --border: #e4ddd3;
-      --text: #1a1612; --muted: #6b6055;
-      --accent: #c84b31; --accent2: #2d6a4f; --accent3: #1d3557;
-      --code-bg: #1e1e2e; --code-text: #cdd6f4;
-      --tag-bg: #fce8e4; --tag-text: #c84b31; --highlight: #fff3cd;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Priority Queues &amp; Heaps — DSA Zero to Hero</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="header.css">
+    <script src="header.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* ── NAV ── */
-    nav { position: sticky; top: 0; z-index: 100; background: rgba(249,246,241,0.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 2rem; height: 58px; }
-    .nav-brand { font-family: 'Lora', serif; font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
-    .nav-links { display: flex; gap: 1.4rem; list-style: none; flex-wrap: wrap; }
-    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.85rem; font-weight: 500; transition: color .2s; }
-    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        :root {
+            --bg: #f9f6f1;
+            --surface: #ffffff;
+            --border: #e4ddd3;
+            --text: #1a1612;
+            --muted: #6b6055;
+            --accent: #c84b31;
+            --accent2: #2d6a4f;
+            --accent3: #1d3557;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tag-bg: #fce8e4;
+            --tag-text: #c84b31;
+            --highlight: #fff3cd;
+        }
 
-    /* ── HERO ── */
-    .hero { padding: 5rem 2rem 3rem; max-width: 860px; margin: 0 auto; text-align: center; }
-    .breadcrumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; letter-spacing: 0.06em; text-transform: uppercase; }
-    .breadcrumb a { color: var(--accent); text-decoration: none; }
-    .hero h1 { font-family: 'Lora', serif; font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem; }
-    .hero h1 span { color: var(--accent); }
-    .hero-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
-    .tag { background: var(--tag-bg); color: var(--tag-text); border-radius: 20px; padding: 0.2rem 0.8rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em; }
-    .tag.green { background: #e0f0e9; color: var(--accent2); }
-    .tag.blue  { background: #dce8f5; color: var(--accent3); }
-    .tag.amber { background: #fff0d4; color: #a05c00; }
-    .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 580px; margin: 0 auto; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    /* ── TOC ── */
-    .toc-wrapper { max-width: 860px; margin: 0 auto 3rem; padding: 0 2rem; }
-    .toc { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.8rem; }
-    .toc h2 { font-family: 'Lora', serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.8rem; }
-    .toc ol { padding-left: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2rem; }
-    .toc a { color: var(--accent3); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
-    .toc a:hover { text-decoration: underline; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 16px;
+        }
 
-    /* ── MAIN ── */
-    main { max-width: 860px; margin: 0 auto; padding: 0 2rem 6rem; display: flex; flex-direction: column; gap: 3rem; }
-    section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .section-header { display: flex; align-items: center; gap: 0.75rem; padding: 1.2rem 1.8rem; border-bottom: 1px solid var(--border); background: #faf9f7; }
-    .section-number { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
-    .section-header h2 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 700; color: var(--text); }
-    .section-body { padding: 1.8rem; }
-    .section-body p { margin-bottom: 1rem; color: var(--muted); }
-    .section-body p:last-child { margin-bottom: 0; }
-    .section-body strong { color: var(--text); }
+        /* ── NAV ── */
 
-    /* ── DEFINITION BOX ── */
-    .definition-box { background: var(--highlight); border: 1px solid #ffe08a; border-left: 4px solid #f5a623; border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; font-family: 'Lora', serif; font-style: italic; font-size: 1.02rem; color: #3d2c00; line-height: 1.65; }
-    .definition-box strong { color: #5a3c00; }
 
-    /* ── COMPARE CARDS ── */
-    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
-    .compare-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
-    .compare-card.min-card { border-top: 3px solid var(--accent2); }
-    .compare-card.max-card { border-top: 3px solid var(--accent); }
-    .compare-card h3 { font-family: 'Lora', serif; font-size: 0.98rem; margin-bottom: 0.6rem; color: var(--text); }
-    .compare-card ul { padding-left: 1.1rem; color: var(--muted); font-size: 0.88rem; }
-    .compare-card li { margin-bottom: 0.3rem; }
+        /* ── HERO ── */
+        .hero {
+            padding: 5rem 2rem 3rem;
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
 
-    /* ── INDEX FORMULA BOX ── */
-    .formula-box { background: #dce8f5; border: 1px solid #a8c4e0; border-left: 4px solid var(--accent3); border-radius: 8px; padding: 1rem 1.3rem; margin: 1rem 0; }
-    .formula-box p { margin: 0; color: var(--accent3); font-size: 0.92rem; }
-    .formula-box code { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; background: rgba(255,255,255,0.5); padding: 0.1em 0.35em; border-radius: 3px; }
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
 
-    /* ── OPS TABLE ── */
-    .ops-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
-    .ops-table th { background: #f0ece6; text-align: left; padding: 0.6rem 1rem; font-weight: 600; color: var(--text); border-bottom: 2px solid var(--border); }
-    .ops-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
-    .ops-table tr:last-child td { border-bottom: none; }
-    .ops-table tr:hover td { background: #faf8f5; }
-    code.inline { font-family: 'JetBrains Mono', monospace; background: #f0ece6; color: var(--accent); padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em; }
-    .o1    { color: var(--accent2); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-    .on    { color: #c47a00;        font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-    .ologn { color: var(--accent3); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
 
-    /* ── CODE BLOCKS ── */
-    .code-block { background: var(--code-bg); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
-    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1.1rem; background: #181825; }
-    .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #a6adc8; letter-spacing: 0.06em; text-transform: uppercase; }
-    .copy-btn { background: #313244; border: none; color: #cdd6f4; padding: 0.25rem 0.65rem; border-radius: 5px; font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background .2s; }
-    .copy-btn:hover { background: #45475a; }
-    pre { margin: 0; padding: 1.5rem 1.4rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.65; }
-    pre code { font-family: 'JetBrains Mono', monospace; color: var(--code-text); }
-    .kw   { color: #cba6f7; }
-    .fn   { color: #89b4fa; }
-    .str  { color: #a6e3a1; }
-    .num  { color: #fab387; }
-    .cm   { color: #6c7086; font-style: italic; }
-    .cl   { color: #f38ba8; }
-    .prop { color: #89dceb; }
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
 
-    /* ── DIAGRAM SHARED ── */
-    .diagram-area { background: #f9f6f1; border: 1px solid var(--border); border-radius: 10px; padding: 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1.4rem; margin-bottom: 1.4rem; overflow-x: auto; }
-    .diagram-label { font-size: 0.78rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; }
-    .diagram-caption { font-size: 0.82rem; color: var(--muted); text-align: center; font-style: italic; max-width: 560px; }
+        .hero h1 span {
+            color: var(--accent);
+        }
 
-    /* ── TREE NODES ── */
-    /* Full tree SVG approach — positions computed for a 7-node complete binary tree */
-    .tree-container { position: relative; width: 400px; height: 210px; flex-shrink: 0; }
-    .tree-svg-lines { position: absolute; inset: 0; pointer-events: none; }
-    .tn { /* tree node */
-      position: absolute;
-      width: 48px; height: 48px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 700;
-      border: 2.5px solid var(--border); background: var(--surface); color: var(--text);
-      transform: translate(-50%, -50%);
-    }
-    /* Colour variants */
-    .tn.root-min { background: #e0f0e9; border-color: var(--accent2); color: var(--accent2); }
-    .tn.root-max { background: #fce8e4; border-color: var(--accent);  color: var(--accent); }
-    .tn.level1   { background: #dce8f5; border-color: var(--accent3); color: var(--accent3); }
-    .tn.level2   { background: var(--surface); border-color: var(--border); color: var(--text); }
-    .tn.highlight { background: var(--highlight); border-color: #f5a623; color: #7a4800; }
+        .hero-meta {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
 
-    /* ── ARRAY REPR ── */
-    .arr-repr-wrap { display: flex; flex-direction: column; align-items: center; gap: 3px; }
-    .arr-idx-row { display: flex; }
-    .arr-i { width: 48px; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 0.67rem; color: var(--muted); }
-    .arr-row { display: flex; }
-    .arr-c { width: 48px; height: 42px; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; font-weight: 700; background: var(--surface); color: var(--text); margin-right: -2px; }
-    .arr-c:first-child { border-radius: 6px 0 0 6px; }
-    .arr-c:last-child  { border-radius: 0 6px 6px 0; margin-right: 0; }
-    .arr-c.root-min { background: #e0f0e9; border-color: var(--accent2); color: var(--accent2); }
-    .arr-c.root-max { background: #fce8e4; border-color: var(--accent);  color: var(--accent); }
-    .arr-c.level1   { background: #dce8f5; border-color: var(--accent3); color: var(--accent3); }
-    .arr-c.highlight { background: var(--highlight); border-color: #f5a623; color: #7a4800; }
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+        }
 
-    /* ── SIFT STEPS ── */
-    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.8rem; width: 100%; }
-    .sift-step { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.8rem 0.5rem; text-align: center; }
-    .sift-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; color: var(--muted); margin-bottom: 0.6rem; }
-    .sift-desc  { font-size: 0.72rem; color: var(--muted); margin-top: 0.5rem; line-height: 1.35; }
+        .tag.green {
+            background: #e0f0e9;
+            color: var(--accent2);
+        }
 
-    /* Mini 3-node tree for sift steps */
-    .mini-tree { position: relative; width: 96px; height: 76px; margin: 0 auto; }
-    .mt-svg { position: absolute; inset: 0; pointer-events: none; }
-    .mn { position: absolute; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; font-weight: 700; border: 2px solid var(--border); background: var(--surface); color: var(--text); transform: translate(-50%,-50%); }
-    .mn.r  { background: #e0f0e9; border-color: var(--accent2); color: var(--accent2); }
-    .mn.h  { background: var(--highlight); border-color: #f5a623; color: #7a4800; }
-    .mn.b  { background: #dce8f5; border-color: var(--accent3); color: var(--accent3); }
+        .tag.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
 
-    /* ── CALLOUTS ── */
-    .callout { display: flex; gap: 0.8rem; align-items: flex-start; background: #eef4ff; border: 1px solid #b8d0f5; border-left: 4px solid var(--accent3); border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1rem; }
-    .callout.amber { background: #fff8e6; border-color: #ffe08a; border-left-color: #f5a623; }
-    .callout.green { background: #e8f5ee; border-color: #a8d5ba; border-left-color: var(--accent2); }
-    .callout-icon { font-size: 1.1rem; flex-shrink: 0; }
-    .callout p { margin: 0; font-size: 0.9rem; color: var(--accent3); }
-    .callout.amber p { color: #7a4800; }
-    .callout.green p { color: var(--accent2); }
+        .tag.amber {
+            background: #fff0d4;
+            color: #a05c00;
+        }
 
-    /* ── ANALOGY CARDS ── */
-    .analogy-card { background: linear-gradient(135deg,#fdf6ec,#fef9f5); border: 1px solid #f0d9b5; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; }
-    .analogy-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
-    .analogy-card h3 { font-family: 'Lora', serif; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text); }
-    .analogy-card p { color: var(--muted); margin-bottom: 0.6rem; }
-    .analogy-card p:last-child { margin-bottom: 0; }
-    .analogy-card ul { padding-left: 1.3rem; color: var(--muted); font-size: 0.95rem; }
-    .analogy-card li { margin-bottom: 0.3rem; }
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 580px;
+            margin: 0 auto;
+        }
 
-    /* ── REAL WORLD ── */
-    .rw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px,1fr)); gap: 1rem; }
-    .rw-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.2rem; background: var(--surface); }
-    .rw-card .rw-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
-    .rw-card h4 { font-family: 'Lora', serif; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--text); }
-    .rw-card p { font-size: 0.86rem; color: var(--muted); margin: 0; }
+        /* ── TOC ── */
+        .toc-wrapper {
+            max-width: 860px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
 
-    /* ── FOOTER ── */
-    footer { text-align: center; padding: 2.5rem 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
-    footer a { color: var(--accent); text-decoration: none; }
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.4rem 1.8rem;
+        }
 
-    @media (max-width: 660px) {
-      .toc ol { grid-template-columns: 1fr; }
-      .compare-grid { grid-template-columns: 1fr; }
-      .steps-grid { grid-template-columns: repeat(2,1fr); }
-      .tree-container { width: 320px; height: 180px; }
-      nav { padding: 0 1rem; } .nav-links { gap: 0.8rem; }
-    }
-  </style>
+        .toc h2 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .toc ol {
+            padding-left: 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 2rem;
+        }
+
+        .toc a {
+            color: var(--accent3);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── MAIN ── */
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            background: #faf9f7;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-body {
+            padding: 1.8rem;
+        }
+
+        .section-body p {
+            margin-bottom: 1rem;
+            color: var(--muted);
+        }
+
+        .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-body strong {
+            color: var(--text);
+        }
+
+        /* ── DEFINITION BOX ── */
+        .definition-box {
+            background: var(--highlight);
+            border: 1px solid #ffe08a;
+            border-left: 4px solid #f5a623;
+            border-radius: 8px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.02rem;
+            color: #3d2c00;
+            line-height: 1.65;
+        }
+
+        .definition-box strong {
+            color: #5a3c00;
+        }
+
+        /* ── COMPARE CARDS ── */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .compare-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .compare-card.min-card {
+            border-top: 3px solid var(--accent2);
+        }
+
+        .compare-card.max-card {
+            border-top: 3px solid var(--accent);
+        }
+
+        .compare-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 0.98rem;
+            margin-bottom: 0.6rem;
+            color: var(--text);
+        }
+
+        .compare-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
+        .compare-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── INDEX FORMULA BOX ── */
+        .formula-box {
+            background: #dce8f5;
+            border: 1px solid #a8c4e0;
+            border-left: 4px solid var(--accent3);
+            border-radius: 8px;
+            padding: 1rem 1.3rem;
+            margin: 1rem 0;
+        }
+
+        .formula-box p {
+            margin: 0;
+            color: var(--accent3);
+            font-size: 0.92rem;
+        }
+
+        .formula-box code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0.1em 0.35em;
+            border-radius: 3px;
+        }
+
+        /* ── OPS TABLE ── */
+        .ops-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .ops-table th {
+            background: #f0ece6;
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .ops-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            vertical-align: top;
+        }
+
+        .ops-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ops-table tr:hover td {
+            background: #faf8f5;
+        }
+
+        code.inline {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f0ece6;
+            color: var(--accent);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .o1 {
+            color: var(--accent2);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .on {
+            color: #c47a00;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .ologn {
+            color: var(--accent3);
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ── CODE BLOCKS ── */
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.1rem;
+            background: #181825;
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #a6adc8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 0.25rem 0.65rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            transition: background .2s;
+        }
+
+        .copy-btn:hover {
+            background: #45475a;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem 1.4rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.65;
+        }
+
+        pre code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--code-text);
+        }
+
+        .kw {
+            color: #cba6f7;
+        }
+
+        .fn {
+            color: #89b4fa;
+        }
+
+        .str {
+            color: #a6e3a1;
+        }
+
+        .num {
+            color: #fab387;
+        }
+
+        .cm {
+            color: #6c7086;
+            font-style: italic;
+        }
+
+        .cl {
+            color: #f38ba8;
+        }
+
+        .prop {
+            color: #89dceb;
+        }
+
+        /* ── DIAGRAM SHARED ── */
+        .diagram-area {
+            background: #f9f6f1;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.4rem;
+            margin-bottom: 1.4rem;
+            overflow-x: auto;
+        }
+
+        .diagram-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            text-align: center;
+        }
+
+        .diagram-caption {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-align: center;
+            font-style: italic;
+            max-width: 560px;
+        }
+
+        /* ── TREE NODES ── */
+        /* Full tree SVG approach — positions computed for a 7-node complete binary tree */
+        .tree-container {
+            position: relative;
+            width: 400px;
+            height: 210px;
+            flex-shrink: 0;
+        }
+
+        .tree-svg-lines {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .tn {
+            /* tree node */
+            position: absolute;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border: 2.5px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            transform: translate(-50%, -50%);
+        }
+
+        /* Colour variants */
+        .tn.root-min {
+            background: #e0f0e9;
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .tn.root-max {
+            background: #fce8e4;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .tn.level1 {
+            background: #dce8f5;
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        .tn.level2 {
+            background: var(--surface);
+            border-color: var(--border);
+            color: var(--text);
+        }
+
+        .tn.highlight {
+            background: var(--highlight);
+            border-color: #f5a623;
+            color: #7a4800;
+        }
+
+        /* ── ARRAY REPR ── */
+        .arr-repr-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .arr-idx-row {
+            display: flex;
+        }
+
+        .arr-i {
+            width: 48px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.67rem;
+            color: var(--muted);
+        }
+
+        .arr-row {
+            display: flex;
+        }
+
+        .arr-c {
+            width: 48px;
+            height: 42px;
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            font-weight: 700;
+            background: var(--surface);
+            color: var(--text);
+            margin-right: -2px;
+        }
+
+        .arr-c:first-child {
+            border-radius: 6px 0 0 6px;
+        }
+
+        .arr-c:last-child {
+            border-radius: 0 6px 6px 0;
+            margin-right: 0;
+        }
+
+        .arr-c.root-min {
+            background: #e0f0e9;
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .arr-c.root-max {
+            background: #fce8e4;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .arr-c.level1 {
+            background: #dce8f5;
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        .arr-c.highlight {
+            background: var(--highlight);
+            border-color: #f5a623;
+            color: #7a4800;
+        }
+
+        /* ── SIFT STEPS ── */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+            width: 100%;
+        }
+
+        .sift-step {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem 0.5rem;
+            text-align: center;
+        }
+
+        .sift-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .sift-desc {
+            font-size: 0.72rem;
+            color: var(--muted);
+            margin-top: 0.5rem;
+            line-height: 1.35;
+        }
+
+        /* Mini 3-node tree for sift steps */
+        .mini-tree {
+            position: relative;
+            width: 96px;
+            height: 76px;
+            margin: 0 auto;
+        }
+
+        .mt-svg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .mn {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            transform: translate(-50%, -50%);
+        }
+
+        .mn.r {
+            background: #e0f0e9;
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        .mn.h {
+            background: var(--highlight);
+            border-color: #f5a623;
+            color: #7a4800;
+        }
+
+        .mn.b {
+            background: #dce8f5;
+            border-color: var(--accent3);
+            color: var(--accent3);
+        }
+
+        /* ── CALLOUTS ── */
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: #eef4ff;
+            border: 1px solid #b8d0f5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .callout.amber {
+            background: #fff8e6;
+            border-color: #ffe08a;
+            border-left-color: #f5a623;
+        }
+
+        .callout.green {
+            background: #e8f5ee;
+            border-color: #a8d5ba;
+            border-left-color: var(--accent2);
+        }
+
+        .callout-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--accent3);
+        }
+
+        .callout.amber p {
+            color: #7a4800;
+        }
+
+        .callout.green p {
+            color: var(--accent2);
+        }
+
+        /* ── ANALOGY CARDS ── */
+        .analogy-card {
+            background: linear-gradient(135deg, #fdf6ec, #fef9f5);
+            border: 1px solid #f0d9b5;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .analogy-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .analogy-card p {
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .analogy-card ul {
+            padding-left: 1.3rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .analogy-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── REAL WORLD ── */
+        .rw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .rw-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem;
+            background: var(--surface);
+        }
+
+        .rw-card .rw-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rw-card h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+
+        .rw-card p {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 660px) {
+            .toc ol {
+                grid-template-columns: 1fr;
+            }
+
+            .compare-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tree-container {
+                width: 320px;
+                height: 180px;
+            }
+
+            nav {
+                padding: 0 1rem;
+            }
+
+            .nav-links {
+                gap: 0.8rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<!-- ── NAV ── -->
-<nav>
-  <a class="nav-brand" href="index.html">DSA: Zero to Hero</a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="arrays.html">Arrays</a></li>
-    <li><a href="strings.html">Strings</a></li>
-    <li><a href="linked-lists.html">Linked Lists</a></li>
-    <li><a href="stacks.html">Stacks</a></li>
-    <li><a href="queues.html">Queues</a></li>
-    <li><a href="priority-queues.html" class="active">Heaps</a></li>
-  </ul>
-</nav>
+    <!-- ── NAV ── -->
+    <common-header accent="#c84b31"></common-header>
 
-<!-- ── HERO ── -->
-<header class="hero">
-  <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Priority Queues &amp; Heaps</p>
-  <h1>Data Structures:<br/><span>Priority Queues &amp; Heaps</span></h1>
-  <div class="hero-meta">
-    <span class="tag green">Min-Heap</span>
-    <span class="tag">Max-Heap</span>
-    <span class="tag blue">O(log n) Insert</span>
-    <span class="tag amber">O(1) Peek Min/Max</span>
-  </div>
-  <p class="hero-desc">A queue where the most important item always goes first — backed by a brilliantly efficient tree structure that lives inside a plain array.</p>
-</header>
+    <!-- ── HERO ── -->
+    <header class="hero">
+        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Priority Queues &amp;
+            Heaps</p>
+        <h1>Data Structures:<br /><span>Priority Queues &amp; Heaps</span></h1>
+        <div class="hero-meta">
+            <span class="tag green">Min-Heap</span>
+            <span class="tag">Max-Heap</span>
+            <span class="tag blue">O(log n) Insert</span>
+            <span class="tag amber">O(1) Peek Min/Max</span>
+        </div>
+        <p class="hero-desc">A queue where the most important item always goes first — backed by a brilliantly efficient
+            tree structure that lives inside a plain array.</p>
+    </header>
 
-<!-- ── TOC ── -->
-<div class="toc-wrapper">
-  <div class="toc">
-    <h2>Contents</h2>
-    <ol>
-      <li><a href="#definition">Definition</a></li>
-      <li><a href="#explanation">Explanation &amp; Operations</a></li>
-      <li><a href="#code">Code Snippet</a></li>
-      <li><a href="#diagram">Diagram</a></li>
-      <li><a href="#analogy">Analogy (Plain English)</a></li>
-      <li><a href="#real-world">Real-World Applications</a></li>
-    </ol>
-  </div>
-</div>
+    <!-- ── TOC ── -->
+    <div class="toc-wrapper">
+        <div class="toc">
+            <h2>Contents</h2>
+            <ol>
+                <li><a href="#definition">Definition</a></li>
+                <li><a href="#explanation">Explanation &amp; Operations</a></li>
+                <li><a href="#code">Code Snippet</a></li>
+                <li><a href="#diagram">Diagram</a></li>
+                <li><a href="#analogy">Analogy (Plain English)</a></li>
+                <li><a href="#real-world">Real-World Applications</a></li>
+            </ol>
+        </div>
+    </div>
 
-<main>
+    <main>
 
-  <!-- ══════════════════════════════════════════════
+        <!-- ══════════════════════════════════════════════
        1. DEFINITION
   ══════════════════════════════════════════════ -->
-  <section id="definition">
-    <div class="section-header">
-      <div class="section-number">1</div>
-      <h2>Formal Definition</h2>
-    </div>
-    <div class="section-body">
-      <div class="definition-box">
-        A <strong>Priority Queue</strong> is an abstract data type in which every element is associated with a <em>priority value</em>, and the element with the highest (or lowest) priority is always served first — regardless of insertion order. The canonical implementation is a <strong>Binary Heap</strong>: a complete binary tree that satisfies the <em>heap property</em>. In a <strong>min-heap</strong>, every parent node is less than or equal to its children, so the <em>minimum</em> element always sits at the root. In a <strong>max-heap</strong>, every parent is greater than or equal to its children, so the <em>maximum</em> is always at the root. The entire tree is stored compactly in a plain array — no pointers required.
-      </div>
-      <p>A binary heap is always a <strong>complete binary tree</strong> — every level is fully filled except possibly the last, which fills from left to right. This shape guarantee is what makes the array representation possible and keeps all operations tightly bounded at O(log n).</p>
-      <div class="formula-box">
-        <p>For any node stored at index <code>i</code> in the array:<br/>
-        &nbsp;&nbsp;&bull;&nbsp; Left child → <code>(2 × i) + 1</code><br/>
-        &nbsp;&nbsp;&bull;&nbsp; Right child → <code>(2 × i) + 2</code><br/>
-        &nbsp;&nbsp;&bull;&nbsp; Parent → <code>⌊(i − 1) / 2⌋</code><br/>
-        These three formulas replace every pointer in the tree — zero extra memory overhead.</p>
-      </div>
-    </div>
-  </section>
+        <section id="definition">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Formal Definition</h2>
+            </div>
+            <div class="section-body">
+                <div class="definition-box">
+                    A <strong>Priority Queue</strong> is an abstract data type in which every element is associated with
+                    a <em>priority value</em>, and the element with the highest (or lowest) priority is always served
+                    first — regardless of insertion order. The canonical implementation is a <strong>Binary
+                        Heap</strong>: a complete binary tree that satisfies the <em>heap property</em>. In a
+                    <strong>min-heap</strong>, every parent node is less than or equal to its children, so the
+                    <em>minimum</em> element always sits at the root. In a <strong>max-heap</strong>, every parent is
+                    greater than or equal to its children, so the <em>maximum</em> is always at the root. The entire
+                    tree is stored compactly in a plain array — no pointers required.
+                </div>
+                <p>A binary heap is always a <strong>complete binary tree</strong> — every level is fully filled except
+                    possibly the last, which fills from left to right. This shape guarantee is what makes the array
+                    representation possible and keeps all operations tightly bounded at O(log n).</p>
+                <div class="formula-box">
+                    <p>For any node stored at index <code>i</code> in the array:<br />
+                        &nbsp;&nbsp;&bull;&nbsp; Left child → <code>(2 × i) + 1</code><br />
+                        &nbsp;&nbsp;&bull;&nbsp; Right child → <code>(2 × i) + 2</code><br />
+                        &nbsp;&nbsp;&bull;&nbsp; Parent → <code>⌊(i − 1) / 2⌋</code><br />
+                        These three formulas replace every pointer in the tree — zero extra memory overhead.</p>
+                </div>
+            </div>
+        </section>
 
-  <!-- ══════════════════════════════════════════════
+        <!-- ══════════════════════════════════════════════
        2. EXPLANATION
   ══════════════════════════════════════════════ -->
-  <section id="explanation">
-    <div class="section-header">
-      <div class="section-number">2</div>
-      <h2>Formal Explanation &amp; Operations</h2>
-    </div>
-    <div class="section-body">
-      <div class="compare-grid">
-        <div class="compare-card min-card">
-          <h3>🟢 Min-Heap</h3>
-          <ul>
-            <li>Root always holds the <strong>smallest</strong> element</li>
-            <li>Every parent ≤ both its children</li>
-            <li><code class="inline">peek()</code> returns the minimum in O(1)</li>
-            <li>Used in: Dijkstra's, A*, merge k sorted lists, task scheduling by earliest deadline</li>
-            <li>Python's <code class="inline">heapq</code> module is a min-heap</li>
-            <li>Simulate a max-heap by negating all values</li>
-          </ul>
-        </div>
-        <div class="compare-card max-card">
-          <h3>🔴 Max-Heap</h3>
-          <ul>
-            <li>Root always holds the <strong>largest</strong> element</li>
-            <li>Every parent ≥ both its children</li>
-            <li><code class="inline">peek()</code> returns the maximum in O(1)</li>
-            <li>Used in: Heap Sort, finding k-largest elements, scheduling by highest priority</li>
-            <li>Java's <code class="inline">PriorityQueue</code> with a reversed comparator</li>
-            <li>Identical implementation to min-heap — one comparison flipped</li>
-          </ul>
-        </div>
-      </div>
+        <section id="explanation">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>Formal Explanation &amp; Operations</h2>
+            </div>
+            <div class="section-body">
+                <div class="compare-grid">
+                    <div class="compare-card min-card">
+                        <h3>🟢 Min-Heap</h3>
+                        <ul>
+                            <li>Root always holds the <strong>smallest</strong> element</li>
+                            <li>Every parent ≤ both its children</li>
+                            <li><code class="inline">peek()</code> returns the minimum in O(1)</li>
+                            <li>Used in: Dijkstra's, A*, merge k sorted lists, task scheduling by earliest deadline</li>
+                            <li>Python's <code class="inline">heapq</code> module is a min-heap</li>
+                            <li>Simulate a max-heap by negating all values</li>
+                        </ul>
+                    </div>
+                    <div class="compare-card max-card">
+                        <h3>🔴 Max-Heap</h3>
+                        <ul>
+                            <li>Root always holds the <strong>largest</strong> element</li>
+                            <li>Every parent ≥ both its children</li>
+                            <li><code class="inline">peek()</code> returns the maximum in O(1)</li>
+                            <li>Used in: Heap Sort, finding k-largest elements, scheduling by highest priority</li>
+                            <li>Java's <code class="inline">PriorityQueue</code> with a reversed comparator</li>
+                            <li>Identical implementation to min-heap — one comparison flipped</li>
+                        </ul>
+                    </div>
+                </div>
 
-      <table class="ops-table">
-        <thead>
-          <tr><th>Operation</th><th>Time</th><th>Space</th><th>Description</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code class="inline">peek()</code></td>
-            <td class="o1">O(1)</td>
-            <td class="o1">O(1)</td>
-            <td>Return the root (min or max) without removing it — it's always at index 0</td>
-          </tr>
-          <tr>
-            <td><code class="inline">insert(x)</code></td>
-            <td class="ologn">O(log n)</td>
-            <td class="o1">O(1)</td>
-            <td>Append to end of array, then <em>sift up</em>: swap with parent while heap property violated</td>
-          </tr>
-          <tr>
-            <td><code class="inline">extractMin()</code> / <code class="inline">extractMax()</code></td>
-            <td class="ologn">O(log n)</td>
-            <td class="o1">O(1)</td>
-            <td>Swap root with last element, remove last, then <em>sift down</em>: swap with smaller (or larger) child until restored</td>
-          </tr>
-          <tr>
-            <td><code class="inline">heapify(array)</code></td>
-            <td class="on">O(n)</td>
-            <td class="o1">O(1)</td>
-            <td>Build a heap from an unsorted array in-place using Floyd's algorithm — faster than n individual inserts</td>
-          </tr>
-          <tr>
-            <td><code class="inline">decreaseKey(i, val)</code></td>
-            <td class="ologn">O(log n)</td>
-            <td class="o1">O(1)</td>
-            <td>Reduce a node's value and sift up — critical for Dijkstra's algorithm</td>
-          </tr>
-          <tr>
-            <td>Search by value</td>
-            <td class="on">O(n)</td>
-            <td class="o1">O(1)</td>
-            <td>No ordering beyond the heap property — must scan all elements</td>
-          </tr>
-          <tr>
-            <td>Heap Sort (full)</td>
-            <td class="ologn">O(n log n)</td>
-            <td class="o1">O(1)</td>
-            <td>Build max-heap O(n), extract max n times O(n log n) — in-place, no extra memory</td>
-          </tr>
-        </tbody>
-      </table>
+                <table class="ops-table">
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Time</th>
+                            <th>Space</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code class="inline">peek()</code></td>
+                            <td class="o1">O(1)</td>
+                            <td class="o1">O(1)</td>
+                            <td>Return the root (min or max) without removing it — it's always at index 0</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">insert(x)</code></td>
+                            <td class="ologn">O(log n)</td>
+                            <td class="o1">O(1)</td>
+                            <td>Append to end of array, then <em>sift up</em>: swap with parent while heap property
+                                violated</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">extractMin()</code> / <code class="inline">extractMax()</code></td>
+                            <td class="ologn">O(log n)</td>
+                            <td class="o1">O(1)</td>
+                            <td>Swap root with last element, remove last, then <em>sift down</em>: swap with smaller (or
+                                larger) child until restored</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">heapify(array)</code></td>
+                            <td class="on">O(n)</td>
+                            <td class="o1">O(1)</td>
+                            <td>Build a heap from an unsorted array in-place using Floyd's algorithm — faster than n
+                                individual inserts</td>
+                        </tr>
+                        <tr>
+                            <td><code class="inline">decreaseKey(i, val)</code></td>
+                            <td class="ologn">O(log n)</td>
+                            <td class="o1">O(1)</td>
+                            <td>Reduce a node's value and sift up — critical for Dijkstra's algorithm</td>
+                        </tr>
+                        <tr>
+                            <td>Search by value</td>
+                            <td class="on">O(n)</td>
+                            <td class="o1">O(1)</td>
+                            <td>No ordering beyond the heap property — must scan all elements</td>
+                        </tr>
+                        <tr>
+                            <td>Heap Sort (full)</td>
+                            <td class="ologn">O(n log n)</td>
+                            <td class="o1">O(1)</td>
+                            <td>Build max-heap O(n), extract max n times O(n log n) — in-place, no extra memory</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-      <div class="callout">
-        <span class="callout-icon">💡</span>
-        <p><strong>Why is insert O(log n)?</strong> The new element is placed at the bottom of the tree. A complete binary tree of <em>n</em> nodes has height ⌊log₂ n⌋. In the worst case the element bubbles all the way up to the root — one swap per level — so at most ⌊log₂ n⌋ swaps. Same logic applies to extractMin/Max going down.</p>
-      </div>
+                <div class="callout">
+                    <span class="callout-icon">💡</span>
+                    <p><strong>Why is insert O(log n)?</strong> The new element is placed at the bottom of the tree. A
+                        complete binary tree of <em>n</em> nodes has height ⌊log₂ n⌋. In the worst case the element
+                        bubbles all the way up to the root — one swap per level — so at most ⌊log₂ n⌋ swaps. Same logic
+                        applies to extractMin/Max going down.</p>
+                </div>
 
-      <div class="callout amber" style="margin-top:0.8rem;">
-        <span class="callout-icon">⚠️</span>
-        <p><strong>A heap is NOT fully sorted.</strong> The only guarantee is that the root is the min (or max). Siblings at the same level have no ordering relationship with each other — so you cannot do binary search on a heap.</p>
-      </div>
-    </div>
-  </section>
+                <div class="callout amber" style="margin-top:0.8rem;">
+                    <span class="callout-icon">⚠️</span>
+                    <p><strong>A heap is NOT fully sorted.</strong> The only guarantee is that the root is the min (or
+                        max). Siblings at the same level have no ordering relationship with each other — so you cannot
+                        do binary search on a heap.</p>
+                </div>
+            </div>
+        </section>
 
-  <!-- ══════════════════════════════════════════════
+        <!-- ══════════════════════════════════════════════
        3. CODE
   ══════════════════════════════════════════════ -->
-  <section id="code">
-    <div class="section-header">
-      <div class="section-number">3</div>
-      <h2>Code Snippet</h2>
-    </div>
-    <div class="section-body">
-      <p>A complete <strong>MinHeap</strong> class with insert and extractMin, a <strong>MaxHeap</strong> showing the single comparison flip, then <strong>Heap Sort</strong> and a classic interview problem — finding the <em>k</em> largest elements efficiently.</p>
+        <section id="code">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>Code Snippet</h2>
+            </div>
+            <div class="section-body">
+                <p>A complete <strong>MinHeap</strong> class with insert and extractMin, a <strong>MaxHeap</strong>
+                    showing the single comparison flip, then <strong>Heap Sort</strong> and a classic interview problem
+                    — finding the <em>k</em> largest elements efficiently.</p>
 
-      <!-- MinHeap -->
-      <div class="code-block">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — MinHeap (full implementation)</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── MinHeap ──────────────────────────────────────────────────────</span>
+                <!-- MinHeap -->
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — MinHeap (full implementation)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── MinHeap ──────────────────────────────────────────────────────</span>
 <span class="cm">// The smallest element is always at index 0 (the root).</span>
 <span class="cm">// All tree relationships are computed with index arithmetic — no pointers.</span>
 <span class="kw">class</span> <span class="cl">MinHeap</span> {
@@ -451,15 +1138,15 @@
 <span class="fn">console</span>.<span class="fn">log</span>(minH.<span class="fn">extractMin</span>());   <span class="cm">// 2  ← next minimum rises to root</span>
 <span class="fn">console</span>.<span class="fn">log</span>(minH.<span class="fn">extractMin</span>());   <span class="cm">// 3</span>
 <span class="fn">console</span>.<span class="fn">log</span>(minH.<span class="fn">peek</span>());         <span class="cm">// 5  ← new minimum after extractions</span></code></pre>
-      </div>
+                </div>
 
-      <!-- MaxHeap -->
-      <div class="code-block" style="margin-top:1.2rem;">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — MaxHeap &amp; Heap Sort</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── MaxHeap ──────────────────────────────────────────────────────</span>
+                <!-- MaxHeap -->
+                <div class="code-block" style="margin-top:1.2rem;">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — MaxHeap &amp; Heap Sort</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── MaxHeap ──────────────────────────────────────────────────────</span>
 <span class="cm">// Identical structure to MinHeap — only the comparisons are flipped.</span>
 <span class="kw">class</span> <span class="cl">MaxHeap</span> {
   <span class="fn">constructor</span>() { <span class="kw">this</span>.<span class="prop">heap</span> = []; }
@@ -544,15 +1231,15 @@
 
 <span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">heapSort</span>([<span class="num">5</span>, <span class="num">3</span>, <span class="num">8</span>, <span class="num">1</span>, <span class="num">9</span>, <span class="num">2</span>, <span class="num">6</span>]));
 <span class="cm">// [1, 2, 3, 5, 6, 8, 9]</span></code></pre>
-      </div>
+                </div>
 
-      <!-- K Largest -->
-      <div class="code-block" style="margin-top:1.2rem;">
-        <div class="code-header">
-          <span class="code-lang">JavaScript — K Largest Elements (classic interview problem)</span>
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
-        </div>
-        <pre><code><span class="cm">// ─── Find k-largest elements — O(n log k) ─────────────────────────</span>
+                <!-- K Largest -->
+                <div class="code-block" style="margin-top:1.2rem;">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — K Largest Elements (classic interview problem)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Find k-largest elements — O(n log k) ─────────────────────────</span>
 <span class="cm">// Key insight: keep a MIN-heap of size k.</span>
 <span class="cm">// The root is always the current k-th largest element seen so far.</span>
 <span class="cm">// If a new element is larger than the root, it deserves to be in the top k.</span>
@@ -583,372 +1270,430 @@
 <span class="cm">// The heap never grows beyond size k, so each insert/extract costs O(log k),</span>
 <span class="cm">// not O(log n). When k is small (e.g. k=10 from a million items), this is</span>
 <span class="cm">// dramatically faster than sorting the entire array.</span></code></pre>
-      </div>
-    </div>
-  </section>
+                </div>
+            </div>
+        </section>
 
-  <!-- ══════════════════════════════════════════════
+        <!-- ══════════════════════════════════════════════
        4. DIAGRAM
   ══════════════════════════════════════════════ -->
-  <section id="diagram">
-    <div class="section-header">
-      <div class="section-number">4</div>
-      <h2>Diagram Explanation</h2>
-    </div>
-    <div class="section-body">
-      <p>A binary heap is a <strong>complete binary tree</strong> — all levels filled left to right. The same data is shown as both a tree (intuitive) and its underlying array (the actual implementation).</p>
-
-      <!-- MIN HEAP TREE -->
-      <div class="diagram-area">
-        <div class="diagram-label">Min-Heap — root is always the minimum element</div>
-
-        <div class="tree-container">
-          <svg class="tree-svg-lines" viewBox="0 0 400 210">
-            <!-- Root to level-1 -->
-            <line x1="200" y1="24" x2="110" y2="88"  stroke="#e4ddd3" stroke-width="2"/>
-            <line x1="200" y1="24" x2="290" y2="88"  stroke="#e4ddd3" stroke-width="2"/>
-            <!-- Level-1 left to level-2 -->
-            <line x1="110" y1="88" x2="55"  y2="162" stroke="#e4ddd3" stroke-width="2"/>
-            <line x1="110" y1="88" x2="160" y2="162" stroke="#e4ddd3" stroke-width="2"/>
-            <!-- Level-1 right to level-2 -->
-            <line x1="290" y1="88" x2="240" y2="162" stroke="#e4ddd3" stroke-width="2"/>
-            <line x1="290" y1="88" x2="345" y2="162" stroke="#e4ddd3" stroke-width="2"/>
-          </svg>
-          <!-- Nodes: top→down, left→right -->
-          <div class="tn root-min" style="left:200px; top:24px;">1</div>
-          <div class="tn level1"   style="left:110px; top:88px;">3</div>
-          <div class="tn level1"   style="left:290px; top:88px;">5</div>
-          <div class="tn level2"   style="left:55px;  top:162px;">7</div>
-          <div class="tn level2"   style="left:160px; top:162px;">9</div>
-          <div class="tn level2"   style="left:240px; top:162px;">8</div>
-          <div class="tn level2"   style="left:345px; top:162px;">6</div>
-        </div>
-
-        <!-- Array representation -->
-        <div class="arr-repr-wrap">
-          <div class="arr-idx-row">
-            <div class="arr-i">i=0</div><div class="arr-i">i=1</div><div class="arr-i">i=2</div>
-            <div class="arr-i">i=3</div><div class="arr-i">i=4</div><div class="arr-i">i=5</div><div class="arr-i">i=6</div>
-          </div>
-          <div class="arr-row">
-            <div class="arr-c root-min">1</div>
-            <div class="arr-c level1">3</div>
-            <div class="arr-c level1">5</div>
-            <div class="arr-c">7</div>
-            <div class="arr-c">9</div>
-            <div class="arr-c">8</div>
-            <div class="arr-c">6</div>
-          </div>
-        </div>
-
-        <p class="diagram-caption">Tree and array are the same data. Node at i=1 (value 3): left child = 2×1+1 = i=3 (value 7) &nbsp;|&nbsp; right child = 2×1+2 = i=4 (value 9) &nbsp;|&nbsp; parent = ⌊(1−1)/2⌋ = i=0 (value 1). Every parent ≤ its children.</p>
-      </div>
-
-      <!-- MAX HEAP TREE -->
-      <div class="diagram-area">
-        <div class="diagram-label">Max-Heap — root is always the maximum element</div>
-
-        <div class="tree-container">
-          <svg class="tree-svg-lines" viewBox="0 0 400 210">
-            <line x1="200" y1="24" x2="110" y2="88"  stroke="#e4ddd3" stroke-width="2"/>
-            <line x1="200" y1="24" x2="290" y2="88"  stroke="#e4ddd3" stroke-width="2"/>
-            <line x1="110" y1="88" x2="55"  y2="162" stroke="#e4ddd3" stroke-width="2"/>
-            <line x1="110" y1="88" x2="160" y2="162" stroke="#e4ddd3" stroke-width="2"/>
-            <line x1="290" y1="88" x2="240" y2="162" stroke="#e4ddd3" stroke-width="2"/>
-            <line x1="290" y1="88" x2="345" y2="162" stroke="#e4ddd3" stroke-width="2"/>
-          </svg>
-          <div class="tn root-max" style="left:200px; top:24px;">9</div>
-          <div class="tn level1"   style="left:110px; top:88px;">7</div>
-          <div class="tn level1"   style="left:290px; top:88px;">8</div>
-          <div class="tn level2"   style="left:55px;  top:162px;">3</div>
-          <div class="tn level2"   style="left:160px; top:162px;">5</div>
-          <div class="tn level2"   style="left:240px; top:162px;">6</div>
-          <div class="tn level2"   style="left:345px; top:162px;">1</div>
-        </div>
-
-        <div class="arr-repr-wrap">
-          <div class="arr-idx-row">
-            <div class="arr-i">i=0</div><div class="arr-i">i=1</div><div class="arr-i">i=2</div>
-            <div class="arr-i">i=3</div><div class="arr-i">i=4</div><div class="arr-i">i=5</div><div class="arr-i">i=6</div>
-          </div>
-          <div class="arr-row">
-            <div class="arr-c root-max">9</div>
-            <div class="arr-c level1">7</div>
-            <div class="arr-c level1">8</div>
-            <div class="arr-c">3</div>
-            <div class="arr-c">5</div>
-            <div class="arr-c">6</div>
-            <div class="arr-c">1</div>
-          </div>
-        </div>
-
-        <p class="diagram-caption">Every parent (9, 7, 8) is greater than or equal to its children. The maximum is guaranteed to be at the root at all times — O(1) to read it.</p>
-      </div>
-
-      <!-- SIFT UP (insert) -->
-      <p>When a new element is inserted it starts at the bottom and <strong>sifts up</strong>, swapping with its parent each time the heap property is violated.</p>
-
-      <div class="diagram-area">
-        <div class="diagram-label">Min-Heap: inserting 2 — sift up until heap property is restored</div>
-        <div class="steps-grid">
-
-          <!-- Step 1 -->
-          <div class="sift-step">
-            <div class="sift-label">Step 1 — insert 2 at end</div>
-            <div class="mini-tree">
-              <svg class="mt-svg" viewBox="0 0 96 76">
-                <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="24" y1="44" x2="12" y2="66" stroke="#f5a623" stroke-width="1.5" stroke-dasharray="4,2"/>
-              </svg>
-              <div class="mn r" style="left:48px;top:16px;">1</div>
-              <div class="mn b" style="left:24px;top:44px;">3</div>
-              <div class="mn b" style="left:72px;top:44px;">5</div>
-              <div class="mn h" style="left:12px;top:66px;">2</div>
+        <section id="diagram">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Diagram Explanation</h2>
             </div>
-            <div class="sift-desc">2 placed as new leaf (i=3). Parent at i=1 is 3. Since 2 &lt; 3 → must swap.</div>
-          </div>
+            <div class="section-body">
+                <p>A binary heap is a <strong>complete binary tree</strong> — all levels filled left to right. The same
+                    data is shown as both a tree (intuitive) and its underlying array (the actual implementation).</p>
 
-          <!-- Step 2 -->
-          <div class="sift-step">
-            <div class="sift-label">Step 2 — swap 2 &amp; 3</div>
-            <div class="mini-tree">
-              <svg class="mt-svg" viewBox="0 0 96 76">
-                <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5"/>
-              </svg>
-              <div class="mn r" style="left:48px;top:16px;">1</div>
-              <div class="mn h" style="left:24px;top:44px;">2</div>
-              <div class="mn b" style="left:72px;top:44px;">5</div>
-              <div class="mn b" style="left:12px;top:66px;">3</div>
+                <!-- MIN HEAP TREE -->
+                <div class="diagram-area">
+                    <div class="diagram-label">Min-Heap — root is always the minimum element</div>
+
+                    <div class="tree-container">
+                        <svg class="tree-svg-lines" viewBox="0 0 400 210">
+                            <!-- Root to level-1 -->
+                            <line x1="200" y1="24" x2="110" y2="88" stroke="#e4ddd3" stroke-width="2" />
+                            <line x1="200" y1="24" x2="290" y2="88" stroke="#e4ddd3" stroke-width="2" />
+                            <!-- Level-1 left to level-2 -->
+                            <line x1="110" y1="88" x2="55" y2="162" stroke="#e4ddd3" stroke-width="2" />
+                            <line x1="110" y1="88" x2="160" y2="162" stroke="#e4ddd3" stroke-width="2" />
+                            <!-- Level-1 right to level-2 -->
+                            <line x1="290" y1="88" x2="240" y2="162" stroke="#e4ddd3" stroke-width="2" />
+                            <line x1="290" y1="88" x2="345" y2="162" stroke="#e4ddd3" stroke-width="2" />
+                        </svg>
+                        <!-- Nodes: top→down, left→right -->
+                        <div class="tn root-min" style="left:200px; top:24px;">1</div>
+                        <div class="tn level1" style="left:110px; top:88px;">3</div>
+                        <div class="tn level1" style="left:290px; top:88px;">5</div>
+                        <div class="tn level2" style="left:55px;  top:162px;">7</div>
+                        <div class="tn level2" style="left:160px; top:162px;">9</div>
+                        <div class="tn level2" style="left:240px; top:162px;">8</div>
+                        <div class="tn level2" style="left:345px; top:162px;">6</div>
+                    </div>
+
+                    <!-- Array representation -->
+                    <div class="arr-repr-wrap">
+                        <div class="arr-idx-row">
+                            <div class="arr-i">i=0</div>
+                            <div class="arr-i">i=1</div>
+                            <div class="arr-i">i=2</div>
+                            <div class="arr-i">i=3</div>
+                            <div class="arr-i">i=4</div>
+                            <div class="arr-i">i=5</div>
+                            <div class="arr-i">i=6</div>
+                        </div>
+                        <div class="arr-row">
+                            <div class="arr-c root-min">1</div>
+                            <div class="arr-c level1">3</div>
+                            <div class="arr-c level1">5</div>
+                            <div class="arr-c">7</div>
+                            <div class="arr-c">9</div>
+                            <div class="arr-c">8</div>
+                            <div class="arr-c">6</div>
+                        </div>
+                    </div>
+
+                    <p class="diagram-caption">Tree and array are the same data. Node at i=1 (value 3): left child =
+                        2×1+1 = i=3 (value 7) &nbsp;|&nbsp; right child = 2×1+2 = i=4 (value 9) &nbsp;|&nbsp; parent =
+                        ⌊(1−1)/2⌋ = i=0 (value 1). Every parent ≤ its children.</p>
+                </div>
+
+                <!-- MAX HEAP TREE -->
+                <div class="diagram-area">
+                    <div class="diagram-label">Max-Heap — root is always the maximum element</div>
+
+                    <div class="tree-container">
+                        <svg class="tree-svg-lines" viewBox="0 0 400 210">
+                            <line x1="200" y1="24" x2="110" y2="88" stroke="#e4ddd3" stroke-width="2" />
+                            <line x1="200" y1="24" x2="290" y2="88" stroke="#e4ddd3" stroke-width="2" />
+                            <line x1="110" y1="88" x2="55" y2="162" stroke="#e4ddd3" stroke-width="2" />
+                            <line x1="110" y1="88" x2="160" y2="162" stroke="#e4ddd3" stroke-width="2" />
+                            <line x1="290" y1="88" x2="240" y2="162" stroke="#e4ddd3" stroke-width="2" />
+                            <line x1="290" y1="88" x2="345" y2="162" stroke="#e4ddd3" stroke-width="2" />
+                        </svg>
+                        <div class="tn root-max" style="left:200px; top:24px;">9</div>
+                        <div class="tn level1" style="left:110px; top:88px;">7</div>
+                        <div class="tn level1" style="left:290px; top:88px;">8</div>
+                        <div class="tn level2" style="left:55px;  top:162px;">3</div>
+                        <div class="tn level2" style="left:160px; top:162px;">5</div>
+                        <div class="tn level2" style="left:240px; top:162px;">6</div>
+                        <div class="tn level2" style="left:345px; top:162px;">1</div>
+                    </div>
+
+                    <div class="arr-repr-wrap">
+                        <div class="arr-idx-row">
+                            <div class="arr-i">i=0</div>
+                            <div class="arr-i">i=1</div>
+                            <div class="arr-i">i=2</div>
+                            <div class="arr-i">i=3</div>
+                            <div class="arr-i">i=4</div>
+                            <div class="arr-i">i=5</div>
+                            <div class="arr-i">i=6</div>
+                        </div>
+                        <div class="arr-row">
+                            <div class="arr-c root-max">9</div>
+                            <div class="arr-c level1">7</div>
+                            <div class="arr-c level1">8</div>
+                            <div class="arr-c">3</div>
+                            <div class="arr-c">5</div>
+                            <div class="arr-c">6</div>
+                            <div class="arr-c">1</div>
+                        </div>
+                    </div>
+
+                    <p class="diagram-caption">Every parent (9, 7, 8) is greater than or equal to its children. The
+                        maximum is guaranteed to be at the root at all times — O(1) to read it.</p>
+                </div>
+
+                <!-- SIFT UP (insert) -->
+                <p>When a new element is inserted it starts at the bottom and <strong>sifts up</strong>, swapping with
+                    its parent each time the heap property is violated.</p>
+
+                <div class="diagram-area">
+                    <div class="diagram-label">Min-Heap: inserting 2 — sift up until heap property is restored</div>
+                    <div class="steps-grid">
+
+                        <!-- Step 1 -->
+                        <div class="sift-step">
+                            <div class="sift-label">Step 1 — insert 2 at end</div>
+                            <div class="mini-tree">
+                                <svg class="mt-svg" viewBox="0 0 96 76">
+                                    <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="24" y1="44" x2="12" y2="66" stroke="#f5a623" stroke-width="1.5"
+                                        stroke-dasharray="4,2" />
+                                </svg>
+                                <div class="mn r" style="left:48px;top:16px;">1</div>
+                                <div class="mn b" style="left:24px;top:44px;">3</div>
+                                <div class="mn b" style="left:72px;top:44px;">5</div>
+                                <div class="mn h" style="left:12px;top:66px;">2</div>
+                            </div>
+                            <div class="sift-desc">2 placed as new leaf (i=3). Parent at i=1 is 3. Since 2 &lt; 3 → must
+                                swap.</div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="sift-step">
+                            <div class="sift-label">Step 2 — swap 2 &amp; 3</div>
+                            <div class="mini-tree">
+                                <svg class="mt-svg" viewBox="0 0 96 76">
+                                    <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5" />
+                                </svg>
+                                <div class="mn r" style="left:48px;top:16px;">1</div>
+                                <div class="mn h" style="left:24px;top:44px;">2</div>
+                                <div class="mn b" style="left:72px;top:44px;">5</div>
+                                <div class="mn b" style="left:12px;top:66px;">3</div>
+                            </div>
+                            <div class="sift-desc">2 now at i=1. Parent at i=0 is 1. Since 2 &gt; 1 → heap property
+                                satisfied, stop.</div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="sift-step">
+                            <div class="sift-label">Step 3 — done ✓</div>
+                            <div class="mini-tree">
+                                <svg class="mt-svg" viewBox="0 0 96 76">
+                                    <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5" />
+                                </svg>
+                                <div class="mn r" style="left:48px;top:16px;">1</div>
+                                <div class="mn b" style="left:24px;top:44px;">2</div>
+                                <div class="mn b" style="left:72px;top:44px;">5</div>
+                                <div class="mn b" style="left:12px;top:66px;">3</div>
+                            </div>
+                            <div class="sift-desc">Heap restored. Root is still 1. Only 1 swap needed — O(log n) = O(1)
+                                here.</div>
+                        </div>
+
+                        <!-- Array after -->
+                        <div class="sift-step">
+                            <div class="sift-label">Array after insert</div>
+                            <div style="display:flex; flex-direction:column; gap:4px; margin-top:0.3rem;">
+                                <div style="display:flex; gap:0;">
+                                    <div class="arr-c root-min" style="width:38px;height:36px;font-size:0.8rem;">1</div>
+                                    <div class="arr-c level1" style="width:38px;height:36px;font-size:0.8rem;">2</div>
+                                    <div class="arr-c level1" style="width:38px;height:36px;font-size:0.8rem;">5</div>
+                                    <div class="arr-c" style="width:38px;height:36px;font-size:0.8rem;">3</div>
+                                </div>
+                                <div style="display:flex; gap:0;">
+                                    <div class="arr-i" style="width:38px;font-size:0.62rem;">i=0</div>
+                                    <div class="arr-i" style="width:38px;font-size:0.62rem;">i=1</div>
+                                    <div class="arr-i" style="width:38px;font-size:0.62rem;">i=2</div>
+                                    <div class="arr-i" style="width:38px;font-size:0.62rem;">i=3</div>
+                                </div>
+                            </div>
+                            <div class="sift-desc">2 is now at i=1, 3 moved to i=3. Min at root. Array is compact, no
+                                pointers.</div>
+                        </div>
+
+                    </div>
+                    <p class="diagram-caption">Sift-up moves the new element toward the root one level at a time,
+                        stopping as soon as it is ≥ its parent. At most ⌊log₂ n⌋ swaps occur.</p>
+                </div>
+
+                <!-- SIFT DOWN (extractMin) -->
+                <p>When the minimum is extracted, the <strong>last element moves to the root</strong> and then
+                    <strong>sifts down</strong>, swapping with the smaller of its two children at each step.</p>
+
+                <div class="diagram-area">
+                    <div class="diagram-label">Min-Heap: extractMin() — last element placed at root, sifts down</div>
+                    <div class="steps-grid">
+
+                        <!-- Before extract -->
+                        <div class="sift-step">
+                            <div class="sift-label">Before — extract root (1)</div>
+                            <div class="mini-tree">
+                                <svg class="mt-svg" viewBox="0 0 96 76">
+                                    <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5" />
+                                </svg>
+                                <div class="mn r" style="left:48px;top:16px;">1</div>
+                                <div class="mn b" style="left:24px;top:44px;">3</div>
+                                <div class="mn b" style="left:72px;top:44px;">5</div>
+                                <div class="mn b" style="left:12px;top:66px;">9</div>
+                            </div>
+                            <div class="sift-desc">Root (1) will be removed. Last element (9) is moved to root position.
+                            </div>
+                        </div>
+
+                        <!-- Step 1 -->
+                        <div class="sift-step">
+                            <div class="sift-label">Step 1 — 9 at root, sift down</div>
+                            <div class="mini-tree">
+                                <svg class="mt-svg" viewBox="0 0 96 76">
+                                    <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5" />
+                                </svg>
+                                <div class="mn h" style="left:48px;top:16px;">9</div>
+                                <div class="mn b" style="left:24px;top:44px;">3</div>
+                                <div class="mn b" style="left:72px;top:44px;">5</div>
+                                <div class="mn b" style="left:12px;top:66px;">9</div>
+                            </div>
+                            <div class="sift-desc">Children are 3 and 5. Smaller child is 3. Since 9 &gt; 3 → swap 9 and
+                                3.</div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="sift-step">
+                            <div class="sift-label">Step 2 — swap 9 &amp; 3</div>
+                            <div class="mini-tree">
+                                <svg class="mt-svg" viewBox="0 0 96 76">
+                                    <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5" />
+                                </svg>
+                                <div class="mn r" style="left:48px;top:16px;">3</div>
+                                <div class="mn h" style="left:24px;top:44px;">9</div>
+                                <div class="mn b" style="left:72px;top:44px;">5</div>
+                                <div class="mn b" style="left:12px;top:66px;">9</div>
+                            </div>
+                            <div class="sift-desc">3 now at root. 9 at i=1. Child of 9 is also 9. Since 9 ≤ 9 → stop.
+                            </div>
+                        </div>
+
+                        <!-- Done -->
+                        <div class="sift-step">
+                            <div class="sift-label">Done — 1 returned ✓</div>
+                            <div class="mini-tree">
+                                <svg class="mt-svg" viewBox="0 0 96 76">
+                                    <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5" />
+                                    <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5" />
+                                </svg>
+                                <div class="mn r" style="left:48px;top:16px;">3</div>
+                                <div class="mn b" style="left:24px;top:44px;">9</div>
+                                <div class="mn b" style="left:72px;top:44px;">5</div>
+                                <div class="mn b" style="left:12px;top:66px;">9</div>
+                            </div>
+                            <div class="sift-desc">Heap restored. New minimum (3) is at root. Caller received 1.</div>
+                        </div>
+
+                    </div>
+                    <p class="diagram-caption">Sift-down always swaps with the <em>smaller</em> of the two children
+                        (min-heap), sinking the displaced element until it reaches its correct level.</p>
+                </div>
+
             </div>
-            <div class="sift-desc">2 now at i=1. Parent at i=0 is 1. Since 2 &gt; 1 → heap property satisfied, stop.</div>
-          </div>
+        </section>
 
-          <!-- Step 3 -->
-          <div class="sift-step">
-            <div class="sift-label">Step 3 — done ✓</div>
-            <div class="mini-tree">
-              <svg class="mt-svg" viewBox="0 0 96 76">
-                <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5"/>
-              </svg>
-              <div class="mn r" style="left:48px;top:16px;">1</div>
-              <div class="mn b" style="left:24px;top:44px;">2</div>
-              <div class="mn b" style="left:72px;top:44px;">5</div>
-              <div class="mn b" style="left:12px;top:66px;">3</div>
-            </div>
-            <div class="sift-desc">Heap restored. Root is still 1. Only 1 swap needed — O(log n) = O(1) here.</div>
-          </div>
-
-          <!-- Array after -->
-          <div class="sift-step">
-            <div class="sift-label">Array after insert</div>
-            <div style="display:flex; flex-direction:column; gap:4px; margin-top:0.3rem;">
-              <div style="display:flex; gap:0;">
-                <div class="arr-c root-min" style="width:38px;height:36px;font-size:0.8rem;">1</div>
-                <div class="arr-c level1"   style="width:38px;height:36px;font-size:0.8rem;">2</div>
-                <div class="arr-c level1"   style="width:38px;height:36px;font-size:0.8rem;">5</div>
-                <div class="arr-c"          style="width:38px;height:36px;font-size:0.8rem;">3</div>
-              </div>
-              <div style="display:flex; gap:0;">
-                <div class="arr-i" style="width:38px;font-size:0.62rem;">i=0</div>
-                <div class="arr-i" style="width:38px;font-size:0.62rem;">i=1</div>
-                <div class="arr-i" style="width:38px;font-size:0.62rem;">i=2</div>
-                <div class="arr-i" style="width:38px;font-size:0.62rem;">i=3</div>
-              </div>
-            </div>
-            <div class="sift-desc">2 is now at i=1, 3 moved to i=3. Min at root. Array is compact, no pointers.</div>
-          </div>
-
-        </div>
-        <p class="diagram-caption">Sift-up moves the new element toward the root one level at a time, stopping as soon as it is ≥ its parent. At most ⌊log₂ n⌋ swaps occur.</p>
-      </div>
-
-      <!-- SIFT DOWN (extractMin) -->
-      <p>When the minimum is extracted, the <strong>last element moves to the root</strong> and then <strong>sifts down</strong>, swapping with the smaller of its two children at each step.</p>
-
-      <div class="diagram-area">
-        <div class="diagram-label">Min-Heap: extractMin() — last element placed at root, sifts down</div>
-        <div class="steps-grid">
-
-          <!-- Before extract -->
-          <div class="sift-step">
-            <div class="sift-label">Before — extract root (1)</div>
-            <div class="mini-tree">
-              <svg class="mt-svg" viewBox="0 0 96 76">
-                <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5"/>
-              </svg>
-              <div class="mn r" style="left:48px;top:16px;">1</div>
-              <div class="mn b" style="left:24px;top:44px;">3</div>
-              <div class="mn b" style="left:72px;top:44px;">5</div>
-              <div class="mn b" style="left:12px;top:66px;">9</div>
-            </div>
-            <div class="sift-desc">Root (1) will be removed. Last element (9) is moved to root position.</div>
-          </div>
-
-          <!-- Step 1 -->
-          <div class="sift-step">
-            <div class="sift-label">Step 1 — 9 at root, sift down</div>
-            <div class="mini-tree">
-              <svg class="mt-svg" viewBox="0 0 96 76">
-                <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5"/>
-              </svg>
-              <div class="mn h" style="left:48px;top:16px;">9</div>
-              <div class="mn b" style="left:24px;top:44px;">3</div>
-              <div class="mn b" style="left:72px;top:44px;">5</div>
-              <div class="mn b" style="left:12px;top:66px;">9</div>
-            </div>
-            <div class="sift-desc">Children are 3 and 5. Smaller child is 3. Since 9 &gt; 3 → swap 9 and 3.</div>
-          </div>
-
-          <!-- Step 2 -->
-          <div class="sift-step">
-            <div class="sift-label">Step 2 — swap 9 &amp; 3</div>
-            <div class="mini-tree">
-              <svg class="mt-svg" viewBox="0 0 96 76">
-                <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5"/>
-              </svg>
-              <div class="mn r" style="left:48px;top:16px;">3</div>
-              <div class="mn h" style="left:24px;top:44px;">9</div>
-              <div class="mn b" style="left:72px;top:44px;">5</div>
-              <div class="mn b" style="left:12px;top:66px;">9</div>
-            </div>
-            <div class="sift-desc">3 now at root. 9 at i=1. Child of 9 is also 9. Since 9 ≤ 9 → stop.</div>
-          </div>
-
-          <!-- Done -->
-          <div class="sift-step">
-            <div class="sift-label">Done — 1 returned ✓</div>
-            <div class="mini-tree">
-              <svg class="mt-svg" viewBox="0 0 96 76">
-                <line x1="48" y1="16" x2="24" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="48" y1="16" x2="72" y2="44" stroke="#e4ddd3" stroke-width="1.5"/>
-                <line x1="24" y1="44" x2="12" y2="66" stroke="#e4ddd3" stroke-width="1.5"/>
-              </svg>
-              <div class="mn r" style="left:48px;top:16px;">3</div>
-              <div class="mn b" style="left:24px;top:44px;">9</div>
-              <div class="mn b" style="left:72px;top:44px;">5</div>
-              <div class="mn b" style="left:12px;top:66px;">9</div>
-            </div>
-            <div class="sift-desc">Heap restored. New minimum (3) is at root. Caller received 1.</div>
-          </div>
-
-        </div>
-        <p class="diagram-caption">Sift-down always swaps with the <em>smaller</em> of the two children (min-heap), sinking the displaced element until it reaches its correct level.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════════
+        <!-- ══════════════════════════════════════════════
        5. ANALOGY
   ══════════════════════════════════════════════ -->
-  <section id="analogy">
-    <div class="section-header">
-      <div class="section-number">5</div>
-      <h2>Plain English Analogy</h2>
-    </div>
-    <div class="section-body">
+        <section id="analogy">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Plain English Analogy</h2>
+            </div>
+            <div class="section-body">
 
-      <div class="analogy-card">
-        <div class="analogy-icon">🏥</div>
-        <h3>Min-Heap — The A&amp;E Waiting Room</h3>
-        <p>You walk into A&amp;E with a sprained wrist. Someone else arrives with a broken arm. Then an ambulance rushes in with someone having a heart attack. In a normal queue, you'd be first since you arrived first. But A&amp;E uses <strong>triage</strong> — whoever is most critically ill is always seen next, no matter when they arrived.</p>
-        <p>A min-heap works exactly like this. Each patient has a priority number (1 = critical, 10 = minor). The patient with the <em>lowest number</em> (most urgent) is always at the front. The moment a new critical patient arrives and gets a lower priority number, they immediately become the next to be seen — the heap reorganises itself automatically.</p>
-        <ul>
-          <li><strong>A new patient being assessed and given a priority number</strong> → <code class="inline">insert()</code></li>
-          <li><strong>The doctor calling the most critical patient next</strong> → <code class="inline">extractMin()</code></li>
-          <li><strong>Checking who is most critical without calling them yet</strong> → <code class="inline">peek()</code></li>
-          <li><strong>A patient's condition suddenly worsening</strong> → <code class="inline">decreaseKey()</code></li>
-        </ul>
-      </div>
+                <div class="analogy-card">
+                    <div class="analogy-icon">🏥</div>
+                    <h3>Min-Heap — The A&amp;E Waiting Room</h3>
+                    <p>You walk into A&amp;E with a sprained wrist. Someone else arrives with a broken arm. Then an
+                        ambulance rushes in with someone having a heart attack. In a normal queue, you'd be first since
+                        you arrived first. But A&amp;E uses <strong>triage</strong> — whoever is most critically ill is
+                        always seen next, no matter when they arrived.</p>
+                    <p>A min-heap works exactly like this. Each patient has a priority number (1 = critical, 10 =
+                        minor). The patient with the <em>lowest number</em> (most urgent) is always at the front. The
+                        moment a new critical patient arrives and gets a lower priority number, they immediately become
+                        the next to be seen — the heap reorganises itself automatically.</p>
+                    <ul>
+                        <li><strong>A new patient being assessed and given a priority number</strong> → <code
+                                class="inline">insert()</code></li>
+                        <li><strong>The doctor calling the most critical patient next</strong> → <code
+                                class="inline">extractMin()</code></li>
+                        <li><strong>Checking who is most critical without calling them yet</strong> → <code
+                                class="inline">peek()</code></li>
+                        <li><strong>A patient's condition suddenly worsening</strong> → <code
+                                class="inline">decreaseKey()</code></li>
+                    </ul>
+                </div>
 
-      <div class="analogy-card">
-        <div class="analogy-icon">🏆</div>
-        <h3>Max-Heap — A Live Gaming Leaderboard</h3>
-        <p>Picture a live tournament leaderboard that always shows the highest-scoring player at the top. Every time a player scores, their position updates. You don't need to sort everyone from scratch — the leaderboard guarantees the best player is always visible at position 1. When that player is knocked out (extracted), the next best rises to the top automatically.</p>
-        <p>A max-heap does this in O(log n) per score update. The winner is always at the root in O(1) — no searching, no sorting.</p>
-      </div>
+                <div class="analogy-card">
+                    <div class="analogy-icon">🏆</div>
+                    <h3>Max-Heap — A Live Gaming Leaderboard</h3>
+                    <p>Picture a live tournament leaderboard that always shows the highest-scoring player at the top.
+                        Every time a player scores, their position updates. You don't need to sort everyone from scratch
+                        — the leaderboard guarantees the best player is always visible at position 1. When that player
+                        is knocked out (extracted), the next best rises to the top automatically.</p>
+                    <p>A max-heap does this in O(log n) per score update. The winner is always at the root in O(1) — no
+                        searching, no sorting.</p>
+                </div>
 
-      <div class="analogy-card">
-        <div class="analogy-icon">📦</div>
-        <h3>Why Store a Tree Inside an Array?</h3>
-        <p>Imagine a family tree printed on a numbered grid. Person 0 is the grandparent. Their two children are in slots 1 and 2. Those children's children fill slots 3, 4, 5, 6. You never need arrows or labels to figure out who is related to whom — the <em>slot number tells you everything</em>.</p>
-        <p>A heap uses exactly this trick. The array slot number doubles as the address, and three simple maths formulas — <code class="inline">2i+1</code>, <code class="inline">2i+2</code>, <code class="inline">⌊(i-1)/2⌋</code> — replace every pointer that a normal tree would need. The result: a tree that fits perfectly inside a flat array with zero wasted memory.</p>
-      </div>
+                <div class="analogy-card">
+                    <div class="analogy-icon">📦</div>
+                    <h3>Why Store a Tree Inside an Array?</h3>
+                    <p>Imagine a family tree printed on a numbered grid. Person 0 is the grandparent. Their two children
+                        are in slots 1 and 2. Those children's children fill slots 3, 4, 5, 6. You never need arrows or
+                        labels to figure out who is related to whom — the <em>slot number tells you everything</em>.</p>
+                    <p>A heap uses exactly this trick. The array slot number doubles as the address, and three simple
+                        maths formulas — <code class="inline">2i+1</code>, <code class="inline">2i+2</code>, <code
+                            class="inline">⌊(i-1)/2⌋</code> — replace every pointer that a normal tree would need. The
+                        result: a tree that fits perfectly inside a flat array with zero wasted memory.</p>
+                </div>
 
-    </div>
-  </section>
+            </div>
+        </section>
 
-  <!-- ══════════════════════════════════════════════
+        <!-- ══════════════════════════════════════════════
        6. REAL WORLD
   ══════════════════════════════════════════════ -->
-  <section id="real-world">
-    <div class="section-header">
-      <div class="section-number">6</div>
-      <h2>Real-World Coding Applications</h2>
-    </div>
-    <div class="section-body">
-      <p>Priority queues and heaps are behind some of the most critical algorithms in computer science — from navigation to operating systems to data compression.</p>
-      <div class="rw-grid">
-        <div class="rw-card">
-          <div class="rw-icon">🗺️</div>
-          <h4>Dijkstra's Shortest Path</h4>
-          <p>The algorithm behind Google Maps and GPS routing. A min-heap always provides the unvisited node with the smallest known distance in O(log n), making the entire algorithm O((V + E) log V).</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">⭐</div>
-          <h4>A* Pathfinding</h4>
-          <p>The go-to algorithm in game AI and robotics. Uses a min-heap (open set) to always explore the most promising node next, based on cost + heuristic. Every game with pathfinding uses this.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🖥️</div>
-          <h4>OS Task Scheduler</h4>
-          <p>Operating systems assign each process a priority. A max-heap (or min-heap with inverted priorities) always surfaces the highest-priority runnable process to the CPU with no linear search.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🗜️</div>
-          <h4>Huffman Coding (Data Compression)</h4>
-          <p>ZIP, PNG, and MP3 compression all rely on Huffman encoding. A min-heap repeatedly extracts the two lowest-frequency symbols to merge them — the heap makes this O(n log n) overall.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">📊</div>
-          <h4>Live Median / Top-K Streams</h4>
-          <p>Maintaining a running median from a data stream uses two heaps: a max-heap for the lower half and a min-heap for the upper half. The median is always the root of one of them — O(log n) per insert.</p>
-        </div>
-        <div class="rw-card">
-          <div class="rw-icon">🔗</div>
-          <h4>Merge k Sorted Lists</h4>
-          <p>Given k sorted arrays, a min-heap holds one element from each list. Extract the minimum, advance that list's pointer, push the next element. Result is a fully merged sorted output in O(n log k) — used in database query engines and external sorting.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+        <section id="real-world">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Real-World Coding Applications</h2>
+            </div>
+            <div class="section-body">
+                <p>Priority queues and heaps are behind some of the most critical algorithms in computer science — from
+                    navigation to operating systems to data compression.</p>
+                <div class="rw-grid">
+                    <div class="rw-card">
+                        <div class="rw-icon">🗺️</div>
+                        <h4>Dijkstra's Shortest Path</h4>
+                        <p>The algorithm behind Google Maps and GPS routing. A min-heap always provides the unvisited
+                            node with the smallest known distance in O(log n), making the entire algorithm O((V + E) log
+                            V).</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">⭐</div>
+                        <h4>A* Pathfinding</h4>
+                        <p>The go-to algorithm in game AI and robotics. Uses a min-heap (open set) to always explore the
+                            most promising node next, based on cost + heuristic. Every game with pathfinding uses this.
+                        </p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🖥️</div>
+                        <h4>OS Task Scheduler</h4>
+                        <p>Operating systems assign each process a priority. A max-heap (or min-heap with inverted
+                            priorities) always surfaces the highest-priority runnable process to the CPU with no linear
+                            search.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🗜️</div>
+                        <h4>Huffman Coding (Data Compression)</h4>
+                        <p>ZIP, PNG, and MP3 compression all rely on Huffman encoding. A min-heap repeatedly extracts
+                            the two lowest-frequency symbols to merge them — the heap makes this O(n log n) overall.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">📊</div>
+                        <h4>Live Median / Top-K Streams</h4>
+                        <p>Maintaining a running median from a data stream uses two heaps: a max-heap for the lower half
+                            and a min-heap for the upper half. The median is always the root of one of them — O(log n)
+                            per insert.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🔗</div>
+                        <h4>Merge k Sorted Lists</h4>
+                        <p>Given k sorted arrays, a min-heap holds one element from each list. Extract the minimum,
+                            advance that list's pointer, push the next element. Result is a fully merged sorted output
+                            in O(n log k) — used in database query engines and external sorting.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-</main>
+    </main>
 
-<footer>
-  <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
-  <p style="margin-top:0.4rem;font-size:0.8rem;">Built for learners, by learners.</p>
-</footer>
+    <footer>
+        <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+        <p style="margin-top:0.4rem;font-size:0.8rem;">Built for learners, by learners.</p>
+    </footer>
 
-<script>
-  function copyCode(btn) {
-    const pre = btn.closest('.code-block').querySelector('pre');
-    navigator.clipboard.writeText(pre.innerText).then(() => {
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = 'Copy', 2000);
-    });
-  }
-</script>
+    <script>
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+    </script>
 </body>
+
 </html>

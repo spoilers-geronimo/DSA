@@ -1,187 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DSA Zero to Hero</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --cream: #FAF7F2; --white: #FFFFFF;
-      --ink: #1A1A1A; --ink-light: #4A4A4A; --ink-muted: #888;
-      --accent: #D4500A; --accent-light: #F5E6DC;
-      --border: #E8E2D8;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DSA Zero to Hero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="header.css">
+    <script src="header.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* NAV */
-    nav {
-      position: sticky; top: 0; z-index: 200;
-      background: rgba(250,247,242,0.96); backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 5vw;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 64px;
-    }
-    .nav-logo { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.35rem; color: var(--ink); text-decoration: none; letter-spacing: -0.3px; }
-    .nav-logo span { color: var(--accent); }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { text-decoration: none; color: var(--ink-light); font-size: 0.88rem; font-weight: 500; transition: color 0.2s; }
-    .nav-links a:hover { color: var(--accent); }
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
-    .hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.25s; }
-    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; }
-    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+        :root {
+            --cream: #FAF7F2;
+            --white: #FFFFFF;
+            --ink: #1A1A1A;
+            --ink-light: #4A4A4A;
+            --ink-muted: #888;
+            --accent: #D4500A;
+            --accent-light: #F5E6DC;
+            --border: #E8E2D8;
+        }
 
-    /* Mobile drawer */
-    .mobile-drawer {
-      display: none; position: fixed; top: 64px; left: 0; right: 0; bottom: 0;
-      background: var(--white); z-index: 199; flex-direction: column;
-      padding: 1.5rem 5vw; border-top: 1px solid var(--border);
-      overflow-y: auto;
-    }
-    .mobile-drawer.open { display: flex; }
-    .mobile-drawer a { text-decoration: none; color: var(--ink); font-size: 1.05rem; font-weight: 500; padding: 1rem 0; border-bottom: 1px solid var(--border); }
-    .mobile-drawer a:last-child { border-bottom: none; }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    /* HERO */
-    .hero {
-      padding: 6rem 5vw 4rem;
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 4rem; align-items: center;
-      max-width: 1300px; margin: 0 auto;
-    }
-    .hero-badge { display: inline-block; background: var(--accent-light); color: var(--accent); font-size: 0.73rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.33rem 0.85rem; border-radius: 20px; margin-bottom: 1.3rem; }
-    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.3rem, 5vw, 4.2rem); font-weight: 900; line-height: 1.08; letter-spacing: -1.5px; margin-bottom: 1.2rem; }
-    .hero h1 em { font-style: italic; color: var(--accent); }
-    .hero-desc { font-size: 1rem; line-height: 1.8; color: var(--ink-light); max-width: 480px; margin-bottom: 2rem; }
-    .hero-cta { display: inline-flex; align-items: center; gap: 0.55rem; background: var(--ink); color: var(--white); text-decoration: none; padding: 0.82rem 1.7rem; border-radius: 4px; font-weight: 600; font-size: 0.9rem; transition: background 0.2s, transform 0.2s; }
-    .hero-cta:hover { background: var(--accent); transform: translateY(-2px); }
-    .hero-cta svg { width: 16px; height: 16px; }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--ink);
+        }
 
-    /* Hero code card */
-    .hero-visual { display: flex; align-items: center; justify-content: center; }
-    .hero-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 1.6rem; width: 100%; max-width: 400px; box-shadow: 0 8px 40px rgba(0,0,0,0.1); animation: float 4s ease-in-out infinite; }
-    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-    .code-win { background: #1E1E2E; border-radius: 8px; padding: 1.1rem 1.2rem; font-family: 'DM Mono', monospace; font-size: 0.75rem; line-height: 1.85; color: #CDD6F4; overflow-x: auto; }
-    .code-win pre { margin: 0; white-space: pre; }
-    .dots { display: flex; gap: 6px; margin-bottom: 0.85rem; }
-    .dots span { width: 10px; height: 10px; border-radius: 50%; }
-    .dr{background:#F38BA8;} .dy{background:#F9E2AF;} .dg{background:#A6E3A1;}
 
-    /* STATS */
-    .stats-bar { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--white); padding: 1.8rem 5vw; }
-    .stats-inner { max-width: 1300px; margin: 0 auto; display: flex; gap: 3rem; flex-wrap: wrap; }
-    .stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; }
-    .stat-label { font-size: 0.78rem; color: var(--ink-muted); font-weight: 500; margin-top: 2px; }
 
-    /* SECTION HEADER */
-    .section-header { max-width: 1300px; margin: 0 auto; padding: 4.5rem 5vw 2rem; }
-    .section-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-muted); margin-bottom: 0.6rem; }
-    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem); font-weight: 900; letter-spacing: -1px; line-height: 1.15; }
-    .section-title span { color: var(--accent); font-style: italic; }
-    .section-sub { font-size: 0.95rem; color: var(--ink-light); max-width: 540px; line-height: 1.75; margin-top: 0.6rem; }
+        /* HERO */
+        .hero {
+            padding: 6rem 5vw 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
 
-    /* CONCEPT GRID */
-    .concepts-grid { max-width: 1300px; margin: 0 auto; padding: 0 5vw 5rem; display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1.2rem; }
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.73rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.33rem 0.85rem;
+            border-radius: 20px;
+            margin-bottom: 1.3rem;
+        }
 
-    /* CONCEPT CARD */
-    .concept-card { background: var(--white); border: 1.5px solid var(--border); border-radius: 10px; padding: 1.7rem; text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 0.85rem; transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; position: relative; overflow: hidden; opacity: 0; transform: translateY(20px); }
-    .concept-card.visible { animation: fadeUp 0.5s forwards; }
-    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-    .concept-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--card-accent, var(--accent)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
-    .concept-card:hover::before { transform: scaleX(1); }
-    .concept-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(0,0,0,0.1); border-color: transparent; }
-    .card-icon { width: 40px; height: 40px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; background: var(--card-icon-bg, var(--accent-light)); }
-    .card-number { position: absolute; top: 1.3rem; right: 1.5rem; font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--border); line-height: 1; user-select: none; }
-    .card-tag { font-size: 0.67rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--card-accent, var(--accent)); }
-    .card-title { font-family: 'Playfair Display', serif; font-size: 1.22rem; font-weight: 700; line-height: 1.2; }
-    .card-desc { font-size: 0.84rem; color: var(--ink-light); line-height: 1.7; flex: 1; }
-    .card-footer { display: flex; align-items: center; justify-content: space-between; padding-top: 0.85rem; border-top: 1px solid var(--border); }
-    .card-difficulty { display: flex; gap: 4px; align-items: center; }
-    .diff-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); }
-    .diff-dot.filled { background: var(--card-accent, var(--accent)); }
-    .diff-label { font-size: 0.69rem; color: var(--ink-muted); margin-left: 4px; font-weight: 500; }
-    .card-arrow { width: 26px; height: 26px; border-radius: 50%; background: var(--card-icon-bg, var(--accent-light)); display: flex; align-items: center; justify-content: center; color: var(--card-accent, var(--accent)); font-size: 0.85rem; transition: background 0.2s, color 0.2s; }
-    .concept-card:hover .card-arrow { background: var(--card-accent, var(--accent)); color: white; }
-    .concept-card.locked { opacity: 0.48; cursor: default; pointer-events: none; }
-    .concept-card.locked.visible { opacity: 0.48; }
-    .lock-badge { position: absolute; top: 1.1rem; right: 1.2rem; font-size: 0.67rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; background: var(--border); color: var(--ink-muted); padding: 0.18rem 0.52rem; border-radius: 20px; }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.3rem, 5vw, 4.2rem);
+            font-weight: 900;
+            line-height: 1.08;
+            letter-spacing: -1.5px;
+            margin-bottom: 1.2rem;
+        }
 
-    /* HOW WE TEACH */
-    .journey-section { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 5rem 5vw; }
-    .journey-inner { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
-    .journey-steps { display: flex; flex-direction: column; gap: 1.3rem; }
-    .journey-step { display: flex; gap: 1rem; align-items: flex-start; }
-    .step-num { width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: var(--accent); color: white; font-weight: 700; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
-    .step-content h4 { font-weight: 700; font-size: 0.93rem; margin-bottom: 0.18rem; }
-    .step-content p { font-size: 0.84rem; color: var(--ink-light); line-height: 1.6; }
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent);
+        }
 
-    /* FOOTER */
-    footer { background: var(--ink); color: #888; text-align: center; padding: 2.5rem 5vw; font-size: 0.82rem; }
-    .footer-logo { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 900; color: white; margin-bottom: 0.4rem; }
-    .footer-logo span { color: var(--accent); }
+        .hero-desc {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--ink-light);
+            max-width: 480px;
+            margin-bottom: 2rem;
+        }
 
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      .hero { grid-template-columns: 1fr; gap: 0; padding: 3.5rem 5vw 3rem; }
-      .hero-visual { display: none; }
-      .journey-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-      .nav-links { display: none; }
-      .hamburger { display: flex; }
-    }
-    @media (max-width: 600px) {
-      .concepts-grid { grid-template-columns: 1fr; }
-      .stats-inner { gap: 1.5rem; }
-      .section-header { padding: 3rem 5vw 1.5rem; }
-    }
-  </style>
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+            background: var(--ink);
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.82rem 1.7rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .hero-cta:hover {
+            background: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .hero-cta svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Hero code card */
+        .hero-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.6rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.1);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0)
+            }
+
+            50% {
+                transform: translateY(-10px)
+            }
+        }
+
+        .code-win {
+            background: #1E1E2E;
+            border-radius: 8px;
+            padding: 1.1rem 1.2rem;
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem;
+            line-height: 1.85;
+            color: #CDD6F4;
+            overflow-x: auto;
+        }
+
+        .code-win pre {
+            margin: 0;
+            white-space: pre;
+        }
+
+        .dots {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 0.85rem;
+        }
+
+        .dots span {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .dr {
+            background: #F38BA8;
+        }
+
+        .dy {
+            background: #F9E2AF;
+        }
+
+        .dg {
+            background: #A6E3A1;
+        }
+
+        /* STATS */
+        .stats-bar {
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: var(--white);
+            padding: 1.8rem 5vw;
+        }
+
+        .stats-inner {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--ink-muted);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* SECTION HEADER */
+        .section-header {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 4.5rem 5vw 2rem;
+        }
+
+        .section-tag {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--ink-muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+            font-weight: 900;
+            letter-spacing: -1px;
+            line-height: 1.15;
+        }
+
+        .section-title span {
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        .section-sub {
+            font-size: 0.95rem;
+            color: var(--ink-light);
+            max-width: 540px;
+            line-height: 1.75;
+            margin-top: 0.6rem;
+        }
+
+        /* CONCEPT GRID */
+        .concepts-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 5vw 5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+            gap: 1.2rem;
+        }
+
+        /* CONCEPT CARD */
+        .concept-card {
+            background: var(--white);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 1.7rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .concept-card.visible {
+            animation: fadeUp 0.5s forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .concept-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--card-accent, var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+
+        .concept-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .concept-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border-color: transparent;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background: var(--card-icon-bg, var(--accent-light));
+        }
+
+        .card-number {
+            position: absolute;
+            top: 1.3rem;
+            right: 1.5rem;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--border);
+            line-height: 1;
+            user-select: none;
+        }
+
+        .card-tag {
+            font-size: 0.67rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--card-accent, var(--accent));
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.22rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .card-desc {
+            font-size: 0.84rem;
+            color: var(--ink-light);
+            line-height: 1.7;
+            flex: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-difficulty {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .diff-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--border);
+        }
+
+        .diff-dot.filled {
+            background: var(--card-accent, var(--accent));
+        }
+
+        .diff-label {
+            font-size: 0.69rem;
+            color: var(--ink-muted);
+            margin-left: 4px;
+            font-weight: 500;
+        }
+
+        .card-arrow {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--card-icon-bg, var(--accent-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--card-accent, var(--accent));
+            font-size: 0.85rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .concept-card:hover .card-arrow {
+            background: var(--card-accent, var(--accent));
+            color: white;
+        }
+
+        .concept-card.locked {
+            opacity: 0.48;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .concept-card.locked.visible {
+            opacity: 0.48;
+        }
+
+        .lock-badge {
+            position: absolute;
+            top: 1.1rem;
+            right: 1.2rem;
+            font-size: 0.67rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: var(--border);
+            color: var(--ink-muted);
+            padding: 0.18rem 0.52rem;
+            border-radius: 20px;
+        }
+
+        /* HOW WE TEACH */
+        .journey-section {
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 5rem 5vw;
+        }
+
+        .journey-inner {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: center;
+        }
+
+        .journey-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.3rem;
+        }
+
+        .journey-step {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-content h4 {
+            font-weight: 700;
+            font-size: 0.93rem;
+            margin-bottom: 0.18rem;
+        }
+
+        .step-content p {
+            font-size: 0.84rem;
+            color: var(--ink-light);
+            line-height: 1.6;
+        }
+
+        /* FOOTER */
+        footer {
+            background: var(--ink);
+            color: #888;
+            text-align: center;
+            padding: 2.5rem 5vw;
+            font-size: 0.82rem;
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: white;
+            margin-bottom: 0.4rem;
+        }
+
+        .footer-logo span {
+            color: var(--accent);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 0;
+                padding: 3.5rem 5vw 3rem;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .journey-inner {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+
+        }
+
+        @media (max-width: 600px) {
+            .concepts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-inner {
+                gap: 1.5rem;
+            }
+
+            .section-header {
+                padding: 3rem 5vw 1.5rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<nav>
-  <a class="nav-logo" href="index.html">DSA <span>Zero→Hero</span></a>
-  <ul class="nav-links">
-    <li><a href="#foundations">Foundations</a></li>
-    <li><a href="#structures">Data Structures</a></li>
-    <li><a href="#algorithms">Algorithms</a></li>
-    <li><a href="#journey">How It Works</a></li>
-    <li><a href="real-world.html" style="color:var(--accent);font-weight:600;">🏭 Real World</a></li>
-    <li><a href="war-stories.html" style="color:var(--accent);font-weight:600;">🔥 Programming Battles</a></li>
-  </ul>
-  <button class="hamburger" id="hbg" aria-label="Toggle menu">
-    <span></span><span></span><span></span>
-  </button>
-</nav>
+    <common-header accent="#D4500A"></common-header>
 
-<div class="mobile-drawer" id="drawer">
-  <a href="#foundations" class="drawer-link">Foundations</a>
-  <a href="#structures" class="drawer-link">Data Structures</a>
-  <a href="#algorithms" class="drawer-link">Algorithms</a>
-  <a href="#journey" class="drawer-link">How It Works</a>
-  <a href="real-world.html" class="drawer-link" style="color:var(--accent);font-weight:600;">🏭 DSA in the Real World</a>
-</div>
-
-<!-- HERO -->
-<section class="hero">
-  <div>
-    <div class="hero-badge">🚀 Beginner → Advanced</div>
-    <h1>Master DSA from <em>Zero</em> to Hero</h1>
-    <p class="hero-desc">Data Structures &amp; Algorithms, taught the way your brain actually works — with real analogies, clean visuals, and code that makes sense. No CS degree required.</p>
-    <a href="#foundations" class="hero-cta">
-      Start Learning
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-  </div>
-  <div class="hero-visual">
-    <div class="hero-card">
-      <div class="code-win">
-        <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
-        <pre><span style="color:#6C7086">// Binary Search — O(log n)</span>
+    <!-- HERO -->
+    <section class="hero">
+        <div>
+            <div class="hero-badge">🚀 Beginner → Advanced</div>
+            <h1>Master DSA from <em>Zero</em> to Hero</h1>
+            <p class="hero-desc">Data Structures &amp; Algorithms, taught the way your brain actually works — with real
+                analogies, clean visuals, and code that makes sense. No CS degree required.</p>
+            <a href="#foundations" class="hero-cta">
+                Start Learning
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div class="code-win">
+                    <div class="dots"><span class="dr"></span><span class="dy"></span><span class="dg"></span></div>
+                    <pre><span style="color:#6C7086">// Binary Search — O(log n)</span>
 <span style="color:#CBA6F7">function</span> <span style="color:#89B4FA">binarySearch</span>(arr, target) {
   <span style="color:#CBA6F7">let</span> lo = <span style="color:#FAB387">0</span>, hi = arr.length - <span style="color:#FAB387">1</span>;
   <span style="color:#CBA6F7">while</span> (lo &lt;= hi) {
@@ -192,206 +575,383 @@
   }
   <span style="color:#CBA6F7">return</span> -<span style="color:#FAB387">1</span>;
 }</pre>
-      </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats-bar">
+        <div class="stats-inner">
+            <div>
+                <div class="stat-num">10</div>
+                <div class="stat-label">Concept Modules</div>
+            </div>
+            <div>
+                <div class="stat-num">7</div>
+                <div class="stat-label">Teaching Formats per Topic</div>
+            </div>
+            <div>
+                <div class="stat-num">0</div>
+                <div class="stat-label">Prerequisites Needed</div>
+            </div>
+            <div>
+                <div class="stat-num">∞</div>
+                <div class="stat-label">Times You Can Revisit</div>
+            </div>
+        </div>
     </div>
-  </div>
-</section>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stats-inner">
-    <div><div class="stat-num">10</div><div class="stat-label">Concept Modules</div></div>
-    <div><div class="stat-num">7</div><div class="stat-label">Teaching Formats per Topic</div></div>
-    <div><div class="stat-num">0</div><div class="stat-label">Prerequisites Needed</div></div>
-    <div><div class="stat-num">∞</div><div class="stat-label">Times You Can Revisit</div></div>
-  </div>
-</div>
-
-<!-- CHAPTER 1 -->
-<div id="foundations" class="section-header">
-  <div class="section-tag">Chapter 1 · Foundations</div>
-  <h2 class="section-title">Start Here — <span>The Basics</span></h2>
-  <p class="section-sub">Every expert was once a beginner. These modules lay the groundwork for everything that follows.</p>
-</div>
-<div class="concepts-grid">
-  <a href="arrays.html" class="concept-card" style="--card-accent:#D4500A;--card-icon-bg:#F5E6DC;">
-    <div class="card-number">01</div><div class="card-icon">🗂️</div>
-    <div class="card-tag">Foundation</div>
-    <div class="card-title">Arrays</div>
-    <div class="card-desc">The most fundamental data structure. Learn how elements are stored in contiguous memory and accessed in O(1) time.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot"></div><div class="diff-dot"></div><span class="diff-label">Beginner</span></div><div class="card-arrow">→</div></div>
-  </a>
-  <a href="linked-lists.html" class="concept-card" style="--card-accent:#1A6B4A;--card-icon-bg:#DCF0E6;">
-    <div class="card-number">02</div><div class="card-icon">🔗</div>
-    <div class="card-tag">Foundation</div>
-    <div class="card-title">Linked Lists</div>
-    <div class="card-desc">A chain of nodes connected by pointers. Understand singly and doubly linked lists, and when each shines.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot"></div><div class="diff-dot"></div><span class="diff-label">Beginner</span></div><div class="card-arrow">→</div></div>
-  </a>
-  <a href="stacks.html" class="concept-card" style="--card-accent:#2B5EA7;--card-icon-bg:#DCE8F8;">
-    <div class="card-number">03</div><div class="card-icon">📚</div>
-    <div class="card-tag">Foundation</div>
-    <div class="card-title">Stacks</div>
-    <div class="card-desc">Last In, First Out. Used in undo operations, call stacks, and expression parsing. One of the most elegant structures.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot"></div><div class="diff-dot"></div><span class="diff-label">Beginner</span></div><div class="card-arrow">→</div></div>
-  </a>
-  <a href="queues.html" class="concept-card" style="--card-accent:#8B2FC9;--card-icon-bg:#EEE0FA;">
-    <div class="card-number">04</div><div class="card-icon">🎟️</div>
-    <div class="card-tag">Foundation</div>
-    <div class="card-title">Queues</div>
-    <div class="card-desc">First In, First Out. Learn how queues model real-world waiting lines and power BFS graph traversal.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot"></div><div class="diff-dot"></div><span class="diff-label">Beginner</span></div><div class="card-arrow">→</div></div>
-  </a>
-</div>
-
-<!-- CHAPTER 2 -->
-<div id="structures" class="section-header" style="padding-top:1rem;">
-  <div class="section-tag">Chapter 2 · Data Structures</div>
-  <h2 class="section-title">Build Your <span>Toolkit</span></h2>
-  <p class="section-sub">More powerful ways to organise data — each solving specific problems more efficiently than the basics.</p>
-</div>
-<div class="concepts-grid">
-  <a href="hash-tables.html" class="concept-card" style="--card-accent:#B8860B;--card-icon-bg:#FDF3D0;">
-    <div class="card-number">05</div><div class="card-icon">🗃️</div>
-    <div class="card-tag">Data Structures</div>
-    <div class="card-title">Hash Tables</div>
-    <div class="card-desc">The secret behind O(1) lookup. Learn how hash functions, buckets, and collision handling make dictionaries blazingly fast.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot filled"></div><div class="diff-dot"></div><span class="diff-label">Intermediate</span></div><div class="card-arrow">→</div></div>
-  </a>
-  <a href="binary-trees.html" class="concept-card" style="--card-accent:#1A6B4A;--card-icon-bg:#DCF0E6;">
-    <div class="card-number">06</div><div class="card-icon">🌳</div>
-    <div class="card-tag">Data Structures</div>
-    <div class="card-title">Binary Trees</div>
-    <div class="card-desc">Hierarchical structures that branch like a tree. Master nodes, roots, leaves, and the three classic traversal methods.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot filled"></div><div class="diff-dot"></div><span class="diff-label">Intermediate</span></div><div class="card-arrow">→</div></div>
-  </a>
-  <a href="graphs.html" class="concept-card" style="--card-accent:#D4500A;--card-icon-bg:#F5E6DC;">
-    <div class="card-number">07</div><div class="card-icon">🕸️</div>
-    <div class="card-tag">Data Structures</div>
-    <div class="card-title">Graphs</div>
-    <div class="card-desc">Nodes and edges. Model social networks, maps, and dependencies. Learn adjacency lists, matrices, and graph representations.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot filled"></div><div class="diff-dot filled"></div><span class="diff-label">Advanced</span></div><div class="card-arrow">→</div></div>
-  </a>
-  <a href="heaps.html" class="concept-card" style="--card-accent:#2B5EA7;--card-icon-bg:#DCE8F8;">
-    <div class="card-number">08</div><div class="card-icon">⛰️</div>
-    <div class="card-tag">Data Structures</div>
-    <div class="card-title">Heaps &amp; Priority Queues</div>
-    <div class="card-desc">Always get the min or max in O(1). Essential for Dijkstra's, scheduling algorithms, and top-K problems.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot filled"></div><div class="diff-dot filled"></div><span class="diff-label">Advanced</span></div><div class="card-arrow">→</div></div>
-  </a>
-</div>
-
-<!-- CHAPTER 3 -->
-<div id="algorithms" class="section-header" style="padding-top:1rem;">
-  <div class="section-tag">Chapter 3 · Algorithms</div>
-  <h2 class="section-title">Learn to <span>Think Algorithmically</span></h2>
-  <p class="section-sub">Sorting, searching, and problem-solving strategies used in every major system and technical interview.</p>
-</div>
-<div class="concepts-grid">
-  <a href="sorting.html" class="concept-card" style="--card-accent:#D4500A;--card-icon-bg:#F5E6DC;">
-    <div class="card-number">09</div><div class="card-icon">🔢</div>
-    <div class="card-tag">Algorithms</div>
-    <div class="card-title">Sorting Algorithms</div>
-    <div class="card-desc">Bubble, Merge, Quick — learn how each works, when to use each, and the difference between O(n²) and O(n log n).</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot filled"></div><div class="diff-dot"></div><span class="diff-label">Intermediate</span></div><div class="card-arrow">→</div></div>
-  </a>
-  <a href="binary-search.html" class="concept-card" style="--card-accent:#8B2FC9;--card-icon-bg:#EEE0FA;">
-    <div class="card-number">10</div><div class="card-icon">🔍</div>
-    <div class="card-tag">Algorithms</div>
-    <div class="card-title">Binary Search</div>
-    <div class="card-desc">Cut the problem in half every step. The most elegant search algorithm — O(log n) speed on any sorted collection.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot filled"></div><div class="diff-dot"></div><span class="diff-label">Intermediate</span></div><div class="card-arrow">→</div></div>
-  </a>
-  <div class="concept-card locked" style="--card-accent:#1A6B4A;--card-icon-bg:#DCF0E6;">
-    <div class="lock-badge">🔒 Coming Soon</div><div class="card-icon">🌀</div>
-    <div class="card-tag">Algorithms</div>
-    <div class="card-title">Recursion</div>
-    <div class="card-desc">A function that calls itself. Master base cases, recursive calls, and the call stack — the key to solving tree and graph problems.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot filled"></div><div class="diff-dot"></div><span class="diff-label">Intermediate</span></div><div class="card-arrow">→</div></div>
-  </div>
-  <div class="concept-card locked" style="--card-accent:#B8860B;--card-icon-bg:#FDF3D0;">
-    <div class="lock-badge">🔒 Coming Soon</div><div class="card-icon">🧩</div>
-    <div class="card-tag">Algorithms</div>
-    <div class="card-title">Dynamic Programming</div>
-    <div class="card-desc">Break big problems into overlapping sub-problems. The technique behind optimal solutions for knapsack, LCS, and coin change.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot filled"></div><div class="diff-dot filled"></div><span class="diff-label">Advanced</span></div><div class="card-arrow">→</div></div>
-  </div>
-</div>
-
-<!-- CAPSTONE -->
-<div id="capstone" class="section-header" style="padding-top:1rem;">
-  <div class="section-tag">Capstone · Applied Engineering</div>
-  <h2 class="section-title">DSA in the <span>Real World</span></h2>
-  <p class="section-sub">See how Instagram, Uber, Twitter, Swiggy and Flipkart engineers applied these exact concepts to solve billion-user scale problems — and build a ride-hailing simulator yourself.</p>
-</div>
-<div class="concepts-grid" style="padding-bottom:2rem;">
-  <a href="real-world.html" class="concept-card" style="--card-accent:#2d6a4f;--card-icon-bg:#DCF0E6;">
-    <div class="card-number">★</div><div class="card-icon">🏭</div>
-    <div class="card-tag">Applied Engineering</div>
-    <div class="card-title">DSA in the Real World</div>
-    <div class="card-desc">Real engineering anecdotes from Uber, Instagram, Twitter, Swiggy, and Flipkart. Build a ride-hailing simulator. Roadmap to your first job. Interview resources.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot filled"></div><div class="diff-dot filled"></div><span class="diff-label">All Levels</span></div><div class="card-arrow">→</div></div>
-  </a>
-  <a href="war-stories.html" class="concept-card" style="--card-accent:#c84b31;--card-icon-bg:#fce8e4;">
-    <div class="card-number">✦</div><div class="card-icon">🔥</div>
-    <div class="card-tag">Engineering Programming Battles</div>
-    <div class="card-title">The Night the Load Balancer Lied</div>
-    <div class="card-desc">10 true stories of bugs, outages, and disasters — from Spotify to the Ariane 5 rocket — where the root cause was always a data structure or algorithm gone wrong.</div>
-    <div class="card-footer"><div class="card-difficulty"><div class="diff-dot filled"></div><div class="diff-dot filled"></div><div class="diff-dot"></div><span class="diff-label">Fun + Educational</span></div><div class="card-arrow">→</div></div>
-  </a>
-</div>
-
-<!-- HOW WE TEACH -->
-<section id="journey" class="journey-section">
-  <div class="journey-inner">
-    <div>
-      <div class="section-tag">How We Teach</div>
-      <h2 class="section-title" style="font-size:clamp(1.8rem,3vw,2.4rem);">Every concept, <span>seven ways</span></h2>
-      <p class="section-sub" style="margin-top:0.7rem;">We don't just tell you. We explain, show, and make it stick with a format that works for everyone.</p>
+    <!-- CHAPTER 1 -->
+    <div id="foundations" class="section-header">
+        <div class="section-tag">Chapter 1 · Foundations</div>
+        <h2 class="section-title">Start Here — <span>The Basics</span></h2>
+        <p class="section-sub">Every expert was once a beginner. These modules lay the groundwork for everything that
+            follows.</p>
     </div>
-    <div class="journey-steps">
-      <div class="journey-step"><div class="step-num">1</div><div class="step-content"><h4>Formal Definition</h4><p>The precise, technical definition — the kind you'd find in a textbook or interview.</p></div></div>
-      <div class="journey-step"><div class="step-num">2</div><div class="step-content"><h4>Plain English Explanation</h4><p>We translate jargon into plain language so the concept actually clicks.</p></div></div>
-      <div class="journey-step"><div class="step-num">3</div><div class="step-content"><h4>Real Code Snippet</h4><p>A working, commented code example you can read, copy, and run yourself.</p></div></div>
-      <div class="journey-step"><div class="step-num">4</div><div class="step-content"><h4>Visual Diagram</h4><p>See exactly how memory is arranged, how pointers move, how data flows.</p></div></div>
-      <div class="journey-step"><div class="step-num">5</div><div class="step-content"><h4>Analogy for a 14-year-old</h4><p>A fun, relatable real-world story that makes the concept impossible to forget.</p></div></div>
-      <div class="journey-step"><div class="step-num">6</div><div class="step-content"><h4>Real-World Applications</h4><p>Where this structure or algorithm actually appears in production systems and codebases.</p></div></div>
-      <div class="journey-step"><div class="step-num">7</div><div class="step-content"><h4>Classic Interview Question</h4><p>The most famous problem that tests this concept — with a full walkthrough and solution.</p></div></div>
+    <div class="concepts-grid">
+        <a href="arrays.html" class="concept-card" style="--card-accent:#D4500A;--card-icon-bg:#F5E6DC;">
+            <div class="card-number">01</div>
+            <div class="card-icon">🗂️</div>
+            <div class="card-tag">Foundation</div>
+            <div class="card-title">Arrays</div>
+            <div class="card-desc">The most fundamental data structure. Learn how elements are stored in contiguous
+                memory and accessed in O(1) time.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot"></div>
+                    <div class="diff-dot"></div><span class="diff-label">Beginner</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+        <a href="linked-lists.html" class="concept-card" style="--card-accent:#1A6B4A;--card-icon-bg:#DCF0E6;">
+            <div class="card-number">02</div>
+            <div class="card-icon">🔗</div>
+            <div class="card-tag">Foundation</div>
+            <div class="card-title">Linked Lists</div>
+            <div class="card-desc">A chain of nodes connected by pointers. Understand singly and doubly linked lists,
+                and when each shines.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot"></div>
+                    <div class="diff-dot"></div><span class="diff-label">Beginner</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+        <a href="stacks.html" class="concept-card" style="--card-accent:#2B5EA7;--card-icon-bg:#DCE8F8;">
+            <div class="card-number">03</div>
+            <div class="card-icon">📚</div>
+            <div class="card-tag">Foundation</div>
+            <div class="card-title">Stacks</div>
+            <div class="card-desc">Last In, First Out. Used in undo operations, call stacks, and expression parsing. One
+                of the most elegant structures.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot"></div>
+                    <div class="diff-dot"></div><span class="diff-label">Beginner</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+        <a href="queues.html" class="concept-card" style="--card-accent:#8B2FC9;--card-icon-bg:#EEE0FA;">
+            <div class="card-number">04</div>
+            <div class="card-icon">🎟️</div>
+            <div class="card-tag">Foundation</div>
+            <div class="card-title">Queues</div>
+            <div class="card-desc">First In, First Out. Learn how queues model real-world waiting lines and power BFS
+                graph traversal.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot"></div>
+                    <div class="diff-dot"></div><span class="diff-label">Beginner</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
     </div>
-  </div>
-</section>
 
-<footer>
-  <div class="footer-logo">DSA <span>Zero→Hero</span></div>
-  <p style="margin-top:0.4rem;">Built for curious minds. Learn at your own pace.</p>
-</footer>
+    <!-- CHAPTER 2 -->
+    <div id="structures" class="section-header" style="padding-top:1rem;">
+        <div class="section-tag">Chapter 2 · Data Structures</div>
+        <h2 class="section-title">Build Your <span>Toolkit</span></h2>
+        <p class="section-sub">More powerful ways to organise data — each solving specific problems more efficiently
+            than the basics.</p>
+    </div>
+    <div class="concepts-grid">
+        <a href="hash-tables.html" class="concept-card" style="--card-accent:#B8860B;--card-icon-bg:#FDF3D0;">
+            <div class="card-number">05</div>
+            <div class="card-icon">🗃️</div>
+            <div class="card-tag">Data Structures</div>
+            <div class="card-title">Hash Tables</div>
+            <div class="card-desc">The secret behind O(1) lookup. Learn how hash functions, buckets, and collision
+                handling make dictionaries blazingly fast.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot"></div><span class="diff-label">Intermediate</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+        <a href="binary-trees.html" class="concept-card" style="--card-accent:#1A6B4A;--card-icon-bg:#DCF0E6;">
+            <div class="card-number">06</div>
+            <div class="card-icon">🌳</div>
+            <div class="card-tag">Data Structures</div>
+            <div class="card-title">Binary Trees</div>
+            <div class="card-desc">Hierarchical structures that branch like a tree. Master nodes, roots, leaves, and the
+                three classic traversal methods.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot"></div><span class="diff-label">Intermediate</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+        <a href="graphs.html" class="concept-card" style="--card-accent:#D4500A;--card-icon-bg:#F5E6DC;">
+            <div class="card-number">07</div>
+            <div class="card-icon">🕸️</div>
+            <div class="card-tag">Data Structures</div>
+            <div class="card-title">Graphs</div>
+            <div class="card-desc">Nodes and edges. Model social networks, maps, and dependencies. Learn adjacency
+                lists, matrices, and graph representations.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div><span class="diff-label">Advanced</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+        <a href="heaps.html" class="concept-card" style="--card-accent:#2B5EA7;--card-icon-bg:#DCE8F8;">
+            <div class="card-number">08</div>
+            <div class="card-icon">⛰️</div>
+            <div class="card-tag">Data Structures</div>
+            <div class="card-title">Heaps &amp; Priority Queues</div>
+            <div class="card-desc">Always get the min or max in O(1). Essential for Dijkstra's, scheduling algorithms,
+                and top-K problems.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div><span class="diff-label">Advanced</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+    </div>
 
-<script>
-  // Hamburger
-  const hbg = document.getElementById('hbg');
-  const drawer = document.getElementById('drawer');
-  hbg.addEventListener('click', () => {
-    hbg.classList.toggle('open');
-    drawer.classList.toggle('open');
-  });
-  drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-    hbg.classList.remove('open');
-    drawer.classList.remove('open');
-  }));
+    <!-- CHAPTER 3 -->
+    <div id="algorithms" class="section-header" style="padding-top:1rem;">
+        <div class="section-tag">Chapter 3 · Algorithms</div>
+        <h2 class="section-title">Learn to <span>Think Algorithmically</span></h2>
+        <p class="section-sub">Sorting, searching, and problem-solving strategies used in every major system and
+            technical interview.</p>
+    </div>
+    <div class="concepts-grid">
+        <a href="sorting.html" class="concept-card" style="--card-accent:#D4500A;--card-icon-bg:#F5E6DC;">
+            <div class="card-number">09</div>
+            <div class="card-icon">🔢</div>
+            <div class="card-tag">Algorithms</div>
+            <div class="card-title">Sorting Algorithms</div>
+            <div class="card-desc">Bubble, Merge, Quick — learn how each works, when to use each, and the difference
+                between O(n²) and O(n log n).</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot"></div><span class="diff-label">Intermediate</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+        <a href="binary-search.html" class="concept-card" style="--card-accent:#8B2FC9;--card-icon-bg:#EEE0FA;">
+            <div class="card-number">10</div>
+            <div class="card-icon">🔍</div>
+            <div class="card-tag">Algorithms</div>
+            <div class="card-title">Binary Search</div>
+            <div class="card-desc">Cut the problem in half every step. The most elegant search algorithm — O(log n)
+                speed on any sorted collection.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot"></div><span class="diff-label">Intermediate</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+        <div class="concept-card locked" style="--card-accent:#1A6B4A;--card-icon-bg:#DCF0E6;">
+            <div class="lock-badge">🔒 Coming Soon</div>
+            <div class="card-icon">🌀</div>
+            <div class="card-tag">Algorithms</div>
+            <div class="card-title">Recursion</div>
+            <div class="card-desc">A function that calls itself. Master base cases, recursive calls, and the call stack
+                — the key to solving tree and graph problems.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot"></div><span class="diff-label">Intermediate</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </div>
+        <div class="concept-card locked" style="--card-accent:#B8860B;--card-icon-bg:#FDF3D0;">
+            <div class="lock-badge">🔒 Coming Soon</div>
+            <div class="card-icon">🧩</div>
+            <div class="card-tag">Algorithms</div>
+            <div class="card-title">Dynamic Programming</div>
+            <div class="card-desc">Break big problems into overlapping sub-problems. The technique behind optimal
+                solutions for knapsack, LCS, and coin change.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div><span class="diff-label">Advanced</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </div>
+    </div>
 
-  // Card entrance animation
-  const cards = document.querySelectorAll('.concept-card');
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const idx = Array.from(cards).indexOf(entry.target) % 4;
-        entry.target.style.animationDelay = (idx * 70) + 'ms';
-        entry.target.classList.add('visible');
-        obs.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.07 });
-  cards.forEach(c => obs.observe(c));
-</script>
+    <!-- CAPSTONE -->
+    <div id="capstone" class="section-header" style="padding-top:1rem;">
+        <div class="section-tag">Capstone · Applied Engineering</div>
+        <h2 class="section-title">DSA in the <span>Real World</span></h2>
+        <p class="section-sub">See how Instagram, Uber, Twitter, Swiggy and Flipkart engineers applied these exact
+            concepts to solve billion-user scale problems — and build a ride-hailing simulator yourself.</p>
+    </div>
+    <div class="concepts-grid" style="padding-bottom:2rem;">
+        <a href="real-world.html" class="concept-card" style="--card-accent:#2d6a4f;--card-icon-bg:#DCF0E6;">
+            <div class="card-number">★</div>
+            <div class="card-icon">🏭</div>
+            <div class="card-tag">Applied Engineering</div>
+            <div class="card-title">DSA in the Real World</div>
+            <div class="card-desc">Real engineering anecdotes from Uber, Instagram, Twitter, Swiggy, and Flipkart. Build
+                a ride-hailing simulator. Roadmap to your first job. Interview resources.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div><span class="diff-label">All Levels</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+        <a href="war-stories.html" class="concept-card" style="--card-accent:#c84b31;--card-icon-bg:#fce8e4;">
+            <div class="card-number">✦</div>
+            <div class="card-icon">🔥</div>
+            <div class="card-tag">Engineering Programming Battles</div>
+            <div class="card-title">The Night the Load Balancer Lied</div>
+            <div class="card-desc">10 true stories of bugs, outages, and disasters — from Spotify to the Ariane 5 rocket
+                — where the root cause was always a data structure or algorithm gone wrong.</div>
+            <div class="card-footer">
+                <div class="card-difficulty">
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot filled"></div>
+                    <div class="diff-dot"></div><span class="diff-label">Fun + Educational</span>
+                </div>
+                <div class="card-arrow">→</div>
+            </div>
+        </a>
+    </div>
+
+    <!-- HOW WE TEACH -->
+    <section id="journey" class="journey-section">
+        <div class="journey-inner">
+            <div>
+                <div class="section-tag">How We Teach</div>
+                <h2 class="section-title" style="font-size:clamp(1.8rem,3vw,2.4rem);">Every concept, <span>seven
+                        ways</span></h2>
+                <p class="section-sub" style="margin-top:0.7rem;">We don't just tell you. We explain, show, and make it
+                    stick with a format that works for everyone.</p>
+            </div>
+            <div class="journey-steps">
+                <div class="journey-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Formal Definition</h4>
+                        <p>The precise, technical definition — the kind you'd find in a textbook or interview.</p>
+                    </div>
+                </div>
+                <div class="journey-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Plain English Explanation</h4>
+                        <p>We translate jargon into plain language so the concept actually clicks.</p>
+                    </div>
+                </div>
+                <div class="journey-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Real Code Snippet</h4>
+                        <p>A working, commented code example you can read, copy, and run yourself.</p>
+                    </div>
+                </div>
+                <div class="journey-step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>Visual Diagram</h4>
+                        <p>See exactly how memory is arranged, how pointers move, how data flows.</p>
+                    </div>
+                </div>
+                <div class="journey-step">
+                    <div class="step-num">5</div>
+                    <div class="step-content">
+                        <h4>Analogy for a 14-year-old</h4>
+                        <p>A fun, relatable real-world story that makes the concept impossible to forget.</p>
+                    </div>
+                </div>
+                <div class="journey-step">
+                    <div class="step-num">6</div>
+                    <div class="step-content">
+                        <h4>Real-World Applications</h4>
+                        <p>Where this structure or algorithm actually appears in production systems and codebases.</p>
+                    </div>
+                </div>
+                <div class="journey-step">
+                    <div class="step-num">7</div>
+                    <div class="step-content">
+                        <h4>Classic Interview Question</h4>
+                        <p>The most famous problem that tests this concept — with a full walkthrough and solution.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">DSA <span>Zero→Hero</span></div>
+        <p style="margin-top:0.4rem;">Built for curious minds. Learn at your own pace.</p>
+    </footer>
+
+    <script>
+
+
+        // Card entrance animation
+        const cards = document.querySelectorAll('.concept-card');
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const idx = Array.from(cards).indexOf(entry.target) % 4;
+                    entry.target.style.animationDelay = (idx * 70) + 'ms';
+                    entry.target.classList.add('visible');
+                    obs.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.07 });
+        cards.forEach(c => obs.observe(c));
+    </script>
 </body>
+
 </html>
