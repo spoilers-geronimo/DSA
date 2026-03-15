@@ -44,7 +44,7 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.7;
-            font-size: 16px;
+            font-size: 20px;
         }
 
         /* ── NAV ── */
@@ -859,6 +859,99 @@
                 gap: 0.8rem;
             }
         }
+
+        @media (min-width: 1400px) {
+            body {
+                font-size: 26px;
+                line-height: 1.8;
+            }
+
+            .hero,
+            .toc-wrapper,
+            main,
+            .module-nav {
+                max-width: 1500px;
+                width: 85%;
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .hero {
+                padding: 7rem 0 4rem;
+            }
+
+            .hero h1 {
+                font-size: 3.8rem;
+            }
+
+            .hero-desc {
+                font-size: 1.22rem;
+                max-width: 700px;
+            }
+
+            .section-header {
+                padding: 1.8rem 2.8rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .section-body {
+                padding: 2.8rem;
+                font-size: 1.1rem;
+            }
+
+            .definition-box {
+                padding: 1.8rem 2.2rem;
+                font-size: 1.25rem;
+            }
+
+            .compare-card {
+                padding: 1.8rem;
+            }
+
+            .compare-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .compare-card ul {
+                font-size: 1.05rem;
+            }
+
+            .ops-table th,
+            .ops-table td {
+                padding: 1rem 1.4rem;
+                font-size: 1.05rem;
+            }
+
+            pre {
+                padding: 2.2rem;
+                font-size: 1rem;
+            }
+
+            .diagram-area {
+                padding: 3rem;
+            }
+
+            .tn {
+                width: 65px;
+                height: 65px;
+                font-size: 1.1rem;
+            }
+
+            .arr-c {
+                width: 65px;
+                height: 55px;
+                font-size: 1.1rem;
+            }
+
+            .sift-step {
+                padding: 1.2rem;
+            }
+        }
     </style>
 </head>
 
@@ -1477,7 +1570,8 @@
 
                 <!-- SIFT DOWN (extractMin) -->
                 <p>When the minimum is extracted, the <strong>last element moves to the root</strong> and then
-                    <strong>sifts down</strong>, swapping with the smaller of its two children at each step.</p>
+                    <strong>sifts down</strong>, swapping with the smaller of its two children at each step.
+                </p>
 
                 <div class="diagram-area">
                     <div class="diagram-label">Min-Heap: extractMin() — last element placed at root, sifts down</div>

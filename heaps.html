@@ -44,7 +44,7 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.7;
-            font-size: 16px;
+            font-size: 20px;
         }
 
 
@@ -816,6 +816,99 @@
                 gap: 1rem;
             }
         }
+
+        @media (min-width: 1400px) {
+            body {
+                font-size: 26px;
+                line-height: 1.8;
+            }
+
+            .hero,
+            .toc-wrapper,
+            main,
+            .module-nav {
+                max-width: 1500px;
+                width: 85%;
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .hero {
+                padding: 7rem 0 4rem;
+            }
+
+            .hero h1 {
+                font-size: 3.8rem;
+            }
+
+            .hero-desc {
+                font-size: 1.22rem;
+                max-width: 700px;
+            }
+
+            .section-header {
+                padding: 1.8rem 2.8rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .section-body {
+                padding: 2.8rem;
+                font-size: 1.1rem;
+            }
+
+            .definition-box {
+                padding: 1.8rem 2.2rem;
+                font-size: 1.25rem;
+            }
+
+            .compare-card {
+                padding: 1.8rem;
+            }
+
+            .compare-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .compare-card ul {
+                font-size: 1.05rem;
+            }
+
+            .ops-table th,
+            .ops-table td {
+                padding: 1rem 1.4rem;
+                font-size: 1.05rem;
+            }
+
+            pre {
+                padding: 2.2rem;
+                font-size: 1rem;
+            }
+
+            .diagram-area {
+                padding: 3rem;
+            }
+
+            .tree-svg {
+                max-width: 650px;
+            }
+
+            .arr-cell {
+                min-width: 65px;
+                height: 60px;
+                font-size: 1.1rem;
+            }
+
+            .hs-cell {
+                width: 48px;
+                height: 44px;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 
@@ -1286,7 +1379,8 @@
                     <p>In an A&amp;E department, patients don't get seen in the order they arrive — they get seen in
                         order of <strong>medical urgency</strong>. A patient who just had a heart attack is seen before
                         someone with a sprained ankle, even if the ankle patient arrived first. This is a
-                        <strong>priority queue</strong> in action.</p>
+                        <strong>priority queue</strong> in action.
+                    </p>
                     <p>The nurse at triage is the heap. Every time a new patient arrives (insert), the nurse assesses
                         their severity and places them in the correct position in the mental priority order — taking
                         O(log n) comparisons. When a doctor is free (extract), the nurse instantly knows who to send
@@ -1371,7 +1465,8 @@
                             class="inline">k</code>, return the <strong>k-th largest element</strong> in the array.
                         Note: it is the k-th largest in sorted order, not the k-th distinct element.</p>
                     <p style="margin-top:0.6rem;">Example: <code class="inline">nums = [3,2,1,5,6,4], k = 2</code> →
-                        <code class="inline">5</code> (the 2nd largest)</p>
+                        <code class="inline">5</code> (the 2nd largest)
+                    </p>
                     <span class="difficulty-badge">🔥 Medium — LeetCode #215 · asked at Amazon, Google, Facebook</span>
                 </div>
 

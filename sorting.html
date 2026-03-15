@@ -44,7 +44,7 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.7;
-            font-size: 16px;
+            font-size: 20px;
         }
 
 
@@ -885,6 +885,95 @@
                 width: 26px;
                 height: 26px;
                 font-size: 0.72rem;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            body {
+                font-size: 26px;
+                line-height: 1.8;
+            }
+
+            .hero,
+            .toc-wrapper,
+            main,
+            .module-nav {
+                max-width: 1500px;
+                width: 85%;
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .hero {
+                padding: 7rem 0 4rem;
+            }
+
+            .hero h1 {
+                font-size: 3.8rem;
+            }
+
+            .hero-desc {
+                font-size: 1.22rem;
+                max-width: 700px;
+            }
+
+            .section-header {
+                padding: 1.8rem 2.8rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .section-body {
+                padding: 2.8rem;
+                font-size: 1.1rem;
+            }
+
+            .definition-box {
+                padding: 1.8rem 2.2rem;
+                font-size: 1.25rem;
+            }
+
+            .algo-card {
+                padding: 1.8rem;
+            }
+
+            .algo-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .algo-card ul {
+                font-size: 1.05rem;
+            }
+
+            .ops-table th,
+            .ops-table td {
+                padding: 1rem 1.4rem;
+                font-size: 1.02rem;
+            }
+
+            pre {
+                padding: 2.2rem;
+                font-size: 1rem;
+            }
+
+            .diagram-area {
+                padding: 3rem;
+            }
+
+            .sc {
+                width: 50px;
+                height: 46px;
+                font-size: 1.05rem;
+            }
+
+            .mc {
+                width: 44px;
+                height: 44px;
+                font-size: 1.02rem;
             }
         }
     </style>

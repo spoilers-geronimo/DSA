@@ -41,7 +41,6 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.75;
-            font-size: 16px;
         }
 
 
@@ -186,7 +185,7 @@
 
         .meta-pill {
             display: inline-block;
-            font-size: 0.7rem;
+            font-size: 1rem;
             font-weight: 700;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -226,7 +225,7 @@
 
         .story-body p {
             color: var(--muted);
-            font-size: 0.97rem;
+            font-size: 1.2rem;
             line-height: 1.85;
             margin-bottom: 1.1rem;
         }
@@ -328,7 +327,7 @@
         }
 
         .lesson-text {
-            font-size: 0.88rem;
+            font-size: 1rem;
             color: var(--muted);
             line-height: 1.6;
         }
@@ -445,7 +444,7 @@
 
         .dsa-connection p {
             margin: 0;
-            font-size: 0.88rem;
+            font-size: 1rem;
             color: var(--accent3);
             line-height: 1.6;
         }
@@ -516,6 +515,111 @@
                 padding-right: 1.2rem;
             }
         }
+
+        @media (min-width: 1400px) {
+            body {
+                font-size: 26px;
+                line-height: 1.8;
+            }
+
+            .page-hero,
+            .intro-strip,
+            .page-wrapper {
+                max-width: 1500px;
+                width: 85%;
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .page-hero {
+                padding: 8rem 0 6rem;
+                border-radius: 20px;
+                margin-top: 2rem;
+            }
+
+            .page-hero h1 {
+                font-size: 4rem;
+            }
+
+            .page-hero .subtitle {
+                font-size: 1.3rem;
+                max-width: 850px;
+            }
+
+            .intro-strip {
+                padding: 2.5rem 0;
+                font-size: 1.1rem;
+            }
+
+            .intro-strip p {
+                max-width: 1000px;
+            }
+
+            .story {
+                margin-bottom: 5rem;
+            }
+
+            .story-banner {
+                padding: 2rem 3rem;
+            }
+
+            .story-number {
+                width: 55px;
+                height: 55px;
+                font-size: 1.4rem;
+            }
+
+            .story-title {
+                font-size: 1.6rem;
+            }
+
+            .story-body {
+                padding: 3rem;
+                font-size: 2.5rem;
+            }
+
+            .lightbulb {
+                padding: 2rem 2.5rem;
+                margin: 2.5rem 0;
+            }
+
+            .lightbulb-text {
+                font-size: 1rem;
+            }
+
+            .story-quote {
+                padding: 1.8rem 2.5rem;
+                font-size: 1.15rem;
+                margin: 2rem 0;
+            }
+
+            .lesson-banner {
+                padding: 1.8rem;
+                margin-top: 2.5rem;
+            }
+
+            .source-label {
+                font-size: 0.85rem;
+            }
+
+            .story-footer a {
+                font-size: 0.95rem;
+            }
+
+            .toc-bar {
+                padding: 2rem 3rem;
+            }
+
+            .toc-bar h2 {
+                font-size: 1rem;
+            }
+
+            .toc-bar a {
+                font-size: 1.05rem;
+            }
+        }
     </style>
 </head>
 
@@ -527,7 +631,8 @@
     <div class="page-hero">
         <div class="badge">🔥 Engineering Programming Battles</div>
         <h1>When the Code <em>Tells the Truth</em><br />and No One Listens</h1>
-        <p class="subtitle">10 true stories of bugs, outages, and disasters — at Spotify, Facebook, Flipkart, NASA, and
+        <p class="subtitle">Featuring stories of bugs, outages, and disasters — at Spotify, Facebook, Flipkart, NASA,
+            and
             beyond. In every single one, the root cause was hiding inside a data structure or algorithm you just
             learned.</p>
     </div>

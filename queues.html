@@ -44,7 +44,7 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.7;
-            font-size: 16px;
+            font-size: 20px;
         }
 
 
@@ -830,6 +830,100 @@
                 gap: 0.8rem;
             }
         }
+
+        @media (min-width: 1400px) {
+            body {
+                font-size: 26px;
+                line-height: 1.8;
+            }
+
+            .hero,
+            .toc-wrapper,
+            main {
+                max-width: 1500px;
+                width: 85%;
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .hero {
+                padding: 7rem 0 4rem;
+            }
+
+            .hero h1 {
+                font-size: 3.8rem;
+            }
+
+            .hero-desc {
+                font-size: 1.22rem;
+                max-width: 700px;
+            }
+
+            .section-header {
+                padding: 1.8rem 2.8rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.6rem;
+            }
+
+            .section-body {
+                padding: 2.8rem;
+                font-size: 1.1rem;
+            }
+
+            .definition-box {
+                padding: 1.8rem 2.2rem;
+                font-size: 1.25rem;
+            }
+
+            .variant-card {
+                padding: 1.8rem;
+            }
+
+            .variant-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .variant-card ul {
+                font-size: 1.05rem;
+            }
+
+            .ops-table th,
+            .ops-table td {
+                padding: 1rem 1.4rem;
+                font-size: 1.05rem;
+            }
+
+            pre {
+                padding: 2.2rem;
+                font-size: 1rem;
+            }
+
+            .diagram-area {
+                padding: 3rem;
+            }
+
+            .q-cell,
+            .deq-cell {
+                width: 80px;
+                height: 60px;
+                font-size: 1.1rem;
+            }
+
+            .circ-wrapper {
+                width: 280px;
+                height: 280px;
+            }
+
+            .circ-cell {
+                width: 65px;
+                height: 50px;
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 
@@ -1162,7 +1256,8 @@ cq.<span class="fn">enqueue</span>(<span class="num">4</span>); cq.<span class="
             </div>
             <div class="section-body">
                 <p>A standard queue is a horizontal tunnel: items enter at the <strong>rear</strong> and exit from the
-                    <strong>front</strong>. The two ends never switch roles.</p>
+                    <strong>front</strong>. The two ends never switch roles.
+                </p>
 
                 <div class="diagram-area">
                     <div class="diagram-label">Standard Queue — enqueue at rear, dequeue from front</div>
