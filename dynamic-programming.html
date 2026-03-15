@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Programming — DSA Zero to Hero</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="header.css">
+    <script src="header.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f9f6f1;
+            --surface: #ffffff;
+            --border: #e4ddd3;
+            --text: #1a1612;
+            --muted: #6b6055;
+            --accent: #b8860b;
+            --accent2: #c84b31;
+            --accent3: #1d3557;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tag-bg: #fdf3d0;
+            --tag-text: #b8860b;
+            --highlight: #fff3cd;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 20px;
+        }
+
+        .hero {
+            padding: 5rem 2rem 3rem;
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .tag.green {
+            background: #e0f0e9;
+            color: #1a6b4a;
+        }
+
+        .tag.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
+
+        .tag.red {
+            background: #fce8e4;
+            color: var(--accent2);
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        .toc-wrapper {
+            max-width: 860px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.4rem 1.8rem;
+        }
+
+        .toc h2 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .toc ol {
+            padding-left: 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 2rem;
+        }
+
+        .toc a {
+            color: var(--accent3);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            background: #faf9f7;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-body {
+            padding: 1.8rem;
+        }
+
+        .section-body p {
+            margin-bottom: 1rem;
+            color: var(--muted);
+        }
+
+        .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-body strong {
+            color: var(--text);
+        }
+
+        .definition-box {
+            background: var(--highlight);
+            border: 1px solid #ffe08a;
+            border-left: 4px solid #f5a623;
+            border-radius: 8px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.02rem;
+            color: #3d2c00;
+            line-height: 1.65;
+        }
+
+        /* Pattern cards */
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .pattern-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .pattern-card.memo  { border-top: 3px solid var(--accent3); }
+        .pattern-card.table { border-top: 3px solid var(--accent); }
+        .pattern-card.one   { border-top: 3px solid #1a6b4a; }
+        .pattern-card.two   { border-top: 3px solid var(--accent2); }
+
+        .pattern-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            color: var(--text);
+        }
+
+        .pattern-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .pattern-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        .ops-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .ops-table th {
+            background: #f0ece6;
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .ops-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            vertical-align: top;
+        }
+
+        .ops-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ops-table tr:hover td {
+            background: #faf8f5;
+        }
+
+        code.inline {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f0ece6;
+            color: var(--accent);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        code.inline.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
+
+        .complexity {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .o1    { color: #1a6b4a; font-weight: 700; }
+        .on    { color: #c47a00; font-weight: 700; }
+        .on2   { color: var(--accent2); font-weight: 700; }
+        .ologn { color: var(--accent3); font-weight: 700; }
+        .onm   { color: var(--accent); font-weight: 700; }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.1rem;
+            background: #181825;
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #a6adc8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 0.25rem 0.65rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            transition: background .2s;
+        }
+
+        .copy-btn:hover {
+            background: #45475a;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem 1.4rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.65;
+        }
+
+        pre code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--code-text);
+        }
+
+        .kw   { color: #cba6f7; }
+        .fn   { color: #89b4fa; }
+        .str  { color: #a6e3a1; }
+        .num  { color: #fab387; }
+        .cm   { color: #6c7086; font-style: italic; }
+        .cl   { color: #f38ba8; }
+        .prop { color: #89dceb; }
+
+        /* ── DIAGRAM ── */
+        .diagram-area {
+            background: #f9f6f1;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.8rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+            overflow-x: auto;
+        }
+
+        .diagram-caption {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .mem-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* DP table cells */
+        .dp-table-wrap {
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        .dp-table {
+            border-collapse: collapse;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            margin: 0 auto;
+        }
+
+        .dp-table th {
+            background: #f0ece6;
+            border: 1.5px solid var(--border);
+            padding: 0.45rem 0.8rem;
+            text-align: center;
+            font-weight: 700;
+            color: var(--muted);
+        }
+
+        .dp-table td {
+            border: 1.5px solid var(--border);
+            padding: 0.45rem 0.8rem;
+            text-align: center;
+            background: var(--surface);
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .dp-table td.filled {
+            background: #fdf3d0;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .dp-table td.base {
+            background: #e0f0e9;
+            border-color: #1a6b4a;
+            color: #1a6b4a;
+        }
+
+        .dp-table td.highlight {
+            background: #fce8e4;
+            border-color: var(--accent2);
+            color: var(--accent2);
+        }
+
+        /* ── CALLOUT ── */
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: #eef4ff;
+            border: 1px solid #b8d0f5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .callout.green {
+            background: #e8f5ee;
+            border-color: #a8d5ba;
+            border-left-color: #1a6b4a;
+        }
+
+        .callout.amber {
+            background: #fff8e6;
+            border-color: #ffe08a;
+            border-left-color: var(--accent);
+        }
+
+        .callout.red {
+            background: #fef2f0;
+            border-color: #f5c6bb;
+            border-left-color: var(--accent2);
+        }
+
+        .callout-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--accent3);
+        }
+
+        .callout.green p { color: #1a6b4a; }
+        .callout.amber p { color: #7a4800; }
+        .callout.red   p { color: #8a2010; }
+
+        /* ── ANALOGY ── */
+        .analogy-card {
+            background: linear-gradient(135deg, #fffbf0 0%, #fffdf7 100%);
+            border: 1px solid #ffe08a;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .analogy-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .analogy-card p {
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card ul {
+            padding-left: 1.3rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .analogy-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── REAL WORLD ── */
+        .rw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .rw-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem;
+            background: var(--surface);
+        }
+
+        .rw-card .rw-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rw-card h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+
+        .rw-card p {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── INTERVIEW ── */
+        .interview-problem {
+            background: #f0f4ff;
+            border: 1px solid #c0cff5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .interview-problem h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            color: var(--accent3);
+            margin-bottom: 0.5rem;
+        }
+
+        .interview-problem p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            margin-top: 0.6rem;
+            background: #fdf3d0;
+            color: var(--accent);
+            border-radius: 20px;
+            padding: 0.18rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 1rem 0;
+        }
+
+        .step-list li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            font-size: 0.93rem;
+            color: var(--muted);
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* Completion banner */
+        .completion-banner {
+            background: linear-gradient(135deg, #1d3557 0%, #b8860b 100%);
+            border-radius: 12px;
+            padding: 2rem 2rem;
+            text-align: center;
+            color: #fff;
+            margin-top: 1rem;
+        }
+
+        .completion-banner h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+        }
+
+        .completion-banner p {
+            opacity: 0.85;
+            font-size: 0.95rem;
+            max-width: 520px;
+            margin: 0 auto 1.4rem;
+            line-height: 1.7;
+        }
+
+        .banner-modules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1.4rem;
+        }
+
+        .banner-tag {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 0.25rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .banner-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #fff;
+            color: var(--accent3);
+            text-decoration: none;
+            padding: 0.75rem 1.6rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .banner-cta:hover {
+            opacity: 0.9;
+        }
+
+        /* ── MODULE NAV ── */
+        .module-nav {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .module-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            transition: border-color .2s, color .2s;
+        }
+
+        .module-nav a:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .module-nav a.next {
+            margin-left: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+
+            .toc ol,
+            .pattern-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dp-table th,
+            .dp-table td {
+                padding: 0.35rem 0.5rem;
+                font-size: 0.76rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <common-header accent="#b8860b"></common-header>
+
+    <header class="hero">
+        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Algorithms &rsaquo; Dynamic Programming</p>
+        <h1>Algorithms:<br /><span>Dynamic Programming</span></h1>
+        <div class="hero-meta">
+            <span class="tag">Overlapping Subproblems</span>
+            <span class="tag green">Optimal Substructure</span>
+            <span class="tag blue">Memoisation &amp; Tabulation</span>
+            <span class="tag red">Advanced</span>
+        </div>
+        <p class="hero-desc">Break big problems into overlapping sub-problems, solve each exactly once, and combine the
+            results — the technique behind every optimal scheduling, sequence, and resource-allocation problem.</p>
+    </header>
+
+    <div class="toc-wrapper">
+        <div class="toc">
+            <h2>Contents</h2>
+            <ol>
+                <li><a href="#definition">Formal Definition</a></li>
+                <li><a href="#explanation">Explanation &amp; Patterns</a></li>
+                <li><a href="#code">Code Snippet</a></li>
+                <li><a href="#diagram">Visual Diagram</a></li>
+                <li><a href="#analogy">Analogy (Plain English)</a></li>
+                <li><a href="#real-world">Real-World Applications</a></li>
+                <li><a href="#interview">Interview Question</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <main>
+
+        <!-- 1. DEFINITION -->
+        <section id="definition">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Formal Definition</h2>
+            </div>
+            <div class="section-body">
+                <div class="definition-box">
+                    <strong>Dynamic Programming (DP)</strong> is an algorithmic paradigm that solves complex optimisation
+                    and counting problems by breaking them into overlapping <em>subproblems</em>, solving each subproblem
+                    exactly once, and storing the result for future reuse. It applies when a problem has two properties:
+                    <em>overlapping subproblems</em> — the same subproblem recurs multiple times in the naive recursive
+                    solution — and <em>optimal substructure</em> — the optimal solution to the whole problem can be
+                    constructed from optimal solutions to its subproblems. DP can be implemented <em>top-down</em> via
+                    memoised recursion or <em>bottom-up</em> via iterative tabulation.
+                </div>
+                <p>DP is often described as "recursion with a cache." The cache (a hash map or array) ensures that
+                    each subproblem is solved only once — transforming exponential brute-force recursion into polynomial
+                    time. The name "Dynamic Programming" was coined by Richard Bellman in 1953; it is deliberately
+                    vague, chosen to obscure the mathematical nature of the work from government funding committees.</p>
+            </div>
+        </section>
+
+        <!-- 2. EXPLANATION -->
+        <section id="explanation">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>Plain English Explanation &amp; Patterns</h2>
+            </div>
+            <div class="section-body">
+                <p>The core idea: <strong>don't solve the same problem twice.</strong> If a recursive function is
+                    called with the same arguments repeatedly, you're wasting work. Store the answer the first time
+                    and look it up instantly every time after. That's the entirety of memoisation.</p>
+
+                <p>DP has two implementation styles and two common problem structures:</p>
+
+                <div class="pattern-grid">
+                    <div class="pattern-card memo">
+                        <h3>⬇️ Top-Down (Memoisation)</h3>
+                        <ul>
+                            <li>Write the natural recursive solution first</li>
+                            <li>Add a cache (Map or object) to store results</li>
+                            <li>Before computing, check if result is already cached</li>
+                            <li>Easy to write — hard to reason about space</li>
+                            <li>Solves only the subproblems actually needed</li>
+                        </ul>
+                    </div>
+                    <div class="pattern-card table">
+                        <h3>⬆️ Bottom-Up (Tabulation)</h3>
+                        <ul>
+                            <li>Build an array (the DP table) from base cases upward</li>
+                            <li>Fill each cell using previously filled cells</li>
+                            <li>No recursion, no call stack overhead</li>
+                            <li>Easier to optimise space (rolling array)</li>
+                            <li>Solves all subproblems, even unused ones</li>
+                        </ul>
+                    </div>
+                    <div class="pattern-card one">
+                        <h3>📐 1D DP</h3>
+                        <ul>
+                            <li>State is a single integer: <code class="inline">dp[i]</code></li>
+                            <li>Each value depends on a few previous values</li>
+                            <li>Examples: Fibonacci, Climbing Stairs, House Robber</li>
+                            <li>Often optimised to O(1) space with two variables</li>
+                        </ul>
+                    </div>
+                    <div class="pattern-card two">
+                        <h3>🔲 2D DP</h3>
+                        <ul>
+                            <li>State is two integers: <code class="inline">dp[i][j]</code></li>
+                            <li>Common when two sequences or two constraints exist</li>
+                            <li>Examples: Longest Common Subsequence, Knapsack, Edit Distance</li>
+                            <li>Often optimised to O(n) space with a rolling row</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p style="margin-top: 1.2rem;"><strong>The DP framework — four questions to ask any DP problem:</strong></p>
+
+                <ul class="step-list">
+                    <li>
+                        <div class="step-num">1</div>
+                        <span><strong>What is the state?</strong> What variables fully describe a subproblem? Usually
+                        indices, counts, or capacities. e.g., <code class="inline">dp[i]</code> = best answer for the
+                        first i items.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">2</div>
+                        <span><strong>What is the recurrence?</strong> How do I compute <code class="inline">dp[i]</code>
+                        from earlier values? This is the core transition. e.g., <code class="inline">dp[i] = max(dp[i-1], dp[i-2] + val[i])</code>.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">3</div>
+                        <span><strong>What are the base cases?</strong> The smallest subproblems I can answer directly,
+                        without using the recurrence. e.g., <code class="inline">dp[0] = 0</code>,
+                        <code class="inline">dp[1] = val[0]</code>.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">4</div>
+                        <span><strong>What is the answer?</strong> Which cell in the DP table holds the final answer?
+                        Usually <code class="inline">dp[n]</code> or <code class="inline">dp[n][W]</code>.</span>
+                    </li>
+                </ul>
+
+                <table class="ops-table" style="margin-top: 1.4rem;">
+                    <thead>
+                        <tr>
+                            <th>Classic Problem</th>
+                            <th>DP Type</th>
+                            <th>Time</th>
+                            <th>Space</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Fibonacci / Climbing Stairs</strong></td>
+                            <td>1D linear</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>House Robber</strong></td>
+                            <td>1D linear, skip constraint</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity o1">O(1)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Coin Change</strong></td>
+                            <td>1D knapsack-style</td>
+                            <td class="complexity onm">O(n × amount)</td>
+                            <td class="complexity on">O(amount)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Longest Common Subsequence</strong></td>
+                            <td>2D sequence</td>
+                            <td class="complexity onm">O(m × n)</td>
+                            <td class="complexity on">O(min(m,n))</td>
+                        </tr>
+                        <tr>
+                            <td><strong>0/1 Knapsack</strong></td>
+                            <td>2D capacity</td>
+                            <td class="complexity onm">O(n × W)</td>
+                            <td class="complexity on">O(W)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Edit Distance</strong></td>
+                            <td>2D sequence</td>
+                            <td class="complexity onm">O(m × n)</td>
+                            <td class="complexity on">O(min(m,n))</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="callout amber" style="margin-top: 1.2rem;">
+                    <span class="callout-icon">💡</span>
+                    <p><strong>DP vs Greedy vs Divide-and-Conquer:</strong> All three break problems into smaller parts.
+                        Greedy makes one irrevocable local choice at each step — fast but only correct for certain
+                        problem structures. Divide-and-conquer splits into independent subproblems with no overlap —
+                        merge sort is the classic example. DP handles <em>overlapping</em> subproblems and builds
+                        optimal solutions from all possibilities — more expensive but universally applicable when the
+                        two DP properties hold.</p>
+                </div>
+
+                <div class="callout red" style="margin-top: 0.8rem;">
+                    <span class="callout-icon">⚠️</span>
+                    <p><strong>The most common DP mistake:</strong> writing a memoised solution but using a mutable
+                        object (like an array) as a cache key. Objects in JavaScript are compared by reference, not
+                        value — <code class="inline">[1,2] !== [1,2]</code>. Always use primitive keys
+                        (numbers, strings) for your memo map. For 2D problems, use <code class="inline">`${i},${j}`</code>
+                        as the key or a 2D array.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CODE -->
+        <section id="code">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>Code Snippet</h2>
+            </div>
+            <div class="section-body">
+                <p>Two complete DP solutions — one 1D, one 2D — each shown in both top-down and bottom-up style so
+                    you can see how they relate.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Coin Change (1D DP)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Coin Change — LeetCode #322 ────────────────────────────────</span>
+<span class="cm">// Given coins of different denominations and a target amount,</span>
+<span class="cm">// find the minimum number of coins to make up the amount.</span>
+<span class="cm">// coins = [1, 2, 5], amount = 11  →  3 coins (5+5+1)</span>
+
+<span class="cm">// State: dp[i] = minimum coins needed to make amount i</span>
+<span class="cm">// Recurrence: dp[i] = min over all coins c of (dp[i - c] + 1)</span>
+<span class="cm">// Base case: dp[0] = 0  (0 coins needed for amount 0)</span>
+
+<span class="cm">// ─── Bottom-Up Tabulation — O(amount × coins) ───────────────────</span>
+<span class="kw">function</span> <span class="fn">coinChange</span>(coins, amount) {
+  <span class="cm">// Fill table with Infinity (impossible to reach)</span>
+  <span class="kw">const</span> dp = <span class="kw">new</span> <span class="cl">Array</span>(amount + <span class="num">1</span>).<span class="fn">fill</span>(<span class="cl">Infinity</span>);
+  dp[<span class="num">0</span>] = <span class="num">0</span>;   <span class="cm">// base case</span>
+
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">1</span>; i &lt;= amount; i++) {
+    <span class="kw">for</span> (<span class="kw">const</span> coin <span class="kw">of</span> coins) {
+      <span class="kw">if</span> (i - coin &gt;= <span class="num">0</span>) {
+        dp[i] = Math.<span class="fn">min</span>(dp[i], dp[i - coin] + <span class="num">1</span>);
+      }
+    }
+  }
+  <span class="kw">return</span> dp[amount] === <span class="cl">Infinity</span> ? -<span class="num">1</span> : dp[amount];
+}
+
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">coinChange</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">5</span>], <span class="num">11</span>));   <span class="cm">// 3  (5+5+1)</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">coinChange</span>([<span class="num">2</span>],         <span class="num">3</span>));    <span class="cm">// -1 (impossible)</span>
+
+<span class="cm">// ─── dp table for coins=[1,2,5], amount=7 ────────────────────────</span>
+<span class="cm">// i:    0   1   2   3   4   5   6   7</span>
+<span class="cm">// dp:   0   1   1   2   2   1   2   2</span>
+<span class="cm">//           ↑   ↑               ↑   ↑</span>
+<span class="cm">// dp[1]=dp[0]+1   dp[5]=dp[0]+1   dp[7]=dp[5]+dp[2]=1+1=2</span></code></pre>
+                </div>
+
+                <div class="code-block" style="margin-top: 1.2rem;">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Longest Common Subsequence (2D DP)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Longest Common Subsequence (LCS) — LeetCode #1143 ──────────</span>
+<span class="cm">// Given two strings, return the length of their LCS.</span>
+<span class="cm">// "abcde" and "ace" → 3  (the subsequence "ace")</span>
+
+<span class="cm">// State: dp[i][j] = LCS length of text1[0..i-1] and text2[0..j-1]</span>
+<span class="cm">// Recurrence:</span>
+<span class="cm">//   if text1[i-1] === text2[j-1]:  dp[i][j] = dp[i-1][j-1] + 1</span>
+<span class="cm">//   else:                           dp[i][j] = max(dp[i-1][j], dp[i][j-1])</span>
+<span class="cm">// Base case: dp[i][0] = dp[0][j] = 0 (empty string → LCS length 0)</span>
+
+<span class="kw">function</span> <span class="fn">longestCommonSubsequence</span>(text1, text2) {
+  <span class="kw">const</span> m = text1.<span class="prop">length</span>, n = text2.<span class="prop">length</span>;
+  <span class="cm">// Create (m+1) × (n+1) table, filled with 0</span>
+  <span class="kw">const</span> dp = <span class="cl">Array</span>.<span class="fn">from</span>({ length: m + <span class="num">1</span> }, () => <span class="kw">new</span> <span class="cl">Array</span>(n + <span class="num">1</span>).<span class="fn">fill</span>(<span class="num">0</span>));
+
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">1</span>; i &lt;= m; i++) {
+    <span class="kw">for</span> (<span class="kw">let</span> j = <span class="num">1</span>; j &lt;= n; j++) {
+      <span class="kw">if</span> (text1[i - <span class="num">1</span>] === text2[j - <span class="num">1</span>]) {
+        dp[i][j] = dp[i - <span class="num">1</span>][j - <span class="num">1</span>] + <span class="num">1</span>;   <span class="cm">// characters match: extend LCS</span>
+      } <span class="kw">else</span> {
+        dp[i][j] = Math.<span class="fn">max</span>(dp[i - <span class="num">1</span>][j], dp[i][j - <span class="num">1</span>]);  <span class="cm">// take best of skip</span>
+      }
+    }
+  }
+  <span class="kw">return</span> dp[m][n];
+}
+
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">longestCommonSubsequence</span>(<span class="str">"abcde"</span>, <span class="str">"ace"</span>));   <span class="cm">// 3</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">longestCommonSubsequence</span>(<span class="str">"abc"</span>,   <span class="str">"abc"</span>));   <span class="cm">// 3</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">longestCommonSubsequence</span>(<span class="str">"abc"</span>,   <span class="str">"def"</span>));   <span class="cm">// 0</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. DIAGRAM -->
+        <section id="diagram">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Visual Diagram</h2>
+            </div>
+            <div class="section-body">
+                <p>The Coin Change DP table builds from left to right. Each cell answers: <strong>"what is the
+                    minimum number of coins to make exactly this amount?"</strong> Green = base case, amber = filled
+                    using the recurrence, red = the answer.</p>
+
+                <div class="diagram-area">
+                    <div class="mem-label">Coin Change — dp table for coins=[1,2,5], amount=7</div>
+                    <div class="dp-table-wrap">
+                        <table class="dp-table">
+                            <thead>
+                                <tr>
+                                    <th>amount i</th>
+                                    <th>0</th><th>1</th><th>2</th><th>3</th>
+                                    <th>4</th><th>5</th><th>6</th><th>7</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>dp[i]</th>
+                                    <td class="base">0</td>
+                                    <td class="filled">1</td>
+                                    <td class="filled">1</td>
+                                    <td class="filled">2</td>
+                                    <td class="filled">2</td>
+                                    <td class="filled">1</td>
+                                    <td class="filled">2</td>
+                                    <td class="highlight">2</td>
+                                </tr>
+                                <tr>
+                                    <th>using coin</th>
+                                    <td>—</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>5</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="diagram-caption">Green = base case (dp[0]=0). Amber = filled by recurrence. Red = final answer (dp[7]=2, meaning 5+2). Each cell looks back at most 3 positions (for coins 1, 2, 5).</p>
+                </div>
+
+                <p>The 2D DP table for <strong>LCS("abcde", "ace")</strong> — the diagonal fills happen on character
+                    matches, and the answer propagates to the bottom-right corner:</p>
+
+                <div class="diagram-area">
+                    <div class="mem-label">LCS table — text1="abcde", text2="ace"</div>
+                    <div class="dp-table-wrap">
+                        <table class="dp-table">
+                            <thead>
+                                <tr>
+                                    <th></th><th>""</th>
+                                    <th>a</th><th>c</th><th>e</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>""</th>
+                                    <td class="base">0</td><td class="base">0</td>
+                                    <td class="base">0</td><td class="base">0</td>
+                                </tr>
+                                <tr>
+                                    <th>a</th>
+                                    <td class="base">0</td><td class="filled">1</td>
+                                    <td class="filled">1</td><td class="filled">1</td>
+                                </tr>
+                                <tr>
+                                    <th>b</th>
+                                    <td class="base">0</td><td class="filled">1</td>
+                                    <td class="filled">1</td><td class="filled">1</td>
+                                </tr>
+                                <tr>
+                                    <th>c</th>
+                                    <td class="base">0</td><td class="filled">1</td>
+                                    <td class="filled">2</td><td class="filled">2</td>
+                                </tr>
+                                <tr>
+                                    <th>d</th>
+                                    <td class="base">0</td><td class="filled">1</td>
+                                    <td class="filled">2</td><td class="filled">2</td>
+                                </tr>
+                                <tr>
+                                    <th>e</th>
+                                    <td class="base">0</td><td class="filled">1</td>
+                                    <td class="filled">2</td><td class="highlight">3</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="diagram-caption">Green = base cases (empty string → 0). Amber = cells filled by recurrence. Red = final answer (3). Diagonal jumps happen when characters match: a↔a, c↔c, e↔e.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. ANALOGY -->
+        <section id="analogy">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Plain English Analogy</h2>
+            </div>
+            <div class="section-body">
+                <div class="analogy-card">
+                    <div class="analogy-icon">📝</div>
+                    <h3>A Student Who Never Recalculates the Same Maths Problem Twice</h3>
+                    <p>Imagine a maths student solving a complex problem in an exam. Partway through, she realises
+                        that computing the answer requires knowing the value of <em>x²</em> for several different
+                        values of x. A careless student would compute <em>7² = 49</em> every time it appears in the
+                        problem — maybe five times over. A smart student computes <em>7² = 49</em> once, writes it
+                        in the margin, and looks it up the next four times. Same answer. A fraction of the work.</p>
+                    <p>That is memoisation. The margin notes are the cache (the DP table). The first time you solve
+                        a subproblem, you write the answer down. Every subsequent time you need it, you read it from
+                        the margin instead of recomputing it.</p>
+                    <p>Bottom-up DP is the same student but even more organised. Before starting the big problem,
+                        she pre-computes and writes down every square from 1² to 20² in a table at the top of her
+                        scratch paper. When she needs any value, it's always there. She never has to compute anything
+                        twice.</p>
+                    <ul>
+                        <li><strong>The exam problem</strong> = the main problem to solve</li>
+                        <li><strong>Intermediate calculations (x²)</strong> = overlapping subproblems</li>
+                        <li><strong>Writing in the margin</strong> = memoisation (top-down)</li>
+                        <li><strong>Pre-filling a table</strong> = tabulation (bottom-up)</li>
+                        <li><strong>"Have I seen this before?"</strong> = the cache lookup</li>
+                        <li><strong>The final answer</strong> = dp[n] or dp[n][W]</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. REAL WORLD -->
+        <section id="real-world">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Real-World Coding Applications</h2>
+            </div>
+            <div class="section-body">
+                <p>Dynamic programming is the backbone of optimisation across every domain of computing — anywhere
+                    the best solution to a large problem depends on best solutions to smaller ones.</p>
+                <div class="rw-grid">
+                    <div class="rw-card">
+                        <div class="rw-icon">🧬</div>
+                        <h4>DNA Sequence Alignment</h4>
+                        <p>Bioinformatics tools like BLAST and ClustalW align DNA/protein sequences using DP (the
+                            Smith-Waterman and Needleman-Wunsch algorithms). Edit Distance DP finds the minimum
+                            number of mutations between two sequences.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🗣️</div>
+                        <h4>Auto-correct &amp; Spell-Check</h4>
+                        <p>Autocorrect computes the Edit Distance (Levenshtein distance) between your typed word
+                            and every word in the dictionary. DP makes this fast enough to run in real time on
+                            a phone keyboard on every keystroke.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">📦</div>
+                        <h4>Shipping &amp; Logistics</h4>
+                        <p>The Knapsack problem models packing a cargo plane or delivery truck: given items with
+                            weights and values, maximise value under a weight constraint. FedEx, UPS, and Amazon's
+                            routing optimisation all use DP variants.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">📈</div>
+                        <h4>Stock Trading Algorithms</h4>
+                        <p>The "Best Time to Buy and Sell Stock" family of problems (LeetCode #121–#188) are all DP.
+                            Financial algorithms for optimal order execution, portfolio rebalancing, and
+                            options pricing (Black-Scholes) use DP on discrete state grids.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🌐</div>
+                        <h4>Network Routing (Bellman-Ford)</h4>
+                        <p>The Bellman-Ford shortest-path algorithm is a classic DP over the graph's edges. It
+                            finds shortest paths in networks with negative edge weights and is used in internet
+                            routing protocols like RIP (Routing Information Protocol).</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🤖</div>
+                        <h4>Reinforcement Learning</h4>
+                        <p>Value iteration and policy iteration — the foundational algorithms for training
+                            reinforcement learning agents — are DP algorithms on the Markov Decision Process
+                            state space. AlphaGo's training pipeline is DP at its deepest level.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. INTERVIEW -->
+        <section id="interview">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2>Classic Interview Question</h2>
+            </div>
+            <div class="section-body">
+
+                <div class="interview-problem">
+                    <h3>🏠 House Robber</h3>
+                    <p>You are a robber planning to rob houses along a street. Each house has a certain amount of
+                        money. You cannot rob two adjacent houses (the alarm would trigger). Given an integer array
+                        <code class="inline">nums</code> representing the money in each house, return the maximum
+                        amount you can rob tonight.</p>
+                    <p style="margin-top: 0.6rem;">Example: <code class="inline">nums = [2, 7, 9, 3, 1]</code>
+                        → <code class="inline">12</code> (rob houses 0, 2, 4: 2+9+1=12)</p>
+                    <span class="difficulty-badge">🧩 Medium — LeetCode #198 · the cleanest 1D DP problem in existence</span>
+                </div>
+
+                <p><strong>Why this question?</strong> House Robber is the perfect introduction to 1D DP. The
+                    constraint — can't take adjacent houses — forces you to define a state and a recurrence.
+                    Once you see it, the same pattern unlocks House Robber II (circular street), Minimum Cost
+                    Climbing Stairs, Maximum Alternating Subsequence, and dozens more.</p>
+
+                <p><strong>The key insight:</strong> At each house <code class="inline">i</code>, you have two
+                    choices — rob it (and take whatever you robbed up to house <code class="inline">i-2</code>)
+                    or skip it (and keep whatever you got up to house <code class="inline">i-1</code>). Pick the
+                    bigger of the two.</p>
+
+                <ul class="step-list">
+                    <li>
+                        <div class="step-num">1</div>
+                        <span><strong>State:</strong> <code class="inline">dp[i]</code> = maximum money robbed
+                        from the first <code class="inline">i</code> houses.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">2</div>
+                        <span><strong>Recurrence:</strong> <code class="inline">dp[i] = max(dp[i-1], dp[i-2] + nums[i])</code>
+                        — either skip house i or rob it (adding to the best result two houses back).</span>
+                    </li>
+                    <li>
+                        <div class="step-num">3</div>
+                        <span><strong>Base cases:</strong> <code class="inline">dp[0] = nums[0]</code>,
+                        <code class="inline">dp[1] = max(nums[0], nums[1])</code>.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">4</div>
+                        <span><strong>Space optimisation:</strong> Only <code class="inline">dp[i-1]</code> and
+                        <code class="inline">dp[i-2]</code> are ever needed — replace the array with two variables
+                        for O(1) space.</span>
+                    </li>
+                </ul>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — House Robber: Four Approaches</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Approach 1: Naïve Recursion — O(2ⁿ) ────────────────────────</span>
+<span class="kw">function</span> <span class="fn">robNaive</span>(nums, i = nums.<span class="prop">length</span> - <span class="num">1</span>) {
+  <span class="kw">if</span> (i &lt; <span class="num">0</span>)  <span class="kw">return</span> <span class="num">0</span>;
+  <span class="kw">if</span> (i === <span class="num">0</span>) <span class="kw">return</span> nums[<span class="num">0</span>];
+  <span class="kw">return</span> Math.<span class="fn">max</span>(
+    <span class="fn">robNaive</span>(nums, i - <span class="num">1</span>),              <span class="cm">// skip house i</span>
+    <span class="fn">robNaive</span>(nums, i - <span class="num">2</span>) + nums[i]    <span class="cm">// rob house i</span>
+  );
+}
+
+<span class="cm">// ─── Approach 2: Memoised — O(n) time, O(n) space ────────────────</span>
+<span class="kw">function</span> <span class="fn">robMemo</span>(nums, i = nums.<span class="prop">length</span> - <span class="num">1</span>, memo = {}) {
+  <span class="kw">if</span> (i &lt; <span class="num">0</span>)   <span class="kw">return</span> <span class="num">0</span>;
+  <span class="kw">if</span> (i === <span class="num">0</span>)  <span class="kw">return</span> nums[<span class="num">0</span>];
+  <span class="kw">if</span> (memo[i] !== <span class="kw">undefined</span>) <span class="kw">return</span> memo[i];
+  memo[i] = Math.<span class="fn">max</span>(
+    <span class="fn">robMemo</span>(nums, i - <span class="num">1</span>, memo),
+    <span class="fn">robMemo</span>(nums, i - <span class="num">2</span>, memo) + nums[i]
+  );
+  <span class="kw">return</span> memo[i];
+}
+
+<span class="cm">// ─── Approach 3: Bottom-Up DP — O(n) time, O(n) space ────────────</span>
+<span class="kw">function</span> <span class="fn">robDP</span>(nums) {
+  <span class="kw">if</span> (nums.<span class="prop">length</span> === <span class="num">1</span>) <span class="kw">return</span> nums[<span class="num">0</span>];
+  <span class="kw">const</span> dp = <span class="kw">new</span> <span class="cl">Array</span>(nums.<span class="prop">length</span>);
+  dp[<span class="num">0</span>] = nums[<span class="num">0</span>];
+  dp[<span class="num">1</span>] = Math.<span class="fn">max</span>(nums[<span class="num">0</span>], nums[<span class="num">1</span>]);
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">2</span>; i &lt; nums.<span class="prop">length</span>; i++) {
+    dp[i] = Math.<span class="fn">max</span>(dp[i - <span class="num">1</span>], dp[i - <span class="num">2</span>] + nums[i]);
+  }
+  <span class="kw">return</span> dp[nums.<span class="prop">length</span> - <span class="num">1</span>];
+}
+
+<span class="cm">// ─── Approach 4: Space-Optimised — O(n) time, O(1) space ─────────</span>
+<span class="kw">function</span> <span class="fn">rob</span>(nums) {
+  <span class="kw">let</span> prev2 = <span class="num">0</span>, prev1 = <span class="num">0</span>;
+  <span class="kw">for</span> (<span class="kw">const</span> n <span class="kw">of</span> nums) {
+    <span class="kw">const</span> curr = Math.<span class="fn">max</span>(prev1, prev2 + n);
+    prev2 = prev1;
+    prev1 = curr;
+  }
+  <span class="kw">return</span> prev1;
+}
+
+<span class="cm">// ─── Test all four ────────────────────────────────────────────────</span>
+<span class="kw">const</span> nums = [<span class="num">2</span>, <span class="num">7</span>, <span class="num">9</span>, <span class="num">3</span>, <span class="num">1</span>];
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">robNaive</span>(nums));  <span class="cm">// 12</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">robMemo</span>(nums));   <span class="cm">// 12</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">robDP</span>(nums));     <span class="cm">// 12</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">rob</span>(nums));       <span class="cm">// 12</span>
+
+<span class="cm">// dp trace for [2,7,9,3,1]:</span>
+<span class="cm">// i=0: dp[0]=2</span>
+<span class="cm">// i=1: dp[1]=max(2,7)=7</span>
+<span class="cm">// i=2: dp[2]=max(7, 2+9)=11</span>
+<span class="cm">// i=3: dp[3]=max(11,7+3)=11</span>
+<span class="cm">// i=4: dp[4]=max(11,11+1)=12 ✓</span></code></pre>
+                </div>
+
+                <div class="callout green" style="margin-top: 1rem;">
+                    <span class="callout-icon">✅</span>
+                    <p><strong>Interview tip:</strong> Always present all four approaches in sequence —
+                        naïve → memoised → tabulation → space-optimised. Walk through the dp array by hand for the
+                        example input. Interviewers aren't just testing whether you can code it; they're watching
+                        whether you can <em>reason</em> about it. The space optimisation — collapsing the dp array
+                        into two variables — shows you understand that only the last two states ever matter.
+                        That insight also unlocks Climbing Stairs, Fibonacci, and Minimum Cost Climbing Stairs
+                        instantly. One pattern, dozens of problems.</p>
+                </div>
+
+                <div class="completion-banner">
+                    <h2>🎓 You've Completed the Full Course</h2>
+                    <p>12 modules from Arrays to Dynamic Programming. Every data structure. Every major algorithm.
+                        Every classic interview problem. You now have everything you need.</p>
+                    <div class="banner-modules">
+                        <span class="banner-tag">Arrays</span>
+                        <span class="banner-tag">Linked Lists</span>
+                        <span class="banner-tag">Stacks</span>
+                        <span class="banner-tag">Queues</span>
+                        <span class="banner-tag">Hash Tables</span>
+                        <span class="banner-tag">Binary Trees</span>
+                        <span class="banner-tag">Graphs</span>
+                        <span class="banner-tag">Heaps</span>
+                        <span class="banner-tag">Sorting</span>
+                        <span class="banner-tag">Binary Search</span>
+                        <span class="banner-tag">Recursion</span>
+                        <span class="banner-tag">Dynamic Programming</span>
+                    </div>
+                    <a href="index.html" class="banner-cta">← Back to Course Home</a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <div class="module-nav">
+        <a href="recursion.html">← Recursion</a>
+        <a href="index.html" class="next">Course Home →</a>
+    </div>
+
+    <footer>
+        <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+        <p style="margin-top: 0.4rem; font-size: 0.8rem;">Built for learners, by learners.</p>
+    </footer>
+
+    <script>
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>

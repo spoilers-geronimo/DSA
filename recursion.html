@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Recursion — DSA Zero to Hero</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="header.css">
+    <script src="header.js" defer></script>
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f9f6f1;
+            --surface: #ffffff;
+            --border: #e4ddd3;
+            --text: #1a1612;
+            --muted: #6b6055;
+            --accent: #1a6b4a;
+            --accent2: #c84b31;
+            --accent3: #1d3557;
+            --code-bg: #1e1e2e;
+            --code-text: #cdd6f4;
+            --tag-bg: #e0f0e9;
+            --tag-text: #1a6b4a;
+            --highlight: #fff3cd;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 20px;
+        }
+
+        .hero {
+            padding: 5rem 2rem 3rem;
+            max-width: 860px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .breadcrumb {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-bottom: 1.2rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .hero h1 {
+            font-family: 'Lora', serif;
+            font-size: clamp(2.4rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 span {
+            color: var(--accent);
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            border-radius: 20px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+
+        .tag.red {
+            background: #fce8e4;
+            color: var(--accent2);
+        }
+
+        .tag.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
+
+        .tag.amber {
+            background: #fff0d4;
+            color: #a05c00;
+        }
+
+        .hero-desc {
+            font-size: 1.05rem;
+            color: var(--muted);
+            max-width: 580px;
+            margin: 0 auto;
+        }
+
+        .toc-wrapper {
+            max-width: 860px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: 8px;
+            padding: 1.4rem 1.8rem;
+        }
+
+        .toc h2 {
+            font-family: 'Lora', serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            margin-bottom: 0.8rem;
+        }
+
+        .toc ol {
+            padding-left: 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.2rem 2rem;
+        }
+
+        .toc a {
+            color: var(--accent3);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.2rem 1.8rem;
+            border-bottom: 1px solid var(--border);
+            background: #faf9f7;
+        }
+
+        .section-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .section-header h2 {
+            font-family: 'Lora', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .section-body {
+            padding: 1.8rem;
+        }
+
+        .section-body p {
+            margin-bottom: 1rem;
+            color: var(--muted);
+        }
+
+        .section-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-body strong {
+            color: var(--text);
+        }
+
+        .definition-box {
+            background: var(--highlight);
+            border: 1px solid #ffe08a;
+            border-left: 4px solid #f5a623;
+            border-radius: 8px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1.2rem;
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: 1.02rem;
+            color: #3d2c00;
+            line-height: 1.65;
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .compare-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.2rem;
+        }
+
+        .compare-card.iterative {
+            border-top: 3px solid var(--accent3);
+        }
+
+        .compare-card.recursive {
+            border-top: 3px solid var(--accent);
+        }
+
+        .compare-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            color: var(--text);
+        }
+
+        .compare-card ul {
+            padding-left: 1.1rem;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .compare-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        .ops-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .ops-table th {
+            background: #f0ece6;
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid var(--border);
+        }
+
+        .ops-table td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            vertical-align: top;
+        }
+
+        .ops-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ops-table tr:hover td {
+            background: #faf8f5;
+        }
+
+        code.inline {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f0ece6;
+            color: var(--accent);
+            padding: 0.1em 0.4em;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        code.inline.blue {
+            background: #dce8f5;
+            color: var(--accent3);
+        }
+
+        .complexity {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .o1 {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .on {
+            color: #c47a00;
+            font-weight: 700;
+        }
+
+        .ologn {
+            color: var(--accent3);
+            font-weight: 700;
+        }
+
+        .on2 {
+            color: var(--accent2);
+            font-weight: 700;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.65rem 1.1rem;
+            background: #181825;
+        }
+
+        .code-lang {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #a6adc8;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .copy-btn {
+            background: #313244;
+            border: none;
+            color: #cdd6f4;
+            padding: 0.25rem 0.65rem;
+            border-radius: 5px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 500;
+            transition: background .2s;
+        }
+
+        .copy-btn:hover {
+            background: #45475a;
+        }
+
+        pre {
+            margin: 0;
+            padding: 1.5rem 1.4rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            line-height: 1.65;
+        }
+
+        pre code {
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--code-text);
+        }
+
+        .kw   { color: #cba6f7; }
+        .fn   { color: #89b4fa; }
+        .str  { color: #a6e3a1; }
+        .num  { color: #fab387; }
+        .cm   { color: #6c7086; font-style: italic; }
+        .cl   { color: #f38ba8; }
+        .prop { color: #89dceb; }
+
+        /* ── DIAGRAM ── */
+        .diagram-area {
+            background: #f9f6f1;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.8rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+            overflow-x: auto;
+        }
+
+        .diagram-caption {
+            font-size: 0.82rem;
+            color: var(--muted);
+            text-align: center;
+            font-style: italic;
+        }
+
+        .mem-label {
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* Call stack frames */
+        .call-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .frame {
+            width: 100%;
+            border: 2px solid var(--border);
+            border-radius: 0;
+            padding: 0.6rem 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            background: var(--surface);
+            margin-bottom: -2px;
+        }
+
+        .frame:first-child { border-radius: 8px 8px 0 0; }
+        .frame:last-child  { border-radius: 0 0 8px 8px; margin-bottom: 0; }
+
+        .frame.active {
+            background: #e0f0e9;
+            border-color: var(--accent);
+            z-index: 1;
+        }
+
+        .frame.returning {
+            background: #fce8e4;
+            border-color: var(--accent2);
+        }
+
+        .frame-name { font-weight: 700; color: var(--text); }
+        .frame.active .frame-name { color: var(--accent); }
+        .frame.returning .frame-name { color: var(--accent2); }
+        .frame-val { color: var(--muted); font-size: 0.75rem; }
+
+        .stack-label {
+            font-size: 0.72rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--muted);
+            margin-bottom: 4px;
+            align-self: flex-start;
+        }
+
+        /* Tree diagram for recursion */
+        .tree-svg {
+            width: 100%;
+            max-width: 500px;
+            overflow: visible;
+        }
+
+        /* ── CALLOUT ── */
+        .callout {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+            background: #eef4ff;
+            border: 1px solid #b8d0f5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            margin-top: 1rem;
+        }
+
+        .callout.green {
+            background: #e8f5ee;
+            border-color: #a8d5ba;
+            border-left-color: var(--accent);
+        }
+
+        .callout.amber {
+            background: #fff8e6;
+            border-color: #ffe08a;
+            border-left-color: #f5a623;
+        }
+
+        .callout.red {
+            background: #fef2f0;
+            border-color: #f5c6bb;
+            border-left-color: var(--accent2);
+        }
+
+        .callout-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .callout p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--accent3);
+        }
+
+        .callout.green p { color: var(--accent); }
+        .callout.amber p { color: #7a4800; }
+        .callout.red   p { color: #8a2010; }
+
+        /* ── ANALOGY ── */
+        .analogy-card {
+            background: linear-gradient(135deg, #eef7f2 0%, #f5faf8 100%);
+            border: 1px solid #b8d9c8;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .analogy-icon {
+            font-size: 2.2rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text);
+        }
+
+        .analogy-card p {
+            color: var(--muted);
+            margin-bottom: 0.6rem;
+        }
+
+        .analogy-card ul {
+            padding-left: 1.3rem;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        .analogy-card li {
+            margin-bottom: 0.3rem;
+        }
+
+        /* ── REAL WORLD ── */
+        .rw-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1rem;
+        }
+
+        .rw-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.2rem;
+            background: var(--surface);
+        }
+
+        .rw-card .rw-icon {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .rw-card h4 {
+            font-family: 'Lora', serif;
+            font-size: 0.95rem;
+            margin-bottom: 0.35rem;
+            color: var(--text);
+        }
+
+        .rw-card p {
+            font-size: 0.86rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+        /* ── INTERVIEW ── */
+        .interview-problem {
+            background: #f0f4ff;
+            border: 1px solid #c0cff5;
+            border-left: 4px solid var(--accent3);
+            border-radius: 10px;
+            padding: 1.4rem 1.6rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .interview-problem h3 {
+            font-family: 'Lora', serif;
+            font-size: 1.05rem;
+            color: var(--accent3);
+            margin-bottom: 0.5rem;
+        }
+
+        .interview-problem p {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 0;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            margin-top: 0.6rem;
+            background: #fde8e4;
+            color: var(--accent2);
+            border-radius: 20px;
+            padding: 0.18rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .step-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            margin: 1rem 0;
+        }
+
+        .step-list li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            font-size: 0.93rem;
+            color: var(--muted);
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            font-size: 0.72rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        /* ── MODULE NAV ── */
+        .module-nav {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 2rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .module-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface);
+            transition: border-color .2s, color .2s;
+        }
+
+        .module-nav a:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .module-nav a.next {
+            margin-left: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        @media (max-width: 640px) {
+
+            .toc ol,
+            .compare-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .call-stack {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <common-header accent="#1a6b4a"></common-header>
+
+    <header class="hero">
+        <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Algorithms &rsaquo; Recursion</p>
+        <h1>Algorithms:<br /><span>Recursion</span></h1>
+        <div class="hero-meta">
+            <span class="tag">Self-Reference</span>
+            <span class="tag red">Call Stack</span>
+            <span class="tag blue">Base Case &amp; Recursive Case</span>
+            <span class="tag amber">Intermediate</span>
+        </div>
+        <p class="hero-desc">A function that calls itself — the technique that makes trees, graphs, and divide-and-conquer algorithms not just possible, but elegant.</p>
+    </header>
+
+    <div class="toc-wrapper">
+        <div class="toc">
+            <h2>Contents</h2>
+            <ol>
+                <li><a href="#definition">Formal Definition</a></li>
+                <li><a href="#explanation">Explanation &amp; Patterns</a></li>
+                <li><a href="#code">Code Snippet</a></li>
+                <li><a href="#diagram">Visual Diagram</a></li>
+                <li><a href="#analogy">Analogy (Plain English)</a></li>
+                <li><a href="#real-world">Real-World Applications</a></li>
+                <li><a href="#interview">Interview Question</a></li>
+            </ol>
+        </div>
+    </div>
+
+    <main>
+
+        <!-- 1. DEFINITION -->
+        <section id="definition">
+            <div class="section-header">
+                <div class="section-number">1</div>
+                <h2>Formal Definition</h2>
+            </div>
+            <div class="section-body">
+                <div class="definition-box">
+                    <strong>Recursion</strong> is a programming technique in which a function solves a problem by calling
+                    itself on a smaller version of the same problem. A correct recursive function has two essential
+                    components: a <em>base case</em> — a condition under which the function returns a result directly
+                    without calling itself — and a <em>recursive case</em> — one or more calls to itself with arguments
+                    that move closer to the base case. Each recursive call places a new <em>stack frame</em> on the call
+                    stack; the stack unwinds as base cases are reached and each frame returns its result to the caller.
+                </div>
+                <p>Recursion is not a data structure — it is a <strong>problem-solving strategy</strong>. It is the
+                    natural language for problems that have a self-similar structure: trees, graphs, divide-and-conquer
+                    algorithms, and any problem where the solution to the whole can be expressed in terms of solutions to
+                    smaller instances of the same problem.</p>
+            </div>
+        </section>
+
+        <!-- 2. EXPLANATION -->
+        <section id="explanation">
+            <div class="section-header">
+                <div class="section-number">2</div>
+                <h2>Plain English Explanation &amp; Patterns</h2>
+            </div>
+            <div class="section-body">
+                <p>Every recursive function is built around one core question: <strong>"Can I reduce this problem to a
+                    smaller version of itself?"</strong> If yes, recursion is a natural fit. The structure is always
+                    the same: handle the smallest possible input directly (base case), and for everything else, call
+                    yourself on the smaller piece and combine the results.</p>
+
+                <div class="compare-grid">
+                    <div class="compare-card iterative">
+                        <h3>🔄 Iterative Approach</h3>
+                        <ul>
+                            <li>Uses explicit loops (<code class="inline">for</code>, <code class="inline">while</code>)</li>
+                            <li>State managed via loop variables</li>
+                            <li>Memory: O(1) extra space (no call stack growth)</li>
+                            <li>Harder to read for tree/graph problems</li>
+                            <li>No risk of stack overflow</li>
+                        </ul>
+                    </div>
+                    <div class="compare-card recursive">
+                        <h3>🌀 Recursive Approach</h3>
+                        <ul>
+                            <li>Function calls itself with a smaller input</li>
+                            <li>State managed via call stack frames</li>
+                            <li>Memory: O(depth) for call stack</li>
+                            <li>Naturally mirrors tree / graph structure</li>
+                            <li>Risk of stack overflow on deep inputs</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p style="margin-top: 1.2rem;"><strong>The three laws of recursion</strong> — every correct recursive
+                    function must follow all three:</p>
+
+                <ul class="step-list">
+                    <li>
+                        <div class="step-num">1</div>
+                        <span><strong>It must have a base case.</strong> The simplest possible input that can be answered
+                        directly, without another recursive call. Without this, the function calls itself forever and
+                        crashes the stack.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">2</div>
+                        <span><strong>It must change its state toward the base case.</strong> Each recursive call must use
+                        a smaller or simpler argument than the one it received. Without this, you never reach the base
+                        case.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">3</div>
+                        <span><strong>It must call itself.</strong> The recursive call is what makes it recursive. The
+                        result of the recursive call is combined with the current frame's local work to produce the
+                        answer.</span>
+                    </li>
+                </ul>
+
+                <table class="ops-table" style="margin-top: 1.4rem;">
+                    <thead>
+                        <tr>
+                            <th>Pattern</th>
+                            <th>Description</th>
+                            <th>Time</th>
+                            <th>Space</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Linear recursion</strong></td>
+                            <td>One recursive call per frame (factorial, linked list)</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity on">O(n)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Binary recursion</strong></td>
+                            <td>Two recursive calls per frame (merge sort, binary trees)</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity ologn">O(log n)*</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Divide &amp; Conquer</strong></td>
+                            <td>Split problem in half, solve each half, combine</td>
+                            <td class="complexity ologn">O(n log n)</td>
+                            <td class="complexity ologn">O(log n)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Exponential recursion</strong></td>
+                            <td>Multiple calls with overlapping subproblems (naïve Fibonacci)</td>
+                            <td class="complexity on2">O(2ⁿ)</td>
+                            <td class="complexity on">O(n)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tail recursion</strong></td>
+                            <td>Recursive call is the last operation — can be optimised to O(1) space by a compiler</td>
+                            <td class="complexity on">O(n)</td>
+                            <td class="complexity o1">O(1)*</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p style="font-size: 0.82rem; margin-top: 0.5rem;">* Space for tree traversal is O(h) where h = tree height. Tail-call optimisation (TCO) is supported by some languages/compilers.</p>
+
+                <div class="callout" style="margin-top: 1.2rem;">
+                    <span class="callout-icon">💡</span>
+                    <p><strong>The call stack is the implicit data structure.</strong> Every recursive call pushes a new
+                        frame holding the function's local variables and return address. When the base case is reached,
+                        frames pop in reverse order, each returning its result to the frame below. This is identical to
+                        using an explicit stack — which means every recursive algorithm can be converted to an iterative
+                        one by making that stack explicit.</p>
+                </div>
+
+                <div class="callout red" style="margin-top: 0.8rem;">
+                    <span class="callout-icon">⚠️</span>
+                    <p><strong>Stack overflow:</strong> If recursion goes too deep (typically more than ~10,000 frames
+                        in JavaScript, ~1,000 in Python), the call stack exceeds its OS-imposed limit and the process
+                        crashes. For deeply nested inputs — long linked lists, heavily nested JSON, large trees — prefer
+                        an iterative approach with an explicit stack.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CODE -->
+        <section id="code">
+            <div class="section-header">
+                <div class="section-number">3</div>
+                <h2>Code Snippet</h2>
+            </div>
+            <div class="section-body">
+                <p>Three progressively more powerful recursive functions — each illustrating a different pattern. Read
+                    them as a family: factorial is linear, binary search is divide-and-conquer, and Fibonacci reveals
+                    why memoisation exists.</p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Factorial &amp; Power (Linear Recursion)</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Factorial: n! = n × (n-1) × (n-2) × … × 1 ─────────────────</span>
+<span class="cm">// Base case:      n === 0 → return 1</span>
+<span class="cm">// Recursive case: n × factorial(n - 1)</span>
+<span class="kw">function</span> <span class="fn">factorial</span>(n) {
+  <span class="kw">if</span> (n === <span class="num">0</span>) <span class="kw">return</span> <span class="num">1</span>;          <span class="cm">// base case</span>
+  <span class="kw">return</span> n * <span class="fn">factorial</span>(n - <span class="num">1</span>);   <span class="cm">// recursive case</span>
+}
+
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">factorial</span>(<span class="num">5</span>));   <span class="cm">// 120</span>
+<span class="cm">// Call stack: factorial(5)</span>
+<span class="cm">//   → factorial(4)</span>
+<span class="cm">//     → factorial(3)</span>
+<span class="cm">//       → factorial(2)</span>
+<span class="cm">//         → factorial(1)</span>
+<span class="cm">//           → factorial(0) → 1  ← base case</span>
+<span class="cm">//         ← returns 1×1 = 1</span>
+<span class="cm">//       ← returns 2×1  = 2</span>
+<span class="cm">//     ← returns 3×2  = 6</span>
+<span class="cm">//   ← returns 4×6  = 24</span>
+<span class="cm">// ← returns 5×24 = 120 ✓</span>
+
+<span class="cm">// ─── Power: base^exp using repeated halving ──────────────────────</span>
+<span class="cm">// Divide & Conquer: x^n = x^(n/2) * x^(n/2)  → O(log n)</span>
+<span class="kw">function</span> <span class="fn">power</span>(base, exp) {
+  <span class="kw">if</span> (exp === <span class="num">0</span>) <span class="kw">return</span> <span class="num">1</span>;
+  <span class="kw">const</span> half = <span class="fn">power</span>(base, Math.<span class="fn">floor</span>(exp / <span class="num">2</span>));
+  <span class="kw">return</span> exp % <span class="num">2</span> === <span class="num">0</span>
+    ? half * half             <span class="cm">// even exponent</span>
+    : half * half * base;     <span class="cm">// odd exponent: one extra factor</span>
+}
+
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">power</span>(<span class="num">2</span>, <span class="num">10</span>));   <span class="cm">// 1024  — only 4 multiplications, not 10</span></code></pre>
+                </div>
+
+                <div class="code-block" style="margin-top: 1.2rem;">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Fibonacci: Naïve vs Memoised</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Naïve Fibonacci — O(2ⁿ) — the classic warning ──────────────</span>
+<span class="cm">// fib(5) calls fib(4) AND fib(3)</span>
+<span class="cm">// fib(4) calls fib(3) AND fib(2)  ← fib(3) called TWICE</span>
+<span class="cm">// This exponential branching makes fib(50) take ~2^50 calls.</span>
+<span class="kw">function</span> <span class="fn">fibNaive</span>(n) {
+  <span class="kw">if</span> (n &lt;= <span class="num">1</span>) <span class="kw">return</span> n;
+  <span class="kw">return</span> <span class="fn">fibNaive</span>(n - <span class="num">1</span>) + <span class="fn">fibNaive</span>(n - <span class="num">2</span>);
+}
+
+<span class="cm">// ─── Memoised Fibonacci — O(n) time, O(n) space ──────────────────</span>
+<span class="cm">// Cache (hash map) stores already-computed results.</span>
+<span class="cm">// Each subproblem is solved exactly ONCE.</span>
+<span class="kw">function</span> <span class="fn">fib</span>(n, memo = <span class="kw">new</span> <span class="cl">Map</span>()) {
+  <span class="kw">if</span> (n &lt;= <span class="num">1</span>) <span class="kw">return</span> n;
+  <span class="kw">if</span> (memo.<span class="fn">has</span>(n)) <span class="kw">return</span> memo.<span class="fn">get</span>(n);   <span class="cm">// cache hit</span>
+
+  <span class="kw">const</span> result = <span class="fn">fib</span>(n - <span class="num">1</span>, memo) + <span class="fn">fib</span>(n - <span class="num">2</span>, memo);
+  memo.<span class="fn">set</span>(n, result);                       <span class="cm">// cache result</span>
+  <span class="kw">return</span> result;
+}
+
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">fib</span>(<span class="num">50</span>));   <span class="cm">// 12586269025 — instant ✓</span>
+<span class="cm">// fibNaive(50) would take ~35 seconds. fib(50) takes microseconds.</span>
+
+<span class="cm">// ─── Recursive DFS on a tree ─────────────────────────────────────</span>
+<span class="cm">// The classic recursive pattern: solve left, solve right, combine.</span>
+<span class="kw">function</span> <span class="fn">sumTree</span>(node) {
+  <span class="kw">if</span> (!node) <span class="kw">return</span> <span class="num">0</span>;                          <span class="cm">// base case: null node</span>
+  <span class="kw">return</span> node.<span class="prop">val</span>
+    + <span class="fn">sumTree</span>(node.<span class="prop">left</span>)
+    + <span class="fn">sumTree</span>(node.<span class="prop">right</span>);
+}
+<span class="cm">// Every tree problem reduces to: what do I return for null?</span>
+<span class="cm">// What do I combine from left and right? That's the template.</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. DIAGRAM -->
+        <section id="diagram">
+            <div class="section-header">
+                <div class="section-number">4</div>
+                <h2>Visual Diagram</h2>
+            </div>
+            <div class="section-body">
+                <p>The call stack builds up as each recursive call is made, then unwinds as each base case returns.
+                    This is <code class="inline">factorial(4)</code> — four frames pushed, then popped in reverse:</p>
+
+                <div class="diagram-area">
+                    <div class="mem-label">Call Stack — factorial(4) unwinding</div>
+                    <div class="stack-label">← top (currently executing)</div>
+                    <div class="call-stack">
+                        <div class="frame active">
+                            <span class="frame-name">factorial(0)</span>
+                            <span class="frame-val">→ returns 1 (base case)</span>
+                        </div>
+                        <div class="frame returning">
+                            <span class="frame-name">factorial(1)</span>
+                            <span class="frame-val">waiting: 1 × ?</span>
+                        </div>
+                        <div class="frame returning">
+                            <span class="frame-name">factorial(2)</span>
+                            <span class="frame-val">waiting: 2 × ?</span>
+                        </div>
+                        <div class="frame returning">
+                            <span class="frame-name">factorial(3)</span>
+                            <span class="frame-val">waiting: 3 × ?</span>
+                        </div>
+                        <div class="frame returning">
+                            <span class="frame-name">factorial(4)</span>
+                            <span class="frame-val">waiting: 4 × ?</span>
+                        </div>
+                    </div>
+                    <p class="diagram-caption">Green = active frame at the top. Each frame waits, frozen, until the frame above it returns. Then it computes its own answer and returns to the frame below.</p>
+                </div>
+
+                <p>The <strong>recursion tree</strong> for naïve <code class="inline">fib(5)</code> shows why it's
+                    O(2ⁿ) — and why memoisation is the fix. The highlighted nodes are computed twice:</p>
+
+                <div class="diagram-area">
+                    <div class="mem-label">Recursion tree — fib(5)</div>
+                    <svg class="tree-svg" viewBox="0 0 500 260" xmlns="http://www.w3.org/2000/svg"
+                        font-family="JetBrains Mono, monospace">
+                        <!-- Edges -->
+                        <line x1="250" y1="30"  x2="150" y2="80"  stroke="#e4ddd3" stroke-width="1.5"/>
+                        <line x1="250" y1="30"  x2="350" y2="80"  stroke="#e4ddd3" stroke-width="1.5"/>
+                        <line x1="150" y1="98"  x2="90"  y2="148" stroke="#e4ddd3" stroke-width="1.5"/>
+                        <line x1="150" y1="98"  x2="210" y2="148" stroke="#e4ddd3" stroke-width="1.5"/>
+                        <line x1="350" y1="98"  x2="300" y2="148" stroke="#e4ddd3" stroke-width="1.5"/>
+                        <line x1="350" y1="98"  x2="400" y2="148" stroke="#e4ddd3" stroke-width="1.5"/>
+                        <line x1="90"  y1="166" x2="60"  y2="216" stroke="#e4ddd3" stroke-width="1.5"/>
+                        <line x1="90"  y1="166" x2="120" y2="216" stroke="#e4ddd3" stroke-width="1.5"/>
+                        <line x1="210" y1="166" x2="185" y2="216" stroke="#e4ddd3" stroke-width="1.5"/>
+                        <line x1="300" y1="166" x2="275" y2="216" stroke="#e4ddd3" stroke-width="1.5"/>
+                        <!-- Root -->
+                        <circle cx="250" cy="20" r="18" fill="#e0f0e9" stroke="#1a6b4a" stroke-width="2"/>
+                        <text x="250" y="25" text-anchor="middle" font-size="12" font-weight="700" fill="#1a6b4a">f(5)</text>
+                        <!-- Level 2 -->
+                        <circle cx="150" cy="89" r="18" fill="#e0f0e9" stroke="#1a6b4a" stroke-width="2"/>
+                        <text x="150" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#1a6b4a">f(4)</text>
+                        <circle cx="350" cy="89" r="18" fill="#fce8e4" stroke="#c84b31" stroke-width="2"/>
+                        <text x="350" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="#c84b31">f(3)</text>
+                        <!-- Level 3 -->
+                        <circle cx="90"  cy="157" r="18" fill="#fce8e4" stroke="#c84b31" stroke-width="2"/>
+                        <text x="90"  y="162" text-anchor="middle" font-size="12" font-weight="700" fill="#c84b31">f(3)</text>
+                        <circle cx="210" cy="157" r="18" fill="#dce8f5" stroke="#1d3557" stroke-width="2"/>
+                        <text x="210" y="162" text-anchor="middle" font-size="12" font-weight="700" fill="#1d3557">f(2)</text>
+                        <circle cx="300" cy="157" r="18" fill="#dce8f5" stroke="#1d3557" stroke-width="2"/>
+                        <text x="300" y="162" text-anchor="middle" font-size="12" font-weight="700" fill="#1d3557">f(2)</text>
+                        <circle cx="400" cy="157" r="18" fill="#f5f1ec" stroke="#b8b0a8" stroke-width="2"/>
+                        <text x="400" y="162" text-anchor="middle" font-size="12" font-weight="700" fill="#b8b0a8">f(1)</text>
+                        <!-- Level 4 -->
+                        <circle cx="60"  cy="227" r="18" fill="#dce8f5" stroke="#1d3557" stroke-width="2"/>
+                        <text x="60"  y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#1d3557">f(2)</text>
+                        <circle cx="120" cy="227" r="18" fill="#f5f1ec" stroke="#b8b0a8" stroke-width="2"/>
+                        <text x="120" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#b8b0a8">f(1)</text>
+                        <circle cx="185" cy="227" r="18" fill="#f5f1ec" stroke="#b8b0a8" stroke-width="2"/>
+                        <text x="185" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#b8b0a8">f(1)</text>
+                        <circle cx="275" cy="227" r="18" fill="#f5f1ec" stroke="#b8b0a8" stroke-width="2"/>
+                        <text x="275" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="#b8b0a8">f(1)</text>
+                        <!-- Labels -->
+                        <text x="460" y="94"  font-size="10" fill="#c84b31" font-weight="700">⚠ f(3) computed twice</text>
+                        <text x="430" y="162" font-size="10" fill="#1d3557" font-weight="700">f(2) computed 3×</text>
+                    </svg>
+                    <p class="diagram-caption">Red = f(3) computed twice. Blue = f(2) computed three times. Memoisation stores results the first time, eliminating all the duplicate branches instantly.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. ANALOGY -->
+        <section id="analogy">
+            <div class="section-header">
+                <div class="section-number">5</div>
+                <h2>Plain English Analogy</h2>
+            </div>
+            <div class="section-body">
+                <div class="analogy-card">
+                    <div class="analogy-icon">🪆</div>
+                    <h3>Russian Nesting Dolls (Matryoshka)</h3>
+                    <p>Picture a set of Russian nesting dolls. You pick up the largest doll and ask: "How many dolls are
+                        inside this one?" You can't count them without opening it. So you open it and find a slightly
+                        smaller doll inside. You ask the same question again — "How many dolls are inside <em>this</em>
+                        one?" You open it. Same question, smaller doll. You keep doing this until you open a doll that
+                        has nothing inside — that's your <strong>base case</strong>. The answer is zero.</p>
+                    <p>Now you start counting on the way back out. The innermost doll contains 0 dolls, so the next one
+                        out contains 1 (itself). The next one contains 2. The one after that contains 3. By the time
+                        you're back to the largest doll, you've counted them all — without ever having to see the whole
+                        picture at once. Each doll only needed to know how many were inside it, and it asked the doll
+                        inside to find out.</p>
+                    <p>That is exactly how a recursive function works. Each function call only handles one step, and
+                        delegates the rest to the next call — exactly like each doll delegating the inner count to the
+                        doll it contains.</p>
+                    <ul>
+                        <li><strong>Each doll</strong> = a stack frame</li>
+                        <li><strong>"Ask the doll inside"</strong> = the recursive call</li>
+                        <li><strong>The smallest doll with nothing inside</strong> = the base case</li>
+                        <li><strong>Counting back out as you close dolls</strong> = the call stack unwinding</li>
+                        <li><strong>The final count at the outermost doll</strong> = the return value of the original call</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. REAL WORLD -->
+        <section id="real-world">
+            <div class="section-header">
+                <div class="section-number">6</div>
+                <h2>Real-World Coding Applications</h2>
+            </div>
+            <div class="section-body">
+                <p>Recursion appears wherever the data has a naturally self-similar or nested structure — anywhere the
+                    problem can be broken into smaller versions of itself.</p>
+                <div class="rw-grid">
+                    <div class="rw-card">
+                        <div class="rw-icon">🌳</div>
+                        <h4>Tree Traversal (DOM, AST)</h4>
+                        <p>Every HTML page is a tree. Browsers parse and render it using recursive descent. Compilers
+                            traverse Abstract Syntax Trees recursively — each node calls evaluate on its children and
+                            combines the results.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">📁</div>
+                        <h4>File System Walking</h4>
+                        <p>The Unix <code class="inline">find</code> command and tools like <code class="inline">grep -r</code>
+                            recursively walk directory trees. A directory contains files and other directories —
+                            a self-similar structure that recursion handles naturally.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🔀</div>
+                        <h4>Merge Sort &amp; Quick Sort</h4>
+                        <p>Both sorting algorithms are recursive divide-and-conquer. Merge sort splits the array in
+                            half, sorts each half recursively, then merges. Quick sort partitions around a pivot and
+                            sorts each partition recursively.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🕸️</div>
+                        <h4>Graph DFS</h4>
+                        <p>Depth-First Search on a graph is naturally recursive: visit a node, then recursively visit
+                            each unvisited neighbour. Maze solving, cycle detection, and topological sort all rely on
+                            recursive DFS.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🧩</div>
+                        <h4>Backtracking (Sudoku, N-Queens)</h4>
+                        <p>Backtracking algorithms — solving Sudoku, generating permutations, the N-Queens problem —
+                            are recursive: try a choice, recurse deeper, and if it fails, undo it and try the next
+                            option. The call stack naturally tracks the undo history.</p>
+                    </div>
+                    <div class="rw-card">
+                        <div class="rw-icon">🗜️</div>
+                        <h4>JSON Parsing</h4>
+                        <p>JSON is a recursive data format: an object can contain arrays, which can contain objects.
+                            Every JSON parser uses recursive descent — the parser for objects calls the parser for
+                            values, which calls the parser for objects again when needed.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. INTERVIEW -->
+        <section id="interview">
+            <div class="section-header">
+                <div class="section-number">7</div>
+                <h2>Classic Interview Question</h2>
+            </div>
+            <div class="section-body">
+
+                <div class="interview-problem">
+                    <h3>🔢 Climbing Stairs</h3>
+                    <p>You are climbing a staircase with <code class="inline">n</code> steps. Each time you can either
+                        climb <strong>1</strong> or <strong>2</strong> steps. In how many distinct ways can you climb
+                        to the top?</p>
+                    <p style="margin-top: 0.6rem;">Example: <code class="inline">n = 3</code> → <code class="inline">3</code>
+                        ways: (1+1+1), (1+2), (2+1)</p>
+                    <span class="difficulty-badge">⚡ Easy — LeetCode #70 · the gateway to Dynamic Programming</span>
+                </div>
+
+                <p><strong>Why this question?</strong> It's the perfect bridge between recursion and dynamic
+                    programming. The naïve recursive solution is beautiful and obvious — but O(2ⁿ). The memoised
+                    version teaches you to cache subproblems. The bottom-up DP version teaches you to flip the
+                    recursion upside down. Three solutions, three paradigms, one problem.</p>
+
+                <p><strong>The key insight:</strong> To reach step <code class="inline">n</code>, you must have come
+                    from step <code class="inline">n-1</code> (took 1 step) or step <code class="inline">n-2</code>
+                    (took 2 steps). So <code class="inline">ways(n) = ways(n-1) + ways(n-2)</code>. That's the
+                    Fibonacci recurrence in disguise.</p>
+
+                <ul class="step-list">
+                    <li>
+                        <div class="step-num">1</div>
+                        <span><strong>Base cases:</strong> <code class="inline">ways(1) = 1</code>, <code class="inline">ways(2) = 2</code>.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">2</div>
+                        <span><strong>Recursive case:</strong> <code class="inline">ways(n) = ways(n-1) + ways(n-2)</code>.</span>
+                    </li>
+                    <li>
+                        <div class="step-num">3</div>
+                        <span>Add a memo map to cache results and drop from O(2ⁿ) to O(n).</span>
+                    </li>
+                    <li>
+                        <div class="step-num">4</div>
+                        <span>Notice only the last two values are ever needed — optimise space to O(1).</span>
+                    </li>
+                </ul>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-lang">JavaScript — Climbing Stairs: Three Approaches</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code><span class="cm">// ─── Approach 1: Naïve Recursion — O(2ⁿ) ────────────────────────</span>
+<span class="kw">function</span> <span class="fn">climbNaive</span>(n) {
+  <span class="kw">if</span> (n &lt;= <span class="num">2</span>) <span class="kw">return</span> n;
+  <span class="kw">return</span> <span class="fn">climbNaive</span>(n - <span class="num">1</span>) + <span class="fn">climbNaive</span>(n - <span class="num">2</span>);
+}
+<span class="cm">// Correct but exponential — times out on n > 40</span>
+
+<span class="cm">// ─── Approach 2: Memoised Recursion — O(n) time, O(n) space ─────</span>
+<span class="kw">function</span> <span class="fn">climbMemo</span>(n, memo = {}) {
+  <span class="kw">if</span> (n &lt;= <span class="num">2</span>) <span class="kw">return</span> n;
+  <span class="kw">if</span> (memo[n])  <span class="kw">return</span> memo[n];    <span class="cm">// cache hit</span>
+  memo[n] = <span class="fn">climbMemo</span>(n - <span class="num">1</span>, memo) + <span class="fn">climbMemo</span>(n - <span class="num">2</span>, memo);
+  <span class="kw">return</span> memo[n];
+}
+
+<span class="cm">// ─── Approach 3: Bottom-up DP — O(n) time, O(1) space ────────────</span>
+<span class="cm">// Flip the recursion: build from small subproblems up to n.</span>
+<span class="cm">// We only ever need the last two results — no array needed.</span>
+<span class="kw">function</span> <span class="fn">climbDP</span>(n) {
+  <span class="kw">if</span> (n &lt;= <span class="num">2</span>) <span class="kw">return</span> n;
+  <span class="kw">let</span> prev2 = <span class="num">1</span>, prev1 = <span class="num">2</span>;
+
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">3</span>; i &lt;= n; i++) {
+    <span class="kw">const</span> curr = prev1 + prev2;
+    prev2 = prev1;
+    prev1 = curr;
+  }
+  <span class="kw">return</span> prev1;
+}
+
+<span class="cm">// ─── Test all three ───────────────────────────────────────────────</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">climbNaive</span>(<span class="num">5</span>));   <span class="cm">// 8</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">climbMemo</span>(<span class="num">5</span>));   <span class="cm">// 8</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">climbDP</span>(<span class="num">5</span>));     <span class="cm">// 8</span>
+
+<span class="cm">// n=1→1, n=2→2, n=3→3, n=4→5, n=5→8  (Fibonacci sequence!)</span></code></pre>
+                </div>
+
+                <div class="callout green" style="margin-top: 1rem;">
+                    <span class="callout-icon">✅</span>
+                    <p><strong>Interview tip:</strong> Always present all three approaches in order. Start with the
+                        recursive insight — <em>"to reach step n, I came from n-1 or n-2"</em>. Show the naïve version,
+                        then explain why it's O(2ⁿ) using the recursion tree. Add memoisation and explain it eliminates
+                        the duplicate branches. Finally, observe that we only ever look back two steps — flip it
+                        bottom-up and eliminate the hash map entirely. This progression from recursion → memoisation →
+                        DP is the exact pattern you'll use on dozens of interview problems.</p>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <div class="module-nav">
+        <a href="binary-search.html">← Binary Search</a>
+        <a href="dynamic-programming.html" class="next">Dynamic Programming →</a>
+    </div>
+
+    <footer>
+        <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+        <p style="margin-top: 0.4rem; font-size: 0.8rem;">Built for learners, by learners.</p>
+    </footer>
+
+    <script>
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>
