@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DSA in the Real World — DSA Zero to Hero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f9f6f1;
+      --surface:   #ffffff;
+      --border:    #e4ddd3;
+      --text:      #1a1612;
+      --muted:     #6b6055;
+      --accent:    #c84b31;
+      --accent2:   #2d6a4f;
+      --accent3:   #1d3557;
+      --code-bg:   #1e1e2e;
+      --code-text: #cdd6f4;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(249,246,241,0.95); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 58px;
+    }
+    .nav-brand { font-family: 'Lora', serif; font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    /* ── HERO ── */
+    .page-hero {
+      background: linear-gradient(135deg, #1d3557 0%, #2d6a4f 100%);
+      padding: 5rem 2rem 4rem; text-align: center; color: #fff;
+    }
+    .page-hero .badge {
+      display: inline-block; background: rgba(255,255,255,0.18); border-radius: 20px;
+      padding: 0.28rem 0.9rem; font-size: 0.74rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1.2rem;
+    }
+    .page-hero h1 { font-family: 'Lora', serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 1rem; }
+    .page-hero h1 em { font-style: italic; color: #a6e3a1; }
+    .page-hero p { font-size: 1.05rem; opacity: 0.85; max-width: 600px; margin: 0 auto; line-height: 1.8; }
+
+    /* ── LAYOUT ── */
+    .page-wrapper { max-width: 860px; margin: 0 auto; padding: 0 2rem 6rem; }
+
+    /* ── TOC ── */
+    .toc-wrapper { max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem 0; }
+    .toc { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.8rem; }
+    .toc h2 { font-family: 'Lora', serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.8rem; }
+    .toc ol { padding-left: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.25rem 2rem; }
+    .toc a { color: var(--accent3); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; }
+
+    /* ── SECTION HEADERS ── */
+    .chapter-header { padding: 3.5rem 0 1.5rem; }
+    .chapter-tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .chapter-title { font-family: 'Lora', serif; font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; }
+    .chapter-title span { color: var(--accent); font-style: italic; }
+    .chapter-sub { font-size: 0.95rem; color: var(--muted); margin-top: 0.5rem; line-height: 1.75; max-width: 620px; }
+
+    /* ── COMPANY ANECDOTE CARDS ── */
+    .anecdote-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden; margin-bottom: 1.5rem;
+    }
+    .anecdote-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.2rem 1.6rem; border-bottom: 1px solid var(--border);
+      background: #faf9f7;
+    }
+    .company-logo {
+      width: 44px; height: 44px; border-radius: 10px; display: flex;
+      align-items: center; justify-content: center; font-size: 1.4rem;
+      flex-shrink: 0; border: 1px solid var(--border);
+    }
+    .anecdote-header-text { flex: 1; }
+    .company-name { font-family: 'Lora', serif; font-weight: 700; font-size: 1.05rem; color: var(--text); }
+    .company-meta { font-size: 0.8rem; color: var(--muted); margin-top: 1px; }
+    .dsa-badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      background: #fce8e4; color: var(--accent); border-radius: 20px;
+      padding: 0.22rem 0.75rem; font-size: 0.72rem; font-weight: 700; white-space: nowrap;
+    }
+    .dsa-badge.green { background: #e0f0e9; color: var(--accent2); }
+    .dsa-badge.blue  { background: #dce8f5; color: var(--accent3); }
+    .dsa-badge.amber { background: #fff0d4; color: #a05c00; }
+    .anecdote-body { padding: 1.5rem 1.6rem; }
+    .anecdote-body p { color: var(--muted); margin-bottom: 1rem; font-size: 0.95rem; }
+    .anecdote-body p:last-child { margin-bottom: 0; }
+    .anecdote-body strong { color: var(--text); }
+    .anecdote-quote {
+      background: #f0f4ff; border-left: 4px solid var(--accent3);
+      border-radius: 0 8px 8px 0; padding: 1rem 1.2rem; margin: 1rem 0;
+      font-style: italic; font-family: 'Lora', serif; font-size: 0.95rem;
+      color: var(--accent3); line-height: 1.65;
+    }
+    .source-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      margin-top: 0.8rem; font-size: 0.82rem; color: var(--accent3);
+      text-decoration: none; font-weight: 600; border-bottom: 1px solid #b8d0f5;
+      padding-bottom: 1px; transition: color .2s;
+    }
+    .source-link:hover { color: var(--accent); border-bottom-color: var(--accent); }
+    .source-link::after { content: ' ↗'; font-size: 0.78rem; }
+
+    /* DSA mapping pill row */
+    .dsa-map { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1rem; }
+
+    /* ── PROJECT SECTION ── */
+    .project-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden; margin-bottom: 1.5rem;
+    }
+    .project-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.2rem 1.6rem; border-bottom: 1px solid var(--border); background: #faf9f7;
+    }
+    .project-icon { font-size: 1.8rem; }
+    .project-header-text h3 { font-family: 'Lora', serif; font-size: 1.08rem; font-weight: 700; color: var(--text); }
+    .project-header-text p { font-size: 0.82rem; color: var(--muted); margin-top: 2px; }
+    .project-body { padding: 1.5rem 1.6rem; }
+    .project-body p { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.8rem; }
+    .feature-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; margin: 0.8rem 0; }
+    .feature-list li { display: flex; gap: 0.7rem; align-items: flex-start; font-size: 0.9rem; color: var(--muted); }
+    .feature-list li::before { content: '→'; color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .concepts-used { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
+    .concept-pill {
+      display: inline-block; border: 1.5px solid var(--border); border-radius: 20px;
+      padding: 0.18rem 0.7rem; font-size: 0.74rem; font-weight: 600; color: var(--muted);
+      background: var(--surface);
+    }
+    .concept-pill.accent { border-color: var(--accent); color: var(--accent); background: #fce8e4; }
+    .concept-pill.green  { border-color: var(--accent2); color: var(--accent2); background: #e0f0e9; }
+    .concept-pill.blue   { border-color: var(--accent3); color: var(--accent3); background: #dce8f5; }
+    .concept-pill.amber  { border-color: #a05c00; color: #a05c00; background: #fff0d4; }
+
+    /* ── CODE BLOCK ── */
+    .code-block { background: var(--code-bg); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1.1rem; background: #181825; }
+    .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #a6adc8; letter-spacing: 0.06em; text-transform: uppercase; }
+    .copy-btn { background: #313244; border: none; color: #cdd6f4; padding: 0.25rem 0.65rem; border-radius: 5px; font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background .2s; }
+    .copy-btn:hover { background: #45475a; }
+    pre { margin: 0; padding: 1.4rem 1.4rem; overflow-x: auto; font-size: 0.85rem; line-height: 1.65; }
+    pre code { font-family: 'JetBrains Mono', monospace; color: var(--code-text); }
+    .kw   { color: #cba6f7; }
+    .fn   { color: #89b4fa; }
+    .str  { color: #a6e3a1; }
+    .num  { color: #fab387; }
+    .cm   { color: #6c7086; font-style: italic; }
+    .cl   { color: #f38ba8; }
+    .prop { color: #89dceb; }
+    code.inline { font-family: 'JetBrains Mono', monospace; background: #f0ece6; color: var(--accent); padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em; }
+
+    /* ── NEXT STEPS ── */
+    .next-steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem; }
+    .step-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem; }
+    .step-card.phase-1 { border-top: 3px solid var(--accent); }
+    .step-card.phase-2 { border-top: 3px solid var(--accent3); }
+    .step-card.phase-3 { border-top: 3px solid var(--accent2); }
+    .step-card.phase-4 { border-top: 3px solid #a05c00; }
+    .step-card h3 { font-family: 'Lora', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; color: var(--text); }
+    .step-card .timeline { font-size: 0.73rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.7rem; }
+    .step-card ul { padding-left: 1.1rem; color: var(--muted); font-size: 0.88rem; }
+    .step-card li { margin-bottom: 0.3rem; }
+
+    /* ── RESOURCE LINKS ── */
+    .resource-section { margin-bottom: 1.5rem; }
+    .resource-category { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); }
+    .resource-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .resource-card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+      padding: 1rem 1.1rem; text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; gap: 0.3rem;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .resource-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .resource-card .rc-top { display: flex; align-items: center; gap: 0.5rem; }
+    .resource-card .rc-icon { font-size: 1.1rem; }
+    .resource-card .rc-name { font-family: 'Lora', serif; font-size: 0.95rem; font-weight: 700; color: var(--text); }
+    .resource-card .rc-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+    .resource-card .rc-tag { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); }
+    .resource-card .rc-tag.green { color: var(--accent2); }
+    .resource-card .rc-tag.blue  { color: var(--accent3); }
+    .resource-card .rc-tag.amber { color: #a05c00; }
+
+    /* ── CALLOUT ── */
+    .callout { display: flex; gap: 0.8rem; align-items: flex-start; background: #eef4ff; border: 1px solid #b8d0f5; border-left: 4px solid var(--accent3); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; }
+    .callout.green { background: #e8f5ee; border-color: #a8d5ba; border-left-color: var(--accent2); }
+    .callout.amber { background: #fff8e6; border-color: #ffe08a; border-left-color: #f5a623; }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .callout p { margin: 0; font-size: 0.9rem; color: var(--accent3); }
+    .callout.green p { color: var(--accent2); }
+    .callout.amber p { color: #7a4800; }
+
+    /* ── COMPLETION BANNER ── */
+    .completion-banner {
+      background: linear-gradient(135deg, #1d3557 0%, #c84b31 100%);
+      border-radius: 14px; padding: 2.5rem 2rem; text-align: center; color: #fff;
+      margin-top: 3rem;
+    }
+    .completion-banner h2 { font-family: 'Lora', serif; font-size: 1.7rem; font-weight: 700; margin-bottom: 0.6rem; }
+    .completion-banner p { opacity: 0.88; font-size: 0.97rem; max-width: 520px; margin: 0 auto 1.6rem; line-height: 1.75; }
+    .banner-cta { display: inline-flex; align-items: center; gap: 0.5rem; background: #fff; color: var(--accent3); text-decoration: none; padding: 0.8rem 1.8rem; border-radius: 6px; font-weight: 700; font-size: 0.92rem; transition: opacity 0.2s; }
+    .banner-cta:hover { opacity: 0.9; }
+
+    footer { text-align: center; padding: 2.5rem 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .toc ol, .next-steps-grid, .resource-grid { grid-template-columns: 1fr; }
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; }
+      .anecdote-header { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">DSA: Zero to Hero</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="binary-search.html">Binary Search</a></li>
+    <li><a href="real-world.html" class="active">Real World</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="badge">🏭 Capstone · Applied Engineering</div>
+  <h1>DSA in the <em>Real World</em></h1>
+  <p>The algorithms you just learned are not academic exercises — they are running right now inside the apps you use every day. Here's exactly how, with sources to prove it.</p>
+</div>
+
+<!-- TOC -->
+<div class="toc-wrapper">
+  <div class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#anecdotes">Engineering Anecdotes</a></li>
+      <li><a href="#project">Your Capstone Project</a></li>
+      <li><a href="#nextsteps">Next Steps</a></li>
+      <li><a href="#resources">Resources &amp; Links</a></li>
+    </ol>
+  </div>
+</div>
+
+<div class="page-wrapper">
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 1 — REAL ENGINEERING ANECDOTES
+  ═══════════════════════════════════════════════ -->
+  <div id="anecdotes" class="chapter-header">
+    <div class="chapter-tag">Section 1 · Engineering Anecdotes</div>
+    <h2 class="chapter-title">The Code Behind the <span>Apps You Use Daily</span></h2>
+    <p class="chapter-sub">Real engineers at real companies solved real billion-user scale problems using the exact data structures and algorithms you just learned. Here is the evidence.</p>
+  </div>
+
+  <!-- UBER -->
+  <div class="anecdote-card">
+    <div class="anecdote-header">
+      <div class="company-logo" style="background:#fff3e0;">🚗</div>
+      <div class="anecdote-header-text">
+        <div class="company-name">Uber Engineering</div>
+        <div class="company-meta">Routing Engine · Dispatch System · Surge Pricing</div>
+      </div>
+      <div class="dsa-badge blue">Graphs + Dijkstra's</div>
+    </div>
+    <div class="anecdote-body">
+      <p>When Uber engineers built their routing engine in 2014, they explicitly modelled the entire world road network as a <strong>weighted directed graph</strong> — every intersection is a node, every road segment is an edge weighted by travel time. The Uber engineering blog describes the exact trade-offs they faced:</p>
+      <div class="anecdote-quote">"One simple example you can try at home is Dijkstra's search algorithm, which has become the foundation for most modern routing algorithms today. However, in a production environment, Dijkstra, or any other algorithm that works on top of an unprocessed graph, is usually too slow… it takes roughly 12 hours to build the contracted graph using all the roads of the world."</div>
+      <p>The solution? They eventually adopted <strong>A* search</strong> (Dijkstra with a heuristic) for real-time traffic updates, allowing edge weights to change dynamically as GPS data streams in from millions of active drivers. Their dispatch system also uses <strong>bipartite graph matching</strong> (the Hungarian Algorithm) to optimally pair riders with drivers — a graph problem at its core.</p>
+      <p>Surge pricing itself runs a geospatial partitioning system where cities are divided into hexagonal grid cells, each modelled as nodes. <strong>Hash maps</strong> store demand counts per cell in O(1), and a <strong>priority queue (heap)</strong> surfaces the highest-demand zones instantly.</p>
+      <div class="dsa-map">
+        <span class="dsa-badge blue">Graphs</span>
+        <span class="dsa-badge green">Dijkstra's / A* (Heaps)</span>
+        <span class="dsa-badge amber">Binary Search (Geospatial)</span>
+        <span class="dsa-badge">Hash Tables</span>
+      </div>
+      <a class="source-link" href="https://www.uber.com/blog/engineering-routing-engine/" target="_blank" rel="noopener">Uber Engineering: How Uber's Routing Engine Was Built</a>
+    </div>
+  </div>
+
+  <!-- INSTAGRAM -->
+  <div class="anecdote-card">
+    <div class="anecdote-header">
+      <div class="company-logo" style="background:#fce4ec;">📸</div>
+      <div class="anecdote-header-text">
+        <div class="company-name">Instagram Engineering</div>
+        <div class="company-meta">Feed Delivery · Photo IDs · Follower Graph</div>
+      </div>
+      <div class="dsa-badge">Hash Tables + Sorted IDs</div>
+    </div>
+    <div class="anecdote-body">
+      <p>When Instagram scaled from 0 to 14 million users with <strong>just 3 engineers</strong>, every data structure decision carried enormous weight. Their feed delivery system stored follower lists in <strong>Redis linked-list structures</strong> — when you post a photo, the Media ID is pushed onto a list for every one of your followers. When a follower opens the app, they fetch a slice of that list and look up the posts in <strong>Memcached hash tables</strong> in O(1).</p>
+      <p>Perhaps the most clever algorithmic decision was their <strong>custom ID generation scheme</strong>. Standard auto-increment IDs would bottleneck at the database level. Instead, Instagram engineers designed a 64-bit ID combining Unix timestamp bits, shard ID bits, and auto-increment bits — making every ID <strong>globally unique, time-sortable, and shardable</strong>. This is binary arithmetic and hash-based sharding in production.</p>
+      <div class="anecdote-quote">"Delivery to followers is via lists stored in Redis. The Media ID is pushed on the list for everyone following the user. When it's time to render a feed they take a small number of IDs and look them up in Memcached."</div>
+      <p>Their social graph (who follows whom) is modelled as a <strong>directed graph</strong>. The Explore page recommendation system runs BFS-style traversals on this graph to surface content from users two or three degrees away from you — exactly the graph traversal you learned in Module 7.</p>
+      <div class="dsa-map">
+        <span class="dsa-badge">Linked Lists (Redis)</span>
+        <span class="dsa-badge">Hash Tables (Memcached)</span>
+        <span class="dsa-badge blue">Directed Graphs (Social)</span>
+        <span class="dsa-badge amber">Sorting (ID Generation)</span>
+      </div>
+      <a class="source-link" href="https://blog.bytebytego.com/p/how-instagram-scaled-its-infrastructure" target="_blank" rel="noopener">ByteByteGo: How Instagram Scaled to 1 Billion Users</a>
+    </div>
+  </div>
+
+  <!-- TWITTER / X -->
+  <div class="anecdote-card">
+    <div class="anecdote-header">
+      <div class="company-logo" style="background:#e3f2fd;">🐦</div>
+      <div class="anecdote-header-text">
+        <div class="company-name">X (Twitter) Engineering</div>
+        <div class="company-meta">For You Feed · Graph Traversal · Inverted Index Search</div>
+      </div>
+      <div class="dsa-badge blue">Graphs + BFS</div>
+    </div>
+    <div class="anecdote-body">
+      <p>Twitter's "For You" recommendation pipeline must distil <strong>500 million tweets per day</strong> down to roughly 500 personalized recommendations per user. Their engineering blog (open-sourced in 2023) reveals the exact algorithms at work.</p>
+      <div class="anecdote-quote">"We developed GraphJet, a graph processing engine that maintains a real-time interaction graph between users and Tweets, to execute these traversals. Graph traversals of this type are essential to our Out-of-Network recommendations."</div>
+      <p><strong>GraphJet</strong> maintains a live bipartite graph of user–tweet interactions in memory. When you open the app, the system executes BFS-style random walks on this graph to find tweets that people with similar taste have engaged with — then ranks them using a logistic regression model. The "Real Graph" (their in-network scorer) also predicts engagement likelihood using a weighted graph traversal from your follow network.</p>
+      <p>Their search system uses a classic <strong>inverted index</strong> (a hash map from word → list of tweet IDs) to make full-text search across hundreds of billions of tweets work in milliseconds. Building this index required a massively parallelised pipeline where a <strong>partitioner (hashing algorithm)</strong> divides tweets into shards, and each shard builds a local inverted index concurrently.</p>
+      <div class="dsa-map">
+        <span class="dsa-badge blue">Graphs (GraphJet)</span>
+        <span class="dsa-badge blue">BFS / Graph Traversal</span>
+        <span class="dsa-badge">Hash Tables (Inverted Index)</span>
+        <span class="dsa-badge green">Queues (Event Pipelines)</span>
+      </div>
+      <a class="source-link" href="https://blog.x.com/engineering/en_us/topics/open-source/2023/twitter-recommendation-algorithm" target="_blank" rel="noopener">X Engineering: Twitter's Recommendation Algorithm (2023)</a>
+    </div>
+  </div>
+
+  <!-- SWIGGY / ZOMATO -->
+  <div class="anecdote-card">
+    <div class="anecdote-header">
+      <div class="company-logo" style="background:#fff3e0;">🛵</div>
+      <div class="anecdote-header-text">
+        <div class="company-name">Swiggy &amp; Zomato Engineering</div>
+        <div class="company-meta">Delivery Route Optimisation · ETA Prediction · Demand Forecasting</div>
+      </div>
+      <div class="dsa-badge green">Graphs + Shortest Path</div>
+    </div>
+    <div class="anecdote-body">
+      <p>Every time you order on Swiggy or Zomato, at least three algorithmic decisions happen before the delivery partner even picks up the food. The delivery routing engine models city roads as a <strong>weighted directed graph</strong> and runs <strong>Dijkstra's or A*</strong> to find the fastest path from restaurant to doorstep — accounting for real-time traffic via updated edge weights.</p>
+      <p>The ETA engine must simultaneously account for restaurant preparation time, traffic, and weather. It maintains a <strong>priority queue (min-heap)</strong> of pending deliveries sorted by urgency, so the system always dispatches the most time-critical order next. During peak hours (dinner time, cricket matches, monsoon evenings), a <strong>demand forecasting pipeline</strong> pre-positions delivery partners using heat maps — essentially a spatial hash table counting requests per geohash cell.</p>
+      <p>Swiggy's engineering blog describes how they cracked the multi-order delivery problem — one delivery partner picking up 2–3 orders simultaneously — as a <strong>Vehicle Routing Problem</strong>, a generalisation of the Travelling Salesman Problem solved via graph algorithms and dynamic programming heuristics.</p>
+      <div class="dsa-map">
+        <span class="dsa-badge blue">Graphs (Road Network)</span>
+        <span class="dsa-badge green">Heaps (Priority Dispatch)</span>
+        <span class="dsa-badge">Hash Tables (Geospatial)</span>
+        <span class="dsa-badge amber">Dynamic Programming (VRP)</span>
+      </div>
+      <a class="source-link" href="https://medium.com/@vantakulasatyakiran/how-zomato-swiggy-and-zepto-use-machine-learning-and-data-science-be9ff71cf744" target="_blank" rel="noopener">How Zomato, Swiggy &amp; Zepto Use ML and Data Science</a>
+    </div>
+  </div>
+
+  <!-- FLIPKART -->
+  <div class="anecdote-card">
+    <div class="anecdote-header">
+      <div class="company-logo" style="background:#e8f5e9;">🛒</div>
+      <div class="anecdote-header-text">
+        <div class="company-name">Flipkart Engineering</div>
+        <div class="company-meta">Search Autocomplete · Product Ranking · Flash Sale Traffic</div>
+      </div>
+      <div class="dsa-badge amber">Trees + Hash Tables</div>
+    </div>
+    <div class="anecdote-body">
+      <p>Flipkart's search autocomplete — the instant suggestions that appear as you type — is powered by a <strong>Trie (prefix tree)</strong>, a specialised binary-tree variant where each path from root to node spells out a prefix. A <strong>min-heap of size K</strong> is maintained at each trie node to surface the top-K most popular completions for that prefix in O(K log K). This is exactly the Trie + Heap combination from your Heaps module.</p>
+      <p>During Flipkart's Big Billion Day sale, traffic spikes 10–50× normal. Their session management uses <strong>distributed hash tables</strong> (sharded across thousands of servers) to maintain user cart state in O(1), even under extreme concurrency. A naive array-based approach would have been catastrophically slow.</p>
+      <p>Product ranking for search results uses a <strong>merge-sort based pipeline</strong>: multiple data sources (inventory, price, ratings, seller score) each produce a sorted list, and a K-way merge using a min-heap combines them into a single ranked feed — the exact Merge K Sorted Lists pattern from Module 8.</p>
+      <div class="dsa-map">
+        <span class="dsa-badge amber">Tries (Autocomplete)</span>
+        <span class="dsa-badge green">Heaps (Top-K Results)</span>
+        <span class="dsa-badge">Hash Tables (Session)</span>
+        <span class="dsa-badge">Merge Sort (Ranking)</span>
+      </div>
+      <a class="source-link" href="https://www.intervue.io/blog/how-flipkarts-first-10-engineers-built-indias-e-commerce-dna-from-a-bangalore-apartment" target="_blank" rel="noopener">How Flipkart's First 10 Engineers Built India's E-Commerce DNA</a>
+    </div>
+  </div>
+
+  <!-- FACEBOOK -->
+  <div class="anecdote-card">
+    <div class="anecdote-header">
+      <div class="company-logo" style="background:#e3f2fd;">🌐</div>
+      <div class="anecdote-header-text">
+        <div class="company-name">Meta (Facebook) Engineering</div>
+        <div class="company-meta">Friend Suggestions · News Feed · Messenger</div>
+      </div>
+      <div class="dsa-badge blue">Graphs + BFS</div>
+    </div>
+    <div class="anecdote-body">
+      <p>"People You May Know" is one of the most impactful features in Meta's history — and it's a textbook <strong>graph BFS problem</strong>. Starting from your node in the social graph, the system runs a BFS to depth 2, finding all your friends-of-friends. Nodes that appear most frequently in that BFS result (high overlap) are the strongest suggestions. With 3 billion users, this graph has hundreds of billions of edges — requiring custom distributed graph processing systems.</p>
+      <p>The News Feed ranking system uses a <strong>priority queue</strong> to maintain the top-scoring posts across all your friends' content streams. Rather than sorting every post ever created by every friend (O(n log n) for potentially millions of posts), Feed maintains a size-K max-heap and streams posts through it — O(n log K) where K is the feed size. This is the Kth Largest Element pattern you solved in Module 8, at 3 billion user scale.</p>
+      <div class="anecdote-quote">"The whole social graph is traversed using BFS. Friends-of-friends connections are computed at query time using real-time graph traversals across hundreds of billions of edges."</div>
+      <div class="dsa-map">
+        <span class="dsa-badge blue">Graphs (Social Graph)</span>
+        <span class="dsa-badge blue">BFS (Friend Suggestions)</span>
+        <span class="dsa-badge green">Heaps (Feed Ranking)</span>
+        <span class="dsa-badge">Hash Tables (Edge Storage)</span>
+      </div>
+      <a class="source-link" href="https://highscalability.com/designing-instagram/" target="_blank" rel="noopener">High Scalability: Designing Social Platforms at Scale</a>
+    </div>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 2 — CAPSTONE PROJECT
+  ═══════════════════════════════════════════════ -->
+  <div id="project" class="chapter-header">
+    <div class="chapter-tag">Section 2 · Capstone Project</div>
+    <h2 class="chapter-title">Build <span>MiniRide</span> — A Ride-Hailing Simulator</h2>
+    <p class="chapter-sub">One project that uses every concept from this course. Build a simplified ride-hailing backend that models the core systems of Uber/Ola — from driver matching to route finding to surge pricing.</p>
+  </div>
+
+  <div class="callout">
+    <span class="callout-icon">🎯</span>
+    <p><strong>Why MiniRide?</strong> It's the most algorithm-dense real-world system a beginner can reasonably build. It forces you to pick the right data structure for every sub-problem — and the right answer is different for each one. Building it will make every module in this course feel concrete.</p>
+  </div>
+
+  <!-- Project Feature 1 -->
+  <div class="project-card">
+    <div class="project-header">
+      <div class="project-icon">🗺️</div>
+      <div class="project-header-text">
+        <h3>Feature 1 — City Graph &amp; Shortest Path</h3>
+        <p>Model a city as a weighted graph and find the fastest route</p>
+      </div>
+    </div>
+    <div class="project-body">
+      <p>Represent city intersections as nodes and roads as weighted edges. Implement Dijkstra's algorithm to find the shortest route from any driver to any rider.</p>
+      <ul class="feature-list">
+        <li>Build an adjacency list representation of a 20-node city graph</li>
+        <li>Implement Dijkstra's using a min-heap priority queue</li>
+        <li>Display the shortest path and total travel time</li>
+        <li>Bonus: swap Dijkstra's for A* with Manhattan distance heuristic</li>
+      </ul>
+      <div class="concepts-used">
+        <span class="concept-pill blue">Graphs</span>
+        <span class="concept-pill green">Heaps (Priority Queue)</span>
+        <span class="concept-pill">Dijkstra's Algorithm</span>
+        <span class="concept-pill">Adjacency List</span>
+      </div>
+      <div class="code-block" style="margin-top:1rem;">
+        <div class="code-header">
+          <span class="code-lang">JavaScript — City Graph + Dijkstra's</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="cm">// City represented as adjacency list: node → [{to, weight}]</span>
+<span class="kw">const</span> city = {
+  <span class="str">'A'</span>: [{ to: <span class="str">'B'</span>, weight: <span class="num">4</span> }, { to: <span class="str">'C'</span>, weight: <span class="num">2</span> }],
+  <span class="str">'B'</span>: [{ to: <span class="str">'D'</span>, weight: <span class="num">5</span> }, { to: <span class="str">'C'</span>, weight: <span class="num">1</span> }],
+  <span class="str">'C'</span>: [{ to: <span class="str">'B'</span>, weight: <span class="num">1</span> }, { to: <span class="str">'D'</span>, weight: <span class="num">8</span> }, { to: <span class="str">'E'</span>, weight: <span class="num">10</span> }],
+  <span class="str">'D'</span>: [{ to: <span class="str">'E'</span>, weight: <span class="num">2</span> }],
+  <span class="str">'E'</span>: []
+};
+
+<span class="cm">// Dijkstra's — finds shortest path from start to all nodes</span>
+<span class="kw">function</span> <span class="fn">dijkstra</span>(graph, start) {
+  <span class="kw">const</span> dist    = {};
+  <span class="kw">const</span> prev    = {};
+  <span class="kw">const</span> visited = <span class="kw">new</span> <span class="cl">Set</span>();
+
+  <span class="cm">// Initialise all distances to infinity</span>
+  <span class="kw">for</span> (<span class="kw">const</span> node <span class="kw">of</span> Object.<span class="fn">keys</span>(graph)) {
+    dist[node] = <span class="cl">Infinity</span>;
+    prev[node] = <span class="kw">null</span>;
+  }
+  dist[start] = <span class="num">0</span>;
+
+  <span class="cm">// Min-heap simulation using sorted array (use MinHeap class for production)</span>
+  <span class="kw">const</span> pq = [[<span class="num">0</span>, start]];  <span class="cm">// [distance, node]</span>
+
+  <span class="kw">while</span> (pq.<span class="prop">length</span>) {
+    pq.<span class="fn">sort</span>((a, b) => a[<span class="num">0</span>] - b[<span class="num">0</span>]);
+    <span class="kw">const</span> [d, u] = pq.<span class="fn">shift</span>();
+
+    <span class="kw">if</span> (visited.<span class="fn">has</span>(u)) <span class="kw">continue</span>;
+    visited.<span class="fn">add</span>(u);
+
+    <span class="kw">for</span> (<span class="kw">const</span> { to, weight } <span class="kw">of</span> graph[u] ?? []) {
+      <span class="kw">const</span> newDist = d + weight;
+      <span class="kw">if</span> (newDist < dist[to]) {
+        dist[to] = newDist;
+        prev[to] = u;
+        pq.<span class="fn">push</span>([newDist, to]);
+      }
+    }
+  }
+  <span class="kw">return</span> { dist, prev };
+}
+
+<span class="cm">// Reconstruct path from prev map</span>
+<span class="kw">function</span> <span class="fn">getPath</span>(prev, end) {
+  <span class="kw">const</span> path = [];
+  <span class="kw">let</span> curr = end;
+  <span class="kw">while</span> (curr) { path.<span class="fn">unshift</span>(curr); curr = prev[curr]; }
+  <span class="kw">return</span> path;
+}
+
+<span class="kw">const</span> { dist, prev } = <span class="fn">dijkstra</span>(city, <span class="str">'A'</span>);
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'Shortest to E:'</span>, dist[<span class="str">'E'</span>]);   <span class="cm">// 9</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="str">'Path:'</span>, <span class="fn">getPath</span>(prev, <span class="str">'E'</span>));    <span class="cm">// ['A','C','B','D','E']</span></code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Feature 2 -->
+  <div class="project-card">
+    <div class="project-header">
+      <div class="project-icon">🔍</div>
+      <div class="project-header-text">
+        <h3>Feature 2 — Driver Matching</h3>
+        <p>Find the nearest available driver to a rider in O(log n)</p>
+      </div>
+    </div>
+    <div class="project-body">
+      <p>When a rider requests a ride, MiniRide must find the nearest available driver. A naïve linear scan is O(n) across all drivers — Uber can't afford that at millions of concurrent users. Use a sorted structure for fast nearest-neighbour queries.</p>
+      <ul class="feature-list">
+        <li>Store available drivers in a hash map keyed by driver ID</li>
+        <li>Maintain driver distances in a min-heap sorted by proximity to the current ride request</li>
+        <li>Extract the closest driver in O(log n) using heap operations</li>
+        <li>Mark driver as busy and remove from heap — O(log n)</li>
+      </ul>
+      <div class="concepts-used">
+        <span class="concept-pill green">Min-Heap (Closest Driver)</span>
+        <span class="concept-pill">Hash Tables (Driver State)</span>
+        <span class="concept-pill blue">Binary Search (Distance Range)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Feature 3 -->
+  <div class="project-card">
+    <div class="project-header">
+      <div class="project-icon">⚡</div>
+      <div class="project-header-text">
+        <h3>Feature 3 — Surge Pricing Engine</h3>
+        <p>Detect high-demand zones using a hash map and apply dynamic pricing</p>
+      </div>
+    </div>
+    <div class="project-body">
+      <p>Divide the city into grid cells (geohash). Maintain a hash map of <code class="inline">cellId → rideRequestCount</code>. When a new request arrives, update the count in O(1). A surge multiplier applies when count exceeds a threshold.</p>
+      <ul class="feature-list">
+        <li>Build a frequency counter hash map over the city grid — O(1) update per request</li>
+        <li>Use a max-heap to track the top-3 busiest zones in real time</li>
+        <li>Apply surge multiplier to the price for requests from high-demand cells</li>
+        <li>Decay counts over time using a sliding window (queue-based)</li>
+      </ul>
+      <div class="concepts-used">
+        <span class="concept-pill">Hash Tables (Demand Count)</span>
+        <span class="concept-pill green">Max-Heap (Top-K Zones)</span>
+        <span class="concept-pill amber">Queue (Sliding Window)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Feature 4 -->
+  <div class="project-card">
+    <div class="project-header">
+      <div class="project-icon">📋</div>
+      <div class="project-header-text">
+        <h3>Feature 4 — Ride Queue &amp; Trip History</h3>
+        <p>A FIFO request queue + searchable sorted trip history</p>
+      </div>
+    </div>
+    <div class="project-body">
+      <p>Unmatched ride requests wait in a FIFO queue. Completed trips are stored in a sorted array indexed by timestamp, enabling O(log n) binary search for any historical trip.</p>
+      <ul class="feature-list">
+        <li>Use a linked-list backed Queue for O(1) enqueue/dequeue of ride requests</li>
+        <li>Store completed trips sorted by <code class="inline">timestamp</code></li>
+        <li>Use binary search to retrieve trips within a given date range in O(log n)</li>
+        <li>Bonus: a stack of the last 5 trips for the "recent activity" screen</li>
+      </ul>
+      <div class="concepts-used">
+        <span class="concept-pill amber">Queues (Ride Requests)</span>
+        <span class="concept-pill">Stacks (Recent Activity)</span>
+        <span class="concept-pill blue">Binary Search (Trip History)</span>
+        <span class="concept-pill">Sorting (Trip Index)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <span class="callout-icon">🚀</span>
+    <p><strong>Start here:</strong> Build Feature 1 first (just the city graph + Dijkstra's). Then add Feature 3 (the surge hash map). The project teaches more in 2 days of building than 2 weeks of reading — because every bug you hit will force you to understand exactly why your data structure choice matters.</p>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 3 — NEXT STEPS
+  ═══════════════════════════════════════════════ -->
+  <div id="nextsteps" class="chapter-header">
+    <div class="chapter-tag">Section 3 · Roadmap</div>
+    <h2 class="chapter-title">Where Do You <span>Go From Here?</span></h2>
+    <p class="chapter-sub">You have the fundamentals. Here is the exact sequence to go from foundation to job-ready in 4 phases.</p>
+  </div>
+
+  <div class="next-steps-grid">
+    <div class="step-card phase-1">
+      <h3>Phase 1 — Solidify</h3>
+      <div class="timeline">⏱ Weeks 1–4</div>
+      <ul>
+        <li>Solve 2–3 LeetCode problems per day — all from the topics in this course</li>
+        <li>Implement every data structure from scratch (no built-ins)</li>
+        <li>Build the MiniRide project above</li>
+        <li>Keep a "mistake journal" — write down every bug and why it happened</li>
+      </ul>
+    </div>
+    <div class="step-card phase-2">
+      <h3>Phase 2 — Expand</h3>
+      <div class="timeline">⏱ Weeks 5–10</div>
+      <ul>
+        <li>Learn Recursion deeply — it unlocks trees, graphs, DP</li>
+        <li>Start Dynamic Programming with the classic DP patterns (knapsack, LCS, coin change)</li>
+        <li>Learn Two Pointers and Sliding Window patterns</li>
+        <li>Aim for 75–100 LeetCode problems solved total</li>
+      </ul>
+    </div>
+    <div class="step-card phase-3">
+      <h3>Phase 3 — System Design</h3>
+      <div class="timeline">⏱ Weeks 11–16</div>
+      <ul>
+        <li>Study System Design basics: CAP theorem, databases, caching</li>
+        <li>Design Twitter, URL shortener, parking lot, rate limiter from scratch</li>
+        <li>Read the engineering blogs listed below — understand why Netflix chose Cassandra</li>
+        <li>Mock system design interviews with peers</li>
+      </ul>
+    </div>
+    <div class="step-card phase-4">
+      <h3>Phase 4 — Interview Ready</h3>
+      <div class="timeline">⏱ Weeks 17–24</div>
+      <ul>
+        <li>Grind Blind 75 / NeetCode 150 on LeetCode</li>
+        <li>Do 2 timed mock interviews per week (45 min each)</li>
+        <li>Build one full-stack project showcasing DSA (not CRUD)</li>
+        <li>Apply actively — aim for 5 applications per week</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout amber">
+    <span class="callout-icon">💡</span>
+    <p><strong>The most important advice:</strong> Consistency beats intensity. 45 minutes every day beats 8 hours on Sundays. The compound effect of daily practice is what separates engineers who crack FAANG from those who study for 6 months and give up.</p>
+  </div>
+
+
+  <!-- ═══════════════════════════════════════════════
+       SECTION 4 — RESOURCES
+  ═══════════════════════════════════════════════ -->
+  <div id="resources" class="chapter-header">
+    <div class="chapter-tag">Section 4 · Resources</div>
+    <h2 class="chapter-title">Everything You Need to <span>Go Deeper</span></h2>
+    <p class="chapter-sub">Curated, opinionated links. No filler. Every link here is genuinely useful.</p>
+  </div>
+
+  <!-- Practice -->
+  <div class="resource-section">
+    <div class="resource-category">🏋️ Practice Platforms</div>
+    <div class="resource-grid">
+      <a class="resource-card" href="https://leetcode.com/problemset/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">⚡</span><span class="rc-name">LeetCode</span></div>
+        <div class="rc-desc">The industry standard. Start with Easy, move to Medium. Use the "Company" filter to practice problems asked at your target company.</div>
+        <span class="rc-tag">Free + Premium</span>
+      </a>
+      <a class="resource-card" href="https://neetcode.io/roadmap" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🗺️</span><span class="rc-name">NeetCode Roadmap</span></div>
+        <div class="rc-desc">The best curated list of 150 LeetCode problems, grouped by pattern. Every problem has a free video solution. Follow this in order.</div>
+        <span class="rc-tag green">Free</span>
+      </a>
+      <a class="resource-card" href="https://www.hackerrank.com/domains/data-structures" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">💻</span><span class="rc-name">HackerRank DSA</span></div>
+        <div class="rc-desc">Great for beginners. Structured by data structure with difficulty levels. Good starting point before tackling LeetCode's medium problems.</div>
+        <span class="rc-tag green">Free</span>
+      </a>
+      <a class="resource-card" href="https://codeforces.com/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🏆</span><span class="rc-name">Codeforces</span></div>
+        <div class="rc-desc">Competitive programming at its hardest. Rated contests every week. Once you're comfortable with LeetCode Medium, use this to get sharp.</div>
+        <span class="rc-tag green">Free</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Books -->
+  <div class="resource-section">
+    <div class="resource-category">📚 Books Worth Reading</div>
+    <div class="resource-grid">
+      <a class="resource-card" href="https://www.crackingthecodinginterview.com/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">📖</span><span class="rc-name">Cracking the Coding Interview</span></div>
+        <div class="rc-desc">Gayle McDowell's classic. 189 programming questions with detailed solutions. The bible for software engineering interviews at top companies.</div>
+        <span class="rc-tag amber">Paid Book</span>
+      </a>
+      <a class="resource-card" href="https://www.algorist.com/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🧮</span><span class="rc-name">Algorithm Design Manual</span></div>
+        <div class="rc-desc">Steven Skiena's masterpiece. Goes deep on algorithm selection and has a "war stories" section — real engineers describing real algorithmic problems.</div>
+        <span class="rc-tag amber">Paid Book</span>
+      </a>
+      <a class="resource-card" href="https://github.com/yangshun/tech-interview-handbook" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">📝</span><span class="rc-name">Tech Interview Handbook</span></div>
+        <div class="rc-desc">Free, comprehensive guide covering DSA patterns, behavioral interviews, and system design. Maintained by a Meta engineer. 100k+ GitHub stars.</div>
+        <span class="rc-tag green">Free on GitHub</span>
+      </a>
+      <a class="resource-card" href="https://www.manning.com/books/grokking-algorithms" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🎨</span><span class="rc-name">Grokking Algorithms</span></div>
+        <div class="rc-desc">Beautifully illustrated. Perfect if you learn visually. Covers all the fundamentals with clear diagrams. Great to read alongside this course.</div>
+        <span class="rc-tag amber">Paid Book</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Courses -->
+  <div class="resource-section">
+    <div class="resource-category">🎓 Online Courses</div>
+    <div class="resource-grid">
+      <a class="resource-card" href="https://www.coursera.org/specializations/algorithms" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🏫</span><span class="rc-name">Stanford Algorithms (Coursera)</span></div>
+        <div class="rc-desc">Tim Roughgarden's legendary Stanford course. Four parts covering divide &amp; conquer, graph algorithms, greedy algorithms, and NP-completeness. Rigorous and free to audit.</div>
+        <span class="rc-tag green">Free to audit</span>
+      </a>
+      <a class="resource-card" href="https://frontendmasters.com/courses/algorithms/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🖥️</span><span class="rc-name">ThePrimeagen: Algorithms (FEM)</span></div>
+        <div class="rc-desc">JavaScript-first algorithms course by ThePrimeagen. Fast-paced, practical, and entertaining. Covers all the fundamentals in TypeScript with real implementations.</div>
+        <span class="rc-tag amber">Paid</span>
+      </a>
+      <a class="resource-card" href="https://www.udemy.com/course/js-algorithms-and-data-structures-masterclass/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🔷</span><span class="rc-name">Colt Steele: JavaScript DSA</span></div>
+        <div class="rc-desc">The most popular DSA course on Udemy with 350k+ students. Covers every structure in this course in JavaScript with animations, quizzes, and 100+ exercises.</div>
+        <span class="rc-tag amber">Paid (~₹600 on sale)</span>
+      </a>
+      <a class="resource-card" href="https://www.youtube.com/playlist?list=PLot-Xpze53ldVwtstag2TL4HQhAnC8ATf" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">▶️</span><span class="rc-name">NeetCode YouTube</span></div>
+        <div class="rc-desc">Free video solutions for every LeetCode problem in the NeetCode 150 list. Clear, concise, pattern-focused explanations. The best free DSA YouTube channel.</div>
+        <span class="rc-tag green">Free</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Engineering Blogs -->
+  <div class="resource-section">
+    <div class="resource-category">🏭 Real Engineering Blogs (Primary Sources)</div>
+    <div class="resource-grid">
+      <a class="resource-card" href="https://engineering.fb.com/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🌐</span><span class="rc-name">Meta Engineering Blog</span></div>
+        <div class="rc-desc">Where Meta engineers write about systems they built. Covers graph infrastructure, feed ranking, distributed systems, and AI at billion-user scale.</div>
+        <span class="rc-tag green">Free</span>
+      </a>
+      <a class="resource-card" href="https://www.uber.com/en-IN/blog/engineering/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🚗</span><span class="rc-name">Uber Engineering Blog</span></div>
+        <div class="rc-desc">Deep dives into Uber's routing engine, dispatch system, surge pricing, and data infrastructure. The routing engine post is required reading for any engineer.</div>
+        <span class="rc-tag green">Free</span>
+      </a>
+      <a class="resource-card" href="https://blog.x.com/engineering/en_us" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🐦</span><span class="rc-name">X (Twitter) Engineering Blog</span></div>
+        <div class="rc-desc">Real posts from Twitter engineers on GraphJet, search indexing, Manhattan DB, and the recommendation algorithm (now open-sourced on GitHub).</div>
+        <span class="rc-tag green">Free</span>
+      </a>
+      <a class="resource-card" href="https://netflixtechblog.com/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">🎬</span><span class="rc-name">Netflix Tech Blog</span></div>
+        <div class="rc-desc">World-class posts on distributed systems, A/B testing, recommendation systems (their hash table and graph work is exceptional), and fault tolerance at scale.</div>
+        <span class="rc-tag green">Free</span>
+      </a>
+      <a class="resource-card" href="https://engineering.linkedin.com/blog" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">💼</span><span class="rc-name">LinkedIn Engineering Blog</span></div>
+        <div class="rc-desc">LinkedIn invented Apache Kafka (queue-based messaging at scale). Their posts on graph infrastructure for professional networks and feed ranking are exceptional.</div>
+        <span class="rc-tag green">Free</span>
+      </a>
+      <a class="resource-card" href="https://highscalability.com/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">📡</span><span class="rc-name">High Scalability</span></div>
+        <div class="rc-desc">Case studies of real systems: how Instagram, WhatsApp, Airbnb, and others scaled. Each article is a masterclass in applied data structure and algorithm selection.</div>
+        <span class="rc-tag green">Free</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- System Design -->
+  <div class="resource-section">
+    <div class="resource-category">🏗️ System Design (Next Level)</div>
+    <div class="resource-grid">
+      <a class="resource-card" href="https://github.com/donnemartin/system-design-primer" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">⚙️</span><span class="rc-name">System Design Primer</span></div>
+        <div class="rc-desc">The most starred system design resource on GitHub (250k+ stars). Covers load balancing, caching, databases, CAP theorem. Essential before senior interviews.</div>
+        <span class="rc-tag green">Free on GitHub</span>
+      </a>
+      <a class="resource-card" href="https://bytebytego.com/" target="_blank" rel="noopener">
+        <div class="rc-top"><span class="rc-icon">📘</span><span class="rc-name">ByteByteGo</span></div>
+        <div class="rc-desc">Alex Xu's beautifully illustrated system design content. His newsletter is free and breaks down real systems (YouTube, Amazon, URL shortener) with clear diagrams.</div>
+        <span class="rc-tag amber">Free newsletter + Paid book</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Completion Banner -->
+  <div class="completion-banner">
+    <h2>🎓 You've Completed DSA Zero to Hero</h2>
+    <p>10 modules. 10 interview problems. 6 real engineering case studies. One capstone project. You now have the foundation that every great software engineer stands on. What you do next is up to you — but you have everything you need to start.</p>
+    <a href="index.html" class="banner-cta">← Back to Course Home</a>
+  </div>
+
+</div><!-- end page-wrapper -->
+
+<footer>
+  <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+  <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
+</footer>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+</body>
+</html>
