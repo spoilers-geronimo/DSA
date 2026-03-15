@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Binary Trees — DSA Zero to Hero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f9f6f1;
+      --surface:   #ffffff;
+      --border:    #e4ddd3;
+      --text:      #1a1612;
+      --muted:     #6b6055;
+      --accent:    #c84b31;
+      --accent2:   #2d6a4f;
+      --accent3:   #1d3557;
+      --code-bg:   #1e1e2e;
+      --code-text: #cdd6f4;
+      --tag-bg:    #fce8e4;
+      --tag-text:  #c84b31;
+      --highlight: #fff3cd;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(249,246,241,0.92); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 58px;
+    }
+    .nav-brand { font-family: 'Lora', serif; font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    .hero { padding: 5rem 2rem 3rem; max-width: 860px; margin: 0 auto; text-align: center; }
+    .breadcrumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .hero h1 { font-family: 'Lora', serif; font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; margin-bottom: 1rem; }
+    .hero h1 span { color: var(--accent); }
+    .hero-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
+    .tag { background: var(--tag-bg); color: var(--tag-text); border-radius: 20px; padding: 0.2rem 0.8rem; font-size: 0.78rem; font-weight: 600; }
+    .tag.green { background: #e0f0e9; color: var(--accent2); }
+    .tag.blue  { background: #dce8f5; color: var(--accent3); }
+    .tag.amber { background: #fff0d4; color: #a05c00; }
+    .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 580px; margin: 0 auto; }
+
+    .toc-wrapper { max-width: 860px; margin: 0 auto 3rem; padding: 0 2rem; }
+    .toc { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.8rem; }
+    .toc h2 { font-family: 'Lora', serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.8rem; }
+    .toc ol { padding-left: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2rem; }
+    .toc a { color: var(--accent3); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 0 2rem 6rem; display: flex; flex-direction: column; gap: 3rem; }
+
+    section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .section-header { display: flex; align-items: center; gap: 0.75rem; padding: 1.2rem 1.8rem; border-bottom: 1px solid var(--border); background: #faf9f7; }
+    .section-number { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
+    .section-header h2 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 700; color: var(--text); }
+    .section-body { padding: 1.8rem; }
+    .section-body p { margin-bottom: 1rem; color: var(--muted); }
+    .section-body p:last-child { margin-bottom: 0; }
+    .section-body strong { color: var(--text); }
+
+    .definition-box { background: var(--highlight); border: 1px solid #ffe08a; border-left: 4px solid #f5a623; border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; font-family: 'Lora', serif; font-style: italic; font-size: 1.02rem; color: #3d2c00; line-height: 1.65; }
+
+    .variant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+    .variant-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.2rem; }
+    .variant-card.bt   { border-top: 3px solid var(--accent3); }
+    .variant-card.bst  { border-top: 3px solid var(--accent2); }
+    .variant-card.full { border-top: 3px solid var(--accent); }
+    .variant-card.perf { border-top: 3px solid #a05c00; }
+    .variant-card h3 { font-family: 'Lora', serif; font-size: 1rem; margin-bottom: 0.6rem; color: var(--text); }
+    .variant-card ul { padding-left: 1.1rem; color: var(--muted); font-size: 0.9rem; }
+    .variant-card li { margin-bottom: 0.3rem; }
+
+    .ops-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+    .ops-table th { background: #f0ece6; text-align: left; padding: 0.6rem 1rem; font-weight: 600; color: var(--text); border-bottom: 2px solid var(--border); }
+    .ops-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+    .ops-table tr:last-child td { border-bottom: none; }
+    .ops-table tr:hover td { background: #faf8f5; }
+    code.inline { font-family: 'JetBrains Mono', monospace; background: #f0ece6; color: var(--accent); padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em; }
+    .complexity { font-family: 'JetBrains Mono', monospace; }
+    .o1    { color: var(--accent2); font-weight: 700; }
+    .on    { color: #c47a00; font-weight: 700; }
+    .ologn { color: var(--accent3); font-weight: 700; }
+
+    .code-block { background: var(--code-bg); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1.1rem; background: #181825; }
+    .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #a6adc8; letter-spacing: 0.06em; text-transform: uppercase; }
+    .copy-btn { background: #313244; border: none; color: #cdd6f4; padding: 0.25rem 0.65rem; border-radius: 5px; font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background .2s; }
+    .copy-btn:hover { background: #45475a; }
+    pre { margin: 0; padding: 1.5rem 1.4rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.65; }
+    pre code { font-family: 'JetBrains Mono', monospace; color: var(--code-text); }
+    .kw   { color: #cba6f7; }
+    .fn   { color: #89b4fa; }
+    .str  { color: #a6e3a1; }
+    .num  { color: #fab387; }
+    .cm   { color: #6c7086; font-style: italic; }
+    .cl   { color: #f38ba8; }
+    .prop { color: #89dceb; }
+
+    /* ── TREE DIAGRAM ── */
+    .diagram-area { background: #f9f6f1; border: 1px solid var(--border); border-radius: 10px; padding: 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.4rem; overflow-x: auto; }
+    .diagram-caption { font-size: 0.82rem; color: var(--muted); text-align: center; font-style: italic; }
+    .mem-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* SVG tree is inline — styles kept minimal */
+    .tree-svg { width: 100%; max-width: 480px; overflow: visible; }
+
+    /* Traversal order badges */
+    .traversal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 0.5rem; }
+    .trav-card { border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.1rem; background: var(--surface); }
+    .trav-card h4 { font-family: 'Lora', serif; font-size: 0.95rem; margin-bottom: 0.4rem; color: var(--text); }
+    .trav-card .order { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .trav-card .order.inorder  { color: var(--accent2); }
+    .trav-card .order.preorder { color: var(--accent3); }
+    .trav-card .order.postorder{ color: var(--accent); }
+    .trav-card p { font-size: 0.83rem; color: var(--muted); margin: 0; }
+
+    .callout { display: flex; gap: 0.8rem; align-items: flex-start; background: #eef4ff; border: 1px solid #b8d0f5; border-left: 4px solid var(--accent3); border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1rem; }
+    .callout.green { background: #e8f5ee; border-color: #a8d5ba; border-left-color: var(--accent2); }
+    .callout.amber { background: #fff8e6; border-color: #ffe08a; border-left-color: #f5a623; }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .callout p { margin: 0; font-size: 0.9rem; color: var(--accent3); }
+    .callout.green p { color: var(--accent2); }
+    .callout.amber p { color: #7a4800; }
+
+    .analogy-card { background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%); border: 1px solid #f0d9b5; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; }
+    .analogy-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
+    .analogy-card h3 { font-family: 'Lora', serif; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text); }
+    .analogy-card p { color: var(--muted); margin-bottom: 0.6rem; }
+    .analogy-card ul { padding-left: 1.3rem; color: var(--muted); font-size: 0.95rem; }
+    .analogy-card li { margin-bottom: 0.3rem; }
+
+    .rw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+    .rw-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.2rem; background: var(--surface); }
+    .rw-card .rw-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .rw-card h4 { font-family: 'Lora', serif; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--text); }
+    .rw-card p { font-size: 0.86rem; color: var(--muted); margin: 0; }
+
+    .interview-problem { background: #f0f4ff; border: 1px solid #c0cff5; border-left: 4px solid var(--accent3); border-radius: 10px; padding: 1.4rem 1.6rem; margin-bottom: 1.4rem; }
+    .interview-problem h3 { font-family: 'Lora', serif; font-size: 1.05rem; color: var(--accent3); margin-bottom: 0.5rem; }
+    .interview-problem p { color: var(--muted); font-size: 0.95rem; margin-bottom: 0; }
+    .difficulty-badge { display: inline-block; margin-top: 0.6rem; background: #fff0d4; color: #a05c00; border-radius: 20px; padding: 0.18rem 0.75rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; }
+    .step-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; margin: 1rem 0; }
+    .step-list li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.93rem; color: var(--muted); }
+    .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+
+    .module-nav { max-width: 860px; margin: 0 auto; padding: 0 2rem 1rem; display: flex; justify-content: space-between; gap: 1rem; }
+    .module-nav a { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); transition: border-color .2s, color .2s; }
+    .module-nav a:hover { border-color: var(--accent); color: var(--accent); }
+    .module-nav a.next { margin-left: auto; }
+
+    footer { text-align: center; padding: 2.5rem 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .toc ol, .variant-grid, .traversal-grid { grid-template-columns: 1fr; }
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">DSA: Zero to Hero</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="arrays.html">Arrays</a></li>
+    <li><a href="hash-tables.html">Hash Tables</a></li>
+    <li><a href="binary-trees.html" class="active">Binary Trees</a></li>
+    <li><a href="graphs.html">Graphs</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Binary Trees</p>
+  <h1>Data Structures:<br/><span>Binary Trees</span></h1>
+  <div class="hero-meta">
+    <span class="tag">Hierarchical</span>
+    <span class="tag green">O(log n) BST Search</span>
+    <span class="tag blue">3 Traversals</span>
+    <span class="tag amber">Recursive Thinking</span>
+  </div>
+  <p class="hero-desc">Hierarchical structures that branch like nature itself — the foundation of search trees, file systems, compilers, and countless interview questions.</p>
+</header>
+
+<div class="toc-wrapper">
+  <div class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#definition">Formal Definition</a></li>
+      <li><a href="#explanation">Explanation &amp; Operations</a></li>
+      <li><a href="#code">Code Snippet</a></li>
+      <li><a href="#diagram">Visual Diagram</a></li>
+      <li><a href="#analogy">Analogy (Plain English)</a></li>
+      <li><a href="#real-world">Real-World Applications</a></li>
+      <li><a href="#interview">Interview Question</a></li>
+    </ol>
+  </div>
+</div>
+
+<main>
+
+  <!-- 1. DEFINITION -->
+  <section id="definition">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2>Formal Definition</h2>
+    </div>
+    <div class="section-body">
+      <div class="definition-box">
+        A <strong>Binary Tree</strong> is a hierarchical data structure in which each node contains a <em>value</em> and at most two children, referred to as the <em>left child</em> and the <em>right child</em>. The topmost node is the <em>root</em>; nodes with no children are <em>leaves</em>. The <em>height</em> of a tree is the length of the longest path from root to a leaf. A <strong>Binary Search Tree (BST)</strong> adds an ordering invariant: for every node, all values in its left subtree are strictly less than the node's value, and all values in its right subtree are strictly greater, enabling O(log n) search in a balanced tree.
+      </div>
+      <p>The key distinction between trees and lists is <strong>non-linearity</strong>: each node can branch into two paths. This branching is what gives balanced binary trees their O(log n) operations — at every step, half the remaining nodes are eliminated from consideration.</p>
+    </div>
+  </section>
+
+  <!-- 2. EXPLANATION -->
+  <section id="explanation">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2>Plain English Explanation &amp; Operations</h2>
+    </div>
+    <div class="section-body">
+      <p>Every node in a binary tree is itself the root of a smaller tree — its <em>subtree</em>. This self-similar structure makes trees naturally recursive: almost every tree algorithm is a function that calls itself on the left and right subtrees.</p>
+
+      <div class="variant-grid">
+        <div class="variant-card bt">
+          <h3>🌳 Binary Tree (General)</h3>
+          <ul>
+            <li>Each node has at most 2 children</li>
+            <li>No ordering constraint on values</li>
+            <li>Used for expression trees, syntax trees</li>
+            <li>Traversal: in-order, pre-order, post-order</li>
+          </ul>
+        </div>
+        <div class="variant-card bst">
+          <h3>🔍 Binary Search Tree (BST)</h3>
+          <ul>
+            <li>Left child &lt; parent &lt; right child</li>
+            <li>In-order traversal yields sorted sequence</li>
+            <li>Search, insert, delete: O(log n) if balanced</li>
+            <li>Degrades to O(n) if unbalanced (skewed)</li>
+          </ul>
+        </div>
+        <div class="variant-card full">
+          <h3>⚖️ Balanced BST (AVL / Red-Black)</h3>
+          <ul>
+            <li>Self-balancing after every insert/delete</li>
+            <li>Guarantees height ≈ log n at all times</li>
+            <li>All operations stay O(log n) worst-case</li>
+            <li>Used by Java's <code class="inline">TreeMap</code>, C++ <code class="inline">std::map</code></li>
+          </ul>
+        </div>
+        <div class="variant-card perf">
+          <h3>✅ Complete / Perfect Tree</h3>
+          <ul>
+            <li><strong>Complete:</strong> all levels filled except possibly the last, filled left to right</li>
+            <li><strong>Perfect:</strong> all internal nodes have 2 children, all leaves at same level</li>
+            <li>n nodes in a perfect tree → height = log₂(n+1) − 1</li>
+            <li>Heap property relies on complete tree shape</li>
+          </ul>
+        </div>
+      </div>
+
+      <table class="ops-table" style="margin-top:1.4rem;">
+        <thead>
+          <tr><th>Operation</th><th>Description</th><th>Balanced BST</th><th>Unbalanced BST</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Search</td>
+            <td>Find a value in the tree</td>
+            <td class="complexity ologn">O(log n)</td>
+            <td class="complexity on">O(n)</td>
+          </tr>
+          <tr>
+            <td>Insert</td>
+            <td>Add a new value maintaining BST order</td>
+            <td class="complexity ologn">O(log n)</td>
+            <td class="complexity on">O(n)</td>
+          </tr>
+          <tr>
+            <td>Delete</td>
+            <td>Remove a node and restructure</td>
+            <td class="complexity ologn">O(log n)</td>
+            <td class="complexity on">O(n)</td>
+          </tr>
+          <tr>
+            <td>Traversal</td>
+            <td>Visit every node once (any order)</td>
+            <td class="complexity on">O(n)</td>
+            <td class="complexity on">O(n)</td>
+          </tr>
+          <tr>
+            <td>Height / Depth</td>
+            <td>Longest root-to-leaf path</td>
+            <td class="complexity ologn">O(log n)</td>
+            <td class="complexity on">O(n)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout" style="margin-top:1.2rem;">
+        <span class="callout-icon">💡</span>
+        <p><strong>The three traversals:</strong> <strong>In-order</strong> (left → root → right) visits BST nodes in sorted ascending order. <strong>Pre-order</strong> (root → left → right) is used to copy or serialize a tree. <strong>Post-order</strong> (left → right → root) is used to delete a tree or evaluate expression trees — the root is always processed last.</p>
+      </div>
+
+      <div class="callout amber" style="margin-top:0.8rem;">
+        <span class="callout-icon">⚠️</span>
+        <p><strong>Beware the degenerate case:</strong> If you insert values into a BST in sorted order (1, 2, 3, 4, 5…), every node has only a right child — the tree becomes a linked list with O(n) operations. Self-balancing trees (AVL, Red-Black) exist precisely to prevent this.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. CODE -->
+  <section id="code">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2>Code Snippet</h2>
+    </div>
+    <div class="section-body">
+      <p>The first snippet builds a BST with insert and search. The second implements all three classic traversals — each one a natural recursive function.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JavaScript — Binary Search Tree</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="kw">class</span> <span class="cl">TreeNode</span> {
+  <span class="fn">constructor</span>(val) {
+    <span class="kw">this</span>.<span class="prop">val</span>   = val;
+    <span class="kw">this</span>.<span class="prop">left</span>  = <span class="kw">null</span>;
+    <span class="kw">this</span>.<span class="prop">right</span> = <span class="kw">null</span>;
+  }
+}
+
+<span class="kw">class</span> <span class="cl">BST</span> {
+  <span class="fn">constructor</span>() { <span class="kw">this</span>.<span class="prop">root</span> = <span class="kw">null</span>; }
+
+  <span class="cm">// O(log n) average — insert while maintaining BST order</span>
+  <span class="fn">insert</span>(val) {
+    <span class="kw">const</span> node = <span class="kw">new</span> <span class="cl">TreeNode</span>(val);
+    <span class="kw">if</span> (!<span class="kw">this</span>.<span class="prop">root</span>) { <span class="kw">this</span>.<span class="prop">root</span> = node; <span class="kw">return</span>; }
+
+    <span class="kw">let</span> curr = <span class="kw">this</span>.<span class="prop">root</span>;
+    <span class="kw">while</span> (<span class="kw">true</span>) {
+      <span class="kw">if</span> (val &lt; curr.<span class="prop">val</span>) {
+        <span class="kw">if</span> (!curr.<span class="prop">left</span>)  { curr.<span class="prop">left</span>  = node; <span class="kw">return</span>; }
+        curr = curr.<span class="prop">left</span>;
+      } <span class="kw">else</span> {
+        <span class="kw">if</span> (!curr.<span class="prop">right</span>) { curr.<span class="prop">right</span> = node; <span class="kw">return</span>; }
+        curr = curr.<span class="prop">right</span>;
+      }
+    }
+  }
+
+  <span class="cm">// O(log n) average — search by value</span>
+  <span class="fn">search</span>(val) {
+    <span class="kw">let</span> curr = <span class="kw">this</span>.<span class="prop">root</span>;
+    <span class="kw">while</span> (curr) {
+      <span class="kw">if</span>      (val === curr.<span class="prop">val</span>) <span class="kw">return true</span>;
+      <span class="kw">else if</span> (val &lt;  curr.<span class="prop">val</span>) curr = curr.<span class="prop">left</span>;
+      <span class="kw">else</span>                       curr = curr.<span class="prop">right</span>;
+    }
+    <span class="kw">return false</span>;
+  }
+}
+
+<span class="cm">// ─── Build a BST ─────────────────────────────────────────────────</span>
+<span class="kw">const</span> bst = <span class="kw">new</span> <span class="cl">BST</span>();
+[<span class="num">8</span>, <span class="num">4</span>, <span class="num">12</span>, <span class="num">2</span>, <span class="num">6</span>, <span class="num">10</span>, <span class="num">14</span>].<span class="fn">forEach</span>(v => bst.<span class="fn">insert</span>(v));
+
+<span class="cm">//        8          ← root</span>
+<span class="cm">//       / \</span>
+<span class="cm">//      4   12</span>
+<span class="cm">//     / \ /  \</span>
+<span class="cm">//    2  6 10  14   ← leaves</span>
+
+<span class="fn">console</span>.<span class="fn">log</span>(bst.<span class="fn">search</span>(<span class="num">6</span>));   <span class="cm">// true</span>
+<span class="fn">console</span>.<span class="fn">log</span>(bst.<span class="fn">search</span>(<span class="num">7</span>));   <span class="cm">// false</span></code></pre>
+      </div>
+
+      <div class="code-block" style="margin-top:1.2rem;">
+        <div class="code-header">
+          <span class="code-lang">JavaScript — Three Traversals (Recursive)</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="cm">// ─── In-order: LEFT → ROOT → RIGHT ──────────────────────────────</span>
+<span class="cm">// On a BST, this yields values in sorted (ascending) order.</span>
+<span class="kw">function</span> <span class="fn">inOrder</span>(node, result = []) {
+  <span class="kw">if</span> (!node) <span class="kw">return</span> result;
+  <span class="fn">inOrder</span>(node.<span class="prop">left</span>,  result);   <span class="cm">// recurse left</span>
+  result.<span class="fn">push</span>(node.<span class="prop">val</span>);          <span class="cm">// visit root</span>
+  <span class="fn">inOrder</span>(node.<span class="prop">right</span>, result);   <span class="cm">// recurse right</span>
+  <span class="kw">return</span> result;
+}
+
+<span class="cm">// ─── Pre-order: ROOT → LEFT → RIGHT ─────────────────────────────</span>
+<span class="cm">// Useful for cloning a tree or serialising its structure.</span>
+<span class="kw">function</span> <span class="fn">preOrder</span>(node, result = []) {
+  <span class="kw">if</span> (!node) <span class="kw">return</span> result;
+  result.<span class="fn">push</span>(node.<span class="prop">val</span>);          <span class="cm">// visit root FIRST</span>
+  <span class="fn">preOrder</span>(node.<span class="prop">left</span>,  result);
+  <span class="fn">preOrder</span>(node.<span class="prop">right</span>, result);
+  <span class="kw">return</span> result;
+}
+
+<span class="cm">// ─── Post-order: LEFT → RIGHT → ROOT ────────────────────────────</span>
+<span class="cm">// Root visited LAST — ideal for deletion or evaluating expressions.</span>
+<span class="kw">function</span> <span class="fn">postOrder</span>(node, result = []) {
+  <span class="kw">if</span> (!node) <span class="kw">return</span> result;
+  <span class="fn">postOrder</span>(node.<span class="prop">left</span>,  result);
+  <span class="fn">postOrder</span>(node.<span class="prop">right</span>, result);
+  result.<span class="fn">push</span>(node.<span class="prop">val</span>);          <span class="cm">// visit root LAST</span>
+  <span class="kw">return</span> result;
+}
+
+<span class="cm">// ─── Results on the BST above ────────────────────────────────────</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">inOrder</span>(bst.<span class="prop">root</span>));    <span class="cm">// [2, 4, 6, 8, 10, 12, 14] ← sorted!</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">preOrder</span>(bst.<span class="prop">root</span>));   <span class="cm">// [8, 4, 2, 6, 12, 10, 14]</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">postOrder</span>(bst.<span class="prop">root</span>));  <span class="cm">// [2, 6, 4, 10, 14, 12, 8]</span></code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. DIAGRAM -->
+  <section id="diagram">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2>Visual Diagram</h2>
+    </div>
+    <div class="section-body">
+      <p>Anatomy of a binary tree — every part has a precise name used in interviews and textbooks:</p>
+
+      <div class="diagram-area">
+        <div class="mem-label">Binary Search Tree — anatomy</div>
+        <svg class="tree-svg" viewBox="0 0 480 260" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace">
+          <!-- Edges -->
+          <line x1="240" y1="46" x2="140" y2="106" stroke="#e4ddd3" stroke-width="2"/>
+          <line x1="240" y1="46" x2="340" y2="106" stroke="#e4ddd3" stroke-width="2"/>
+          <line x1="140" y1="126" x2="90"  y2="186" stroke="#e4ddd3" stroke-width="2"/>
+          <line x1="140" y1="126" x2="190" y2="186" stroke="#e4ddd3" stroke-width="2"/>
+          <line x1="340" y1="126" x2="290" y2="186" stroke="#e4ddd3" stroke-width="2"/>
+          <line x1="340" y1="126" x2="390" y2="186" stroke="#e4ddd3" stroke-width="2"/>
+
+          <!-- Root node -->
+          <circle cx="240" cy="36" r="28" fill="#fce8e4" stroke="#c84b31" stroke-width="2"/>
+          <text x="240" y="41" text-anchor="middle" font-size="15" font-weight="700" fill="#c84b31">8</text>
+
+          <!-- Level 2 -->
+          <circle cx="140" cy="116" r="24" fill="#dce8f5" stroke="#1d3557" stroke-width="2"/>
+          <text x="140" y="121" text-anchor="middle" font-size="14" font-weight="700" fill="#1d3557">4</text>
+          <circle cx="340" cy="116" r="24" fill="#dce8f5" stroke="#1d3557" stroke-width="2"/>
+          <text x="340" y="121" text-anchor="middle" font-size="14" font-weight="700" fill="#1d3557">12</text>
+
+          <!-- Level 3 (leaves) -->
+          <circle cx="90"  cy="196" r="22" fill="#e0f0e9" stroke="#2d6a4f" stroke-width="2"/>
+          <text x="90"  y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#2d6a4f">2</text>
+          <circle cx="190" cy="196" r="22" fill="#e0f0e9" stroke="#2d6a4f" stroke-width="2"/>
+          <text x="190" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#2d6a4f">6</text>
+          <circle cx="290" cy="196" r="22" fill="#e0f0e9" stroke="#2d6a4f" stroke-width="2"/>
+          <text x="290" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#2d6a4f">10</text>
+          <circle cx="390" cy="196" r="22" fill="#e0f0e9" stroke="#2d6a4f" stroke-width="2"/>
+          <text x="390" y="201" text-anchor="middle" font-size="13" font-weight="700" fill="#2d6a4f">14</text>
+
+          <!-- Labels -->
+          <text x="278" y="30" font-size="11" fill="#c84b31" font-weight="700">root</text>
+          <text x="60"  y="200" font-size="11" fill="#2d6a4f">leaf</text>
+          <text x="200" y="200" font-size="11" fill="#2d6a4f">leaf</text>
+          <text x="300" y="200" font-size="11" fill="#2d6a4f">leaf</text>
+          <text x="412" y="200" font-size="11" fill="#2d6a4f">leaf</text>
+
+          <!-- Height arrow -->
+          <line x1="455" y1="36" x2="455" y2="196" stroke="#6b6055" stroke-width="1.5" stroke-dasharray="4"/>
+          <line x1="449" y1="36"  x2="461" y2="36"  stroke="#6b6055" stroke-width="1.5"/>
+          <line x1="449" y1="196" x2="461" y2="196" stroke="#6b6055" stroke-width="1.5"/>
+          <text x="463" y="120" font-size="11" fill="#6b6055">height = 2</text>
+
+          <!-- BST property callout -->
+          <text x="10" y="240" font-size="11" fill="#6b6055">BST property: left(4) &lt; root(8) &lt; right(12) ✓ at every node</text>
+        </svg>
+        <p class="diagram-caption">Red = root · Blue = internal nodes · Green = leaves · Height = 2 (longest root→leaf path)</p>
+      </div>
+
+      <p>The three traversal orders on this same tree — each visits all 7 nodes exactly once in a different sequence:</p>
+
+      <div class="traversal-grid">
+        <div class="trav-card">
+          <h4>In-order</h4>
+          <div class="order inorder">L → Root → R</div>
+          <div class="order inorder" style="font-size:0.78rem;margin-bottom:0.5rem;">[2, 4, 6, 8, 10, 12, 14]</div>
+          <p>Always sorted on a BST. Used to validate BST property and extract elements in order.</p>
+        </div>
+        <div class="trav-card">
+          <h4>Pre-order</h4>
+          <div class="order preorder">Root → L → R</div>
+          <div class="order preorder" style="font-size:0.78rem;margin-bottom:0.5rem;">[8, 4, 2, 6, 12, 10, 14]</div>
+          <p>Root first. Used to clone a tree, serialize to disk, or build prefix expressions.</p>
+        </div>
+        <div class="trav-card">
+          <h4>Post-order</h4>
+          <div class="order postorder">L → R → Root</div>
+          <div class="order postorder" style="font-size:0.78rem;margin-bottom:0.5rem;">[2, 6, 4, 10, 14, 12, 8]</div>
+          <p>Root last. Used to delete a tree safely, evaluate expression trees, or compute subtree sizes.</p>
+        </div>
+      </div>
+
+      <div class="diagram-area" style="margin-top:1.4rem;">
+        <div class="mem-label">BST Insert path — inserting value 7</div>
+        <svg class="tree-svg" viewBox="0 0 420 240" xmlns="http://www.w3.org/2000/svg" font-family="JetBrains Mono, monospace">
+          <!-- Edges -->
+          <line x1="210" y1="42" x2="120" y2="102" stroke="#e4ddd3" stroke-width="2"/>
+          <line x1="210" y1="42" x2="300" y2="102" stroke="#e4ddd3" stroke-width="2"/>
+          <line x1="120" y1="122" x2="75"  y2="182" stroke="#e4ddd3" stroke-width="2"/>
+          <line x1="120" y1="122" x2="165" y2="182" stroke="#e4ddd3" stroke-width="2"/>
+          <!-- New edge to 7 highlighted -->
+          <line x1="165" y1="200" x2="195" y2="218" stroke="#c84b31" stroke-width="2.5" stroke-dasharray="5"/>
+
+          <!-- Nodes -->
+          <circle cx="210" cy="32"  r="26" fill="#f5f9ff" stroke="#1d3557" stroke-width="2"/>
+          <text x="210" y="37" text-anchor="middle" font-size="14" font-weight="700" fill="#1d3557">8</text>
+
+          <circle cx="120" cy="112" r="23" fill="#f5f9ff" stroke="#1d3557" stroke-width="2"/>
+          <text x="120" y="117" text-anchor="middle" font-size="14" font-weight="700" fill="#1d3557">4</text>
+          <circle cx="300" cy="112" r="23" fill="#f5f9ff" stroke="#1d3557" stroke-width="2"/>
+          <text x="300" y="117" text-anchor="middle" font-size="14" font-weight="700" fill="#1d3557">12</text>
+
+          <circle cx="75"  cy="192" r="21" fill="#f5f9ff" stroke="#1d3557" stroke-width="2"/>
+          <text x="75"  y="197" text-anchor="middle" font-size="13" font-weight="700" fill="#1d3557">2</text>
+          <circle cx="165" cy="192" r="21" fill="#fce8e4" stroke="#c84b31" stroke-width="2"/>
+          <text x="165" y="197" text-anchor="middle" font-size="13" font-weight="700" fill="#c84b31">6</text>
+
+          <!-- New node 7 -->
+          <circle cx="200" cy="228" r="20" fill="#fce8e4" stroke="#c84b31" stroke-width="2.5"/>
+          <text x="200" y="233" text-anchor="middle" font-size="13" font-weight="700" fill="#c84b31">7</text>
+          <text x="222" y="233" font-size="11" fill="#c84b31" font-weight="700">← new!</text>
+
+          <!-- Decision arrows / labels -->
+          <text x="240" y="70" font-size="11" fill="#6b6055">7 &lt; 8 → go left</text>
+          <text x="133" y="155" font-size="11" fill="#6b6055">7 &gt; 4 → go right</text>
+          <text x="167" y="180" font-size="11" fill="#c84b31">7 &gt; 6 → right child!</text>
+        </svg>
+        <p class="diagram-caption">Inserting 7: compare at each node, follow left or right. 3 comparisons to find the correct spot.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ANALOGY -->
+  <section id="analogy">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <h2>Plain English Analogy</h2>
+    </div>
+    <div class="section-body">
+      <div class="analogy-card">
+        <div class="analogy-icon">📖</div>
+        <h3>A "Higher or Lower" Number Guessing Game</h3>
+        <p>You know the game: one person thinks of a number between 1 and 100, and you guess. They say "higher" or "lower" each time. A great strategy is to <strong>always guess the middle</strong> — this is binary search, and a Binary Search Tree is the physical data structure that encodes this strategy.</p>
+        <p>Imagine the game frozen as a tree. The first guess (50) is the root. If the answer is lower, you branch left to 25; if higher, you branch right to 75. Each branch leads to a new subtree that covers half the remaining space. Within just 7 guesses you can find any number between 1 and 100 — because log₂(100) ≈ 7.</p>
+        <p>The three traversals also have intuitive meanings. Imagine exploring a family tree document:</p>
+        <ul>
+          <li><strong>Pre-order</strong> = read each family member before their descendants — great for printing the family structure</li>
+          <li><strong>In-order</strong> = read members in birth order — great for listing them in a sorted way</li>
+          <li><strong>Post-order</strong> = read descendants before their parent — great for calculating totals (sum up children first, then the parent)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. REAL WORLD -->
+  <section id="real-world">
+    <div class="section-header">
+      <div class="section-number">6</div>
+      <h2>Real-World Coding Applications</h2>
+    </div>
+    <div class="section-body">
+      <p>Binary trees and their variants appear at almost every level of a computing system.</p>
+      <div class="rw-grid">
+        <div class="rw-card">
+          <div class="rw-icon">🗂️</div>
+          <h4>File Systems</h4>
+          <p>Directory structures are trees. Your <code class="inline">/home/user/docs/report.pdf</code> path traces a root-to-leaf path. File explorers traverse this tree to render the hierarchy.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🔡</div>
+          <h4>Compilers &amp; Parsers</h4>
+          <p>Source code is parsed into an <strong>Abstract Syntax Tree (AST)</strong>. The expression <code class="inline">3 * (4 + 5)</code> becomes a tree — post-order traversal evaluates it correctly.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🗄️</div>
+          <h4>Database B-Trees</h4>
+          <p>B-Trees (generalised binary trees with many children per node) are the primary index structure in every major database. MySQL's InnoDB, PostgreSQL — all use B+ Trees for range queries and sorted access.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🔠</div>
+          <h4>Autocomplete &amp; Tries</h4>
+          <p>Autocomplete in search bars uses a Trie — a tree where each node is a character. Following a path from root to a node spells out a prefix, enabling O(k) prefix lookups where k = prefix length.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🤖</div>
+          <h4>Decision Trees (ML)</h4>
+          <p>Machine learning decision tree classifiers are literally binary trees. Each node asks a yes/no question about a feature; leaves are classification labels. Random Forests are ensembles of many such trees.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🗜️</div>
+          <h4>Huffman Encoding</h4>
+          <p>Data compression algorithms (ZIP, JPEG, MP3) build a binary tree to assign shorter bit codes to frequent characters. The tree's structure determines the compression ratio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. INTERVIEW -->
+  <section id="interview">
+    <div class="section-header">
+      <div class="section-number">7</div>
+      <h2>Classic Interview Question</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="interview-problem">
+        <h3>📏 Maximum Depth of a Binary Tree</h3>
+        <p>Given the root of a binary tree, return its <strong>maximum depth</strong> — the number of nodes along the longest path from the root down to the farthest leaf.</p>
+        <p style="margin-top:0.6rem;">Example: the tree <code class="inline">[3, 9, 20, null, null, 15, 7]</code> has a maximum depth of <code class="inline">3</code>.</p>
+        <span class="difficulty-badge">⚡ Easy — LeetCode #104 · the canonical intro to recursive tree thinking</span>
+      </div>
+
+      <p><strong>Why this question?</strong> It's the perfect entry point for recursive tree thinking — the pattern that unlocks hundreds of harder problems. Once you see that "depth of tree = 1 + max(depth of left, depth of right)", you've internalised the recursive decomposition that applies to diameter, path sum, lowest common ancestor, and beyond.</p>
+
+      <p><strong>The approach — recursive decomposition:</strong></p>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><span><strong>Base case:</strong> if the node is <code class="inline">null</code>, its depth is 0.</span></li>
+        <li><div class="step-num">2</div><span>Recursively compute the depth of the left subtree.</span></li>
+        <li><div class="step-num">3</div><span>Recursively compute the depth of the right subtree.</span></li>
+        <li><div class="step-num">4</div><span>Return <code class="inline">1 + Math.max(leftDepth, rightDepth)</code> — the current node adds 1 to the deeper branch.</span></li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JavaScript — Maximum Depth of Binary Tree</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="cm">// ─── Recursive DFS — O(n) time, O(h) space (h = tree height) ────</span>
+<span class="kw">function</span> <span class="fn">maxDepth</span>(root) {
+  <span class="kw">if</span> (!root) <span class="kw">return</span> <span class="num">0</span>;                       <span class="cm">// base case: empty node</span>
+
+  <span class="kw">const</span> leftDepth  = <span class="fn">maxDepth</span>(root.<span class="prop">left</span>);    <span class="cm">// depth of left subtree</span>
+  <span class="kw">const</span> rightDepth = <span class="fn">maxDepth</span>(root.<span class="prop">right</span>);   <span class="cm">// depth of right subtree</span>
+
+  <span class="kw">return</span> <span class="num">1</span> + Math.<span class="fn">max</span>(leftDepth, rightDepth); <span class="cm">// current node adds 1</span>
+}
+
+<span class="cm">// ─── Walkthrough on tree [3, 9, 20, null, null, 15, 7] ──────────</span>
+<span class="cm">//        3           maxDepth(3)</span>
+<span class="cm">//       / \          = 1 + max( maxDepth(9), maxDepth(20) )</span>
+<span class="cm">//      9  20         = 1 + max( 1,           2            )</span>
+<span class="cm">//        /  \        = 1 + 2</span>
+<span class="cm">//       15   7       = 3  ✓</span>
+
+<span class="cm">// ─── Iterative BFS (level-order) — same complexity ───────────────</span>
+<span class="kw">function</span> <span class="fn">maxDepthBFS</span>(root) {
+  <span class="kw">if</span> (!root) <span class="kw">return</span> <span class="num">0</span>;
+  <span class="kw">let</span> depth = <span class="num">0</span>;
+  <span class="kw">const</span> queue = [root];
+
+  <span class="kw">while</span> (queue.<span class="prop">length</span>) {
+    <span class="kw">const</span> levelSize = queue.<span class="prop">length</span>;     <span class="cm">// all nodes at current level</span>
+
+    <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; levelSize; i++) {
+      <span class="kw">const</span> node = queue.<span class="fn">shift</span>();
+      <span class="kw">if</span> (node.<span class="prop">left</span>)  queue.<span class="fn">push</span>(node.<span class="prop">left</span>);
+      <span class="kw">if</span> (node.<span class="prop">right</span>) queue.<span class="fn">push</span>(node.<span class="prop">right</span>);
+    }
+    depth++;                              <span class="cm">// finished one level</span>
+  }
+
+  <span class="kw">return</span> depth;
+}</code></pre>
+      </div>
+
+      <div class="callout green" style="margin-top:1rem;">
+        <span class="callout-icon">✅</span>
+        <p><strong>Interview tip:</strong> The recursive solution is three lines and deeply elegant — interviewers love it. Mention the space complexity: O(h) for the call stack, where h is the tree height (O(log n) for balanced, O(n) worst case for a skewed tree). Offering the iterative BFS alternative shows you know multiple approaches. The recursive pattern here — <em>"solve for children, combine results, return to parent"</em> — is the template for at least 50 LeetCode tree problems.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="module-nav">
+  <a href="hash-tables.html">← Hash Tables</a>
+  <a href="graphs.html" class="next">Graphs →</a>
+</div>
+
+<footer>
+  <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+  <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
+</footer>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+</body>
+</html>

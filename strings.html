@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Strings — DSA Zero to Hero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f9f6f1;
+      --surface:   #ffffff;
+      --border:    #e4ddd3;
+      --text:      #1a1612;
+      --muted:     #6b6055;
+      --accent:    #c84b31;
+      --accent2:   #2d6a4f;
+      --accent3:   #1d3557;
+      --code-bg:   #1e1e2e;
+      --code-text: #cdd6f4;
+      --tag-bg:    #fce8e4;
+      --tag-text:  #c84b31;
+      --highlight: #fff3cd;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.7; font-size: 16px;
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(249,246,241,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 58px;
+    }
+    .nav-brand {
+      font-family: 'Lora', serif; font-weight: 700; font-size: 1.1rem;
+      color: var(--accent); text-decoration: none; letter-spacing: -0.02em;
+    }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--muted);
+      font-size: 0.88rem; font-weight: 500; transition: color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+
+    .hero {
+      padding: 5rem 2rem 3rem; max-width: 860px; margin: 0 auto; text-align: center;
+    }
+    .breadcrumb {
+      font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .hero h1 {
+      font-family: 'Lora', serif; font-size: clamp(2.4rem, 5vw, 3.4rem);
+      font-weight: 700; line-height: 1.15; letter-spacing: -0.03em;
+      color: var(--text); margin-bottom: 1rem;
+    }
+    .hero h1 span { color: var(--accent); }
+    .hero-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
+    .tag {
+      background: var(--tag-bg); color: var(--tag-text);
+      border-radius: 20px; padding: 0.2rem 0.8rem;
+      font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em;
+    }
+    .tag.green { background: #e0f0e9; color: var(--accent2); }
+    .tag.blue  { background: #dce8f5; color: var(--accent3); }
+    .tag.amber { background: #fff0d4; color: #a05c00; }
+    .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 580px; margin: 0 auto; }
+
+    .toc-wrapper { max-width: 860px; margin: 0 auto 3rem; padding: 0 2rem; }
+    .toc {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.8rem;
+    }
+    .toc h2 {
+      font-family: 'Lora', serif; font-size: 0.9rem; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.8rem;
+    }
+    .toc ol {
+      padding-left: 1.2rem;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2rem;
+    }
+    .toc a { color: var(--accent3); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; }
+
+    main {
+      max-width: 860px; margin: 0 auto;
+      padding: 0 2rem 6rem;
+      display: flex; flex-direction: column; gap: 3rem;
+    }
+
+    section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .section-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 1.2rem 1.8rem; border-bottom: 1px solid var(--border); background: #faf9f7;
+    }
+    .section-number {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: var(--accent); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 700; flex-shrink: 0;
+    }
+    .section-header h2 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 700; color: var(--text); }
+    .section-body { padding: 1.8rem; }
+    .section-body p { margin-bottom: 1rem; color: var(--muted); }
+    .section-body p:last-child { margin-bottom: 0; }
+    .section-body strong { color: var(--text); }
+
+    .definition-box {
+      background: var(--highlight); border: 1px solid #ffe08a;
+      border-left: 4px solid #f5a623; border-radius: 8px;
+      padding: 1.2rem 1.4rem; margin-bottom: 1.2rem;
+      font-family: 'Lora', serif; font-style: italic;
+      font-size: 1.02rem; color: #3d2c00; line-height: 1.65;
+    }
+
+    /* Three-concept cards */
+    .concept-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+    .concept-card {
+      border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem;
+    }
+    .concept-card.immut { border-top: 3px solid var(--accent); }
+    .concept-card.slice  { border-top: 3px solid var(--accent2); }
+    .concept-card.hash   { border-top: 3px solid var(--accent3); }
+    .concept-card h3 { font-family: 'Lora', serif; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--text); }
+    .concept-card p { font-size: 0.88rem; color: var(--muted); margin: 0; }
+
+    .ops-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+    .ops-table th {
+      background: #f0ece6; text-align: left; padding: 0.6rem 1rem;
+      font-weight: 600; color: var(--text); border-bottom: 2px solid var(--border);
+    }
+    .ops-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+    .ops-table tr:last-child td { border-bottom: none; }
+    .ops-table tr:hover td { background: #faf8f5; }
+    code.inline {
+      font-family: 'JetBrains Mono', monospace; background: #f0ece6; color: var(--accent);
+      padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em;
+    }
+    .complexity { font-family: 'JetBrains Mono', monospace; }
+    .o1   { color: var(--accent2); font-weight: 700; }
+    .on   { color: #c47a00;        font-weight: 700; }
+    .onm  { color: var(--accent);  font-weight: 700; }
+
+    .code-block { background: var(--code-bg); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
+    .code-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.65rem 1.1rem; background: #181825;
+    }
+    .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #a6adc8; letter-spacing: 0.06em; text-transform: uppercase; }
+    .copy-btn {
+      background: #313244; border: none; color: #cdd6f4;
+      padding: 0.25rem 0.65rem; border-radius: 5px;
+      font-size: 0.75rem; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background .2s;
+    }
+    .copy-btn:hover { background: #45475a; }
+    pre { margin: 0; padding: 1.5rem 1.4rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.65; }
+    pre code { font-family: 'JetBrains Mono', monospace; color: var(--code-text); }
+    .kw  { color: #cba6f7; } .fn  { color: #89b4fa; } .str { color: #a6e3a1; }
+    .num { color: #fab387; } .cm  { color: #6c7086; font-style: italic; }
+    .cl  { color: #f38ba8; } .prop{ color: #89dceb; }
+
+    /* Diagram */
+    .diagram-area {
+      background: #f9f6f1; border: 1px solid var(--border); border-radius: 10px;
+      padding: 2rem 1.5rem; display: flex; flex-direction: column;
+      align-items: center; gap: 1rem; margin-bottom: 1.4rem; overflow-x: auto;
+    }
+    .str-row { display: flex; align-items: stretch; }
+    .str-cell {
+      width: 48px; height: 48px;
+      border: 2px solid var(--border);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; background: var(--surface);
+      margin-right: -2px;
+    }
+    .str-cell:first-child { border-radius: 6px 0 0 6px; }
+    .str-cell:last-child  { border-radius: 0 6px 6px 0; margin-right: 0; }
+    .str-cell .ch { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .str-cell .idx { font-size: 0.62rem; color: var(--muted); margin-top: 2px; }
+    .str-cell.sliced { background: #e0f0e9; border-color: var(--accent2); }
+    .str-cell.sliced .ch { color: var(--accent2); }
+    .str-cell.hashed { background: #dce8f5; border-color: var(--accent3); }
+    .str-cell.hashed .ch { color: var(--accent3); }
+
+    /* Immutability diagram */
+    .immut-box {
+      display: flex; flex-direction: column; gap: 0.6rem; width: 100%; max-width: 460px;
+    }
+    .immut-row { display: flex; align-items: center; gap: 0.7rem; }
+    .immut-var {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+      color: var(--accent3); font-weight: 700; min-width: 60px;
+    }
+    .immut-arrow { color: var(--muted); font-size: 1rem; }
+    .immut-val {
+      background: var(--surface); border: 2px solid var(--border);
+      border-radius: 6px; padding: 0.3rem 0.7rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+      color: var(--text);
+    }
+    .immut-val.old { text-decoration: line-through; color: var(--muted); border-color: #e4ddd3; }
+    .immut-val.new { border-color: var(--accent2); color: var(--accent2); }
+    .immut-label { font-size: 0.75rem; color: var(--muted); font-style: italic; }
+
+    .hash-flow {
+      display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; justify-content: center;
+    }
+    .hash-box {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 8px; padding: 0.5rem 0.9rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+      text-align: center;
+    }
+    .hash-box.input  { border-color: var(--accent3); color: var(--accent3); }
+    .hash-box.fn     { background: #1d3557; color: #fff; border-color: var(--accent3); font-weight: 700; }
+    .hash-box.output { border-color: var(--accent2); color: var(--accent2); }
+    .hash-arrow { font-size: 1.2rem; color: var(--muted); }
+
+    .diagram-caption { font-size: 0.82rem; color: var(--muted); text-align: center; font-style: italic; }
+
+    .callout {
+      display: flex; gap: 0.8rem; align-items: flex-start;
+      background: #eef4ff; border: 1px solid #b8d0f5;
+      border-left: 4px solid var(--accent3);
+      border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1rem;
+    }
+    .callout.green { background: #e8f5ee; border-color: #a8d5ba; border-left-color: var(--accent2); }
+    .callout.amber { background: #fff8e6; border-color: #ffe08a; border-left-color: #f5a623; }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .callout p { margin: 0; font-size: 0.9rem; color: var(--accent3); }
+    .callout.green p { color: var(--accent2); }
+    .callout.amber p { color: #7a4800; }
+
+    .analogy-card {
+      background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%);
+      border: 1px solid #f0d9b5; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem;
+    }
+    .analogy-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
+    .analogy-card h3 { font-family: 'Lora', serif; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text); }
+    .analogy-card p { color: var(--muted); margin-bottom: 0.6rem; }
+    .analogy-card ul { padding-left: 1.3rem; color: var(--muted); font-size: 0.95rem; }
+    .analogy-card li { margin-bottom: 0.3rem; }
+
+    .rw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+    .rw-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.2rem; background: var(--surface); }
+    .rw-card .rw-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .rw-card h4 { font-family: 'Lora', serif; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--text); }
+    .rw-card p { font-size: 0.86rem; color: var(--muted); margin: 0; }
+
+    footer { text-align: center; padding: 2.5rem 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 700px) {
+      .concept-grid { grid-template-columns: 1fr; }
+      .toc ol { grid-template-columns: 1fr; }
+      nav { padding: 0 1rem; } .nav-links { gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">DSA: Zero to Hero</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="arrays.html">Arrays</a></li>
+    <li><a href="strings.html" class="active">Strings</a></li>
+    <li><a href="linked-lists.html">Linked Lists</a></li>
+    <li><a href="stacks.html">Stacks</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Strings</p>
+  <h1>Data Structures:<br/><span>Strings</span></h1>
+  <div class="hero-meta">
+    <span class="tag">Immutability</span>
+    <span class="tag green">Slicing</span>
+    <span class="tag blue">Hashing</span>
+    <span class="tag amber">Array of Characters</span>
+  </div>
+  <p class="hero-desc">Far more than just text — strings have unique memory properties and algorithmic behaviours that every programmer must master.</p>
+</header>
+
+<div class="toc-wrapper">
+  <div class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#definition">Definition</a></li>
+      <li><a href="#explanation">Explanation &amp; Operations</a></li>
+      <li><a href="#code">Code Snippet</a></li>
+      <li><a href="#diagram">Diagram</a></li>
+      <li><a href="#analogy">Analogy (Plain English)</a></li>
+      <li><a href="#real-world">Real-World Applications</a></li>
+    </ol>
+  </div>
+</div>
+
+<main>
+
+  <!-- 1. DEFINITION -->
+  <section id="definition">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2>Formal Definition</h2>
+    </div>
+    <div class="section-body">
+      <div class="definition-box">
+        A <strong>String</strong> is a finite, ordered sequence of characters drawn from a defined alphabet (commonly Unicode). In most programming languages, a string is internally represented as a <em>contiguous array of character codes</em>. Three critical properties govern how strings behave: <strong>immutability</strong> (in many languages, a string value cannot be modified after creation), <strong>slicing</strong> (extracting a contiguous sub-sequence by index range), and <strong>hashing</strong> (mapping the entire character sequence to a fixed-size integer for fast equality checks and dictionary lookups).
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. EXPLANATION -->
+  <section id="explanation">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2>Formal Explanation &amp; Operations</h2>
+    </div>
+    <div class="section-body">
+      <div class="concept-grid">
+        <div class="concept-card immut">
+          <h3>🔒 Immutability</h3>
+          <p>In JavaScript, Python, Java, and Go, strings are <em>immutable</em>: once a string is allocated in memory, its characters cannot be changed. Any "modification" creates a brand-new string object. This enables safe sharing, caching, and hashing.</p>
+        </div>
+        <div class="concept-card slice">
+          <h3>✂️ Slicing</h3>
+          <p>A <em>slice</em> extracts a substring from index <code class="inline">start</code> (inclusive) to <code class="inline">end</code> (exclusive). In most languages this copies the characters into a new string in O(k) time, where k is the length of the slice.</p>
+        </div>
+        <div class="concept-card hash">
+          <h3>#️⃣ Hashing</h3>
+          <p>A <em>hash function</em> scans every character and produces a fixed-size integer fingerprint. Equal strings always produce the same hash. This enables O(1) average-case lookup in hash maps and sets.</p>
+        </div>
+      </div>
+
+      <table class="ops-table">
+        <thead>
+          <tr><th>Operation</th><th>Description</th><th>Time</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">s[i]</code></td>
+            <td>Access character at index <em>i</em></td>
+            <td class="complexity o1">O(1)</td>
+            <td>Direct index, like an array</td>
+          </tr>
+          <tr>
+            <td><code class="inline">s.length</code></td>
+            <td>Number of characters</td>
+            <td class="complexity o1">O(1)</td>
+            <td>Stored as a field, not computed</td>
+          </tr>
+          <tr>
+            <td>Slice <code class="inline">s[i:j]</code></td>
+            <td>Copy characters from index <em>i</em> to <em>j−1</em></td>
+            <td class="complexity on">O(k)</td>
+            <td>k = length of slice; copies memory</td>
+          </tr>
+          <tr>
+            <td>Concatenation <code class="inline">a + b</code></td>
+            <td>Combine two strings into a new one</td>
+            <td class="complexity on">O(n+m)</td>
+            <td>Allocates new memory of size n+m</td>
+          </tr>
+          <tr>
+            <td>Search <code class="inline">indexOf</code></td>
+            <td>Find first occurrence of a substring</td>
+            <td class="complexity onm">O(n·m)</td>
+            <td>n = string len, m = pattern len (naïve)</td>
+          </tr>
+          <tr>
+            <td>Hash <code class="inline">hash(s)</code></td>
+            <td>Compute integer fingerprint</td>
+            <td class="complexity on">O(n)</td>
+            <td>Usually computed once &amp; cached</td>
+          </tr>
+          <tr>
+            <td>Equality <code class="inline">s1 === s2</code></td>
+            <td>Compare two strings character by character</td>
+            <td class="complexity on">O(n)</td>
+            <td>O(1) if hashes differ and are pre-computed</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout amber">
+        <span class="callout-icon">⚠️</span>
+        <p><strong>The concatenation trap:</strong> Joining n strings in a loop with <code class="inline">result += s[i]</code> is O(n²) because each <code class="inline">+</code> allocates a new string. Use <code class="inline">Array.join()</code> or a <code class="inline">StringBuilder</code> (O(n) total) instead.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. CODE -->
+  <section id="code">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2>Code Snippet</h2>
+    </div>
+    <div class="section-body">
+      <p>Three focused examples — one per core concept: immutability, slicing, and hashing.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JavaScript — Immutability</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="cm">// ─── Strings are immutable in JavaScript ────────────────────────</span>
+<span class="kw">const</span> original = <span class="str">"hello"</span>;
+
+<span class="cm">// You CANNOT modify a character in place:</span>
+<span class="cm">// original[0] = 'H';  ← silently fails (or throws in strict mode)</span>
+<span class="fn">console</span>.<span class="fn">log</span>(original[<span class="num">0</span>]);   <span class="cm">// "h"  (still lowercase)</span>
+
+<span class="cm">// "Modifying" a string always creates a NEW string in memory:</span>
+<span class="kw">const</span> modified = original.<span class="fn">toUpperCase</span>();
+<span class="fn">console</span>.<span class="fn">log</span>(original);       <span class="cm">// "hello"   ← unchanged</span>
+<span class="fn">console</span>.<span class="fn">log</span>(modified);       <span class="cm">// "HELLO"   ← brand new string object</span>
+
+<span class="cm">// Each operation returns a new string; the original is untouched:</span>
+<span class="kw">const</span> s = <span class="str">"  trim me  "</span>;
+<span class="fn">console</span>.<span class="fn">log</span>(s.<span class="fn">trim</span>());       <span class="cm">// "trim me"  ← new string</span>
+<span class="fn">console</span>.<span class="fn">log</span>(s);              <span class="cm">// "  trim me  "  ← original unchanged</span>
+
+<span class="cm">// ⚠️  The O(n²) concatenation trap — AVOID this:</span>
+<span class="kw">let</span> bad = <span class="str">""</span>;
+<span class="kw">const</span> words = [<span class="str">"one"</span>, <span class="str">"two"</span>, <span class="str">"three"</span>, <span class="str">"four"</span>];
+<span class="kw">for</span> (<span class="kw">const</span> w <span class="kw">of</span> words) bad += w + <span class="str">" "</span>;  <span class="cm">// O(n²) — new string every iteration</span>
+
+<span class="cm">// ✅  The correct O(n) approach — use join():</span>
+<span class="kw">const</span> good = words.<span class="fn">join</span>(<span class="str">" "</span>);           <span class="cm">// "one two three four"</span></code></pre>
+      </div>
+
+      <div class="code-block" style="margin-top:1.2rem;">
+        <div class="code-header">
+          <span class="code-lang">JavaScript — Slicing</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="cm">// ─── String Slicing ─────────────────────────────────────────────</span>
+<span class="kw">const</span> s = <span class="str">"Hello, World!"</span>;
+<span class="cm">//         0123456789...</span>
+
+<span class="cm">// slice(start, end): characters from index start up to (not including) end</span>
+<span class="fn">console</span>.<span class="fn">log</span>(s.<span class="fn">slice</span>(<span class="num">0</span>, <span class="num">5</span>));    <span class="cm">// "Hello"    — indices 0,1,2,3,4</span>
+<span class="fn">console</span>.<span class="fn">log</span>(s.<span class="fn">slice</span>(<span class="num">7</span>, <span class="num">12</span>));   <span class="cm">// "World"    — indices 7–11</span>
+<span class="fn">console</span>.<span class="fn">log</span>(s.<span class="fn">slice</span>(-<span class="num">6</span>));      <span class="cm">// "orld!"    — negative: count from end</span>
+<span class="fn">console</span>.<span class="fn">log</span>(s.<span class="fn">slice</span>(<span class="num">7</span>));       <span class="cm">// "World!"   — no end = slice to end</span>
+
+<span class="cm">// Slices are copies — mutating one does NOT affect the other</span>
+<span class="kw">const</span> sub = s.<span class="fn">slice</span>(<span class="num">0</span>, <span class="num">5</span>);
+<span class="fn">console</span>.<span class="fn">log</span>(sub);              <span class="cm">// "Hello"</span>
+<span class="fn">console</span>.<span class="fn">log</span>(s);                <span class="cm">// "Hello, World!" — original untouched</span>
+
+<span class="cm">// Practical: reverse a string using slice + split + join</span>
+<span class="kw">function</span> <span class="fn">reverseString</span>(str) {
+  <span class="kw">return</span> str.<span class="fn">split</span>(<span class="str">""</span>).<span class="fn">reverse</span>().<span class="fn">join</span>(<span class="str">""</span>);
+}
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">reverseString</span>(<span class="str">"racecar"</span>));  <span class="cm">// "racecar" (palindrome)</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">reverseString</span>(<span class="str">"hello"</span>));    <span class="cm">// "olleh"</span>
+
+<span class="cm">// Practical: check if a string is a palindrome — O(n)</span>
+<span class="kw">function</span> <span class="fn">isPalindrome</span>(str) {
+  <span class="kw">const</span> clean = str.<span class="fn">toLowerCase</span>().<span class="fn">replace</span>(<span class="str">/[^a-z0-9]/g</span>, <span class="str">""</span>);
+  <span class="kw">let</span> left = <span class="num">0</span>, right = clean.<span class="prop">length</span> - <span class="num">1</span>;
+  <span class="kw">while</span> (left &lt; right) {
+    <span class="kw">if</span> (clean[left] !== clean[right]) <span class="kw">return false</span>;
+    left++; right--;
+  }
+  <span class="kw">return true</span>;
+}
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">isPalindrome</span>(<span class="str">"A man a plan a canal Panama"</span>)); <span class="cm">// true</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">isPalindrome</span>(<span class="str">"hello"</span>));                      <span class="cm">// false</span></code></pre>
+      </div>
+
+      <div class="code-block" style="margin-top:1.2rem;">
+        <div class="code-header">
+          <span class="code-lang">JavaScript — Hashing &amp; Frequency Maps</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="cm">// ─── Hashing: djb2 hash function (manual implementation) ────────</span>
+<span class="cm">// Shows the principle: scan every char, mix its code into a number.</span>
+<span class="kw">function</span> <span class="fn">hashString</span>(str) {
+  <span class="kw">let</span> hash = <span class="num">5381</span>;                        <span class="cm">// Magic seed</span>
+  <span class="kw">for</span> (<span class="kw">let</span> i = <span class="num">0</span>; i &lt; str.<span class="prop">length</span>; i++) {
+    hash = (hash * <span class="num">33</span>) ^ str.<span class="fn">charCodeAt</span>(i);
+    hash = hash &amp; hash;                   <span class="cm">// Keep it 32-bit</span>
+  }
+  <span class="kw">return</span> Math.<span class="fn">abs</span>(hash);
+}
+
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">hashString</span>(<span class="str">"hello"</span>));       <span class="cm">// e.g. 210700827</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">hashString</span>(<span class="str">"hello"</span>));       <span class="cm">// same — deterministic</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">hashString</span>(<span class="str">"Hello"</span>));       <span class="cm">// different — case-sensitive</span>
+
+<span class="cm">// ─── Practical: Anagram check using a frequency map ─────────────</span>
+<span class="cm">// Two strings are anagrams if they contain the same characters</span>
+<span class="cm">// with the same frequencies. Solved in O(n) using a hash map.</span>
+<span class="kw">function</span> <span class="fn">isAnagram</span>(s, t) {
+  <span class="kw">if</span> (s.<span class="prop">length</span> !== t.<span class="prop">length</span>) <span class="kw">return false</span>;
+
+  <span class="kw">const</span> freq = {};
+
+  <span class="kw">for</span> (<span class="kw">const</span> ch <span class="kw">of</span> s) {
+    freq[ch] = (freq[ch] ?? <span class="num">0</span>) + <span class="num">1</span>;   <span class="cm">// Count characters in s</span>
+  }
+  <span class="kw">for</span> (<span class="kw">const</span> ch <span class="kw">of</span> t) {
+    <span class="kw">if</span> (!freq[ch]) <span class="kw">return false</span>;      <span class="cm">// Missing character</span>
+    freq[ch]--;
+  }
+  <span class="kw">return true</span>;
+}
+
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">isAnagram</span>(<span class="str">"listen"</span>, <span class="str">"silent"</span>)); <span class="cm">// true</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">isAnagram</span>(<span class="str">"hello"</span>,  <span class="str">"world"</span>));  <span class="cm">// false</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">isAnagram</span>(<span class="str">"rat"</span>,    <span class="str">"car"</span>));    <span class="cm">// true</span></code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. DIAGRAM -->
+  <section id="diagram">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2>Diagram Explanation</h2>
+    </div>
+    <div class="section-body">
+      <p>A string <code class="inline">"Hello"</code> is stored as an array of character codes in memory. Each character occupies a fixed number of bytes (2 bytes per char in JavaScript's UTF-16 encoding).</p>
+
+      <div class="diagram-area">
+        <div class="mem-label" style="font-size:0.78rem; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:0.06em;">"Hello, World!" — character array</div>
+        <div class="str-row">
+          <div class="str-cell"><span class="ch">H</span><span class="idx">0</span></div>
+          <div class="str-cell"><span class="ch">e</span><span class="idx">1</span></div>
+          <div class="str-cell"><span class="ch">l</span><span class="idx">2</span></div>
+          <div class="str-cell"><span class="ch">l</span><span class="idx">3</span></div>
+          <div class="str-cell"><span class="ch">o</span><span class="idx">4</span></div>
+          <div class="str-cell"><span class="ch">,</span><span class="idx">5</span></div>
+          <div class="str-cell"><span class="ch"> </span><span class="idx">6</span></div>
+          <div class="str-cell sliced"><span class="ch">W</span><span class="idx">7</span></div>
+          <div class="str-cell sliced"><span class="ch">o</span><span class="idx">8</span></div>
+          <div class="str-cell sliced"><span class="ch">r</span><span class="idx">9</span></div>
+          <div class="str-cell sliced"><span class="ch">l</span><span class="idx">10</span></div>
+          <div class="str-cell sliced"><span class="ch">d</span><span class="idx">11</span></div>
+          <div class="str-cell"><span class="ch">!</span><span class="idx">12</span></div>
+        </div>
+        <p class="diagram-caption">Green cells = <code class="inline">s.slice(7, 12)</code> → "World" — copied into a new string object</p>
+      </div>
+
+      <p>Immutability means two variables can safely point to the same underlying memory — no one can corrupt it.</p>
+
+      <div class="diagram-area">
+        <div class="immut-box">
+          <div class="immut-row">
+            <span class="immut-var">a</span>
+            <span class="immut-arrow">→</span>
+            <div class="immut-val">"hello"</div>
+            <span class="immut-label">(memory addr: 0x200)</span>
+          </div>
+          <div class="immut-row">
+            <span class="immut-var">b</span>
+            <span class="immut-arrow">→</span>
+            <div class="immut-val">"hello"</div>
+            <span class="immut-label">can share same memory safely</span>
+          </div>
+          <div class="immut-row" style="margin-top:0.8rem;">
+            <span class="immut-var">a</span>
+            <span class="immut-arrow">→</span>
+            <div class="immut-val new">"HELLO"</div>
+            <span class="immut-label">← new object at 0x340</span>
+          </div>
+          <div class="immut-row">
+            <span class="immut-var">b</span>
+            <span class="immut-arrow">→</span>
+            <div class="immut-val">"hello"</div>
+            <span class="immut-label">← unchanged, still at 0x200</span>
+          </div>
+        </div>
+        <p class="diagram-caption">After <code class="inline">a = a.toUpperCase()</code> — b is completely unaffected</p>
+      </div>
+
+      <p>Hashing scans every character to produce a single integer fingerprint. Two equal strings always hash to the same value.</p>
+
+      <div class="diagram-area">
+        <div class="hash-flow">
+          <div class="hash-box input">"listen"</div>
+          <span class="hash-arrow">→</span>
+          <div class="hash-box fn">hash()</div>
+          <span class="hash-arrow">→</span>
+          <div class="hash-box output">2947103821</div>
+        </div>
+        <div class="hash-flow" style="margin-top:0.7rem;">
+          <div class="hash-box input">"silent"</div>
+          <span class="hash-arrow">→</span>
+          <div class="hash-box fn">hash()</div>
+          <span class="hash-arrow">→</span>
+          <div class="hash-box output" style="border-color:var(--accent); color:var(--accent)">1048392714</div>
+        </div>
+        <p class="diagram-caption">Same characters, different order → different hashes. Anagram detection needs a <strong>frequency map</strong>, not just hashing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ANALOGY -->
+  <section id="analogy">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <h2>Plain English Analogy</h2>
+    </div>
+    <div class="section-body">
+      <div class="analogy-card">
+        <div class="analogy-icon">🪨</div>
+        <h3>Immutability — A Message Engraved in Stone</h3>
+        <p>Imagine you carve a message into a stone tablet: <em>"hello"</em>. You can read any letter — but you can't erase and recarve just one character without destroying the whole tablet. If you want to change it to <em>"Hello"</em>, you have to carve a brand-new tablet. The old one still exists, unchanged.</p>
+        <p>That's immutability. The computer keeps the original string in memory forever until no one needs it anymore. This makes strings <strong>safe to share</strong> between different parts of a program — nobody can secretly modify the value under your nose.</p>
+      </div>
+
+      <div class="analogy-card">
+        <div class="analogy-icon">✂️</div>
+        <h3>Slicing — Photocopying Part of a Book</h3>
+        <p>If you photocopy pages 7 to 12 of a book, you get a new document that contains only those pages. The original book still exists, fully intact. Your photocopy is independent — writing on it doesn't affect the original.</p>
+        <p>String slicing works the same way. <code class="inline">s.slice(7, 12)</code> photocopies characters 7 through 11 into a brand-new string. The original <code class="inline">s</code> is untouched.</p>
+      </div>
+
+      <div class="analogy-card">
+        <div class="analogy-icon">#️⃣</div>
+        <h3>Hashing — A Locker Number from Your Name</h3>
+        <p>Imagine a gym that assigns you a locker number by running your name through a special formula. Every time you type in <em>"Alice"</em>, you always get locker 42. This lets the gym find your locker instantly — without searching every locker one by one.</p>
+        <p>String hashing does exactly this: it turns a long string of characters into a small fixed number so the computer can find it in a big data structure (like a dictionary) in O(1) time, instead of checking every entry.</p>
+        <ul>
+          <li><strong>"Alice" → locker 42</strong> = <code class="inline">hash("alice") → 42</code></li>
+          <li><strong>Two people with the same locker</strong> = a <em>hash collision</em></li>
+          <li><strong>Changing one letter changes the locker number</strong> = hash sensitivity</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. REAL WORLD -->
+  <section id="real-world">
+    <div class="section-header">
+      <div class="section-number">6</div>
+      <h2>Real-World Coding Applications</h2>
+    </div>
+    <div class="section-body">
+      <p>String operations are at the core of virtually every software system humans interact with daily.</p>
+      <div class="rw-grid">
+        <div class="rw-card">
+          <div class="rw-icon">🔑</div>
+          <h4>Password Hashing</h4>
+          <p>When you create a password, it's hashed (with a salt) before storage. The server never stores the actual password — only its hash. On login, the hash is compared, never the plain text.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🔍</div>
+          <h4>Search Engines</h4>
+          <p>Google tokenises, slices, and hashes billions of web pages. Substring search and string matching algorithms (like KMP and Rabin-Karp) power search relevance and autocomplete.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🌐</div>
+          <h4>URL Routing</h4>
+          <p>Web frameworks split and slice URL paths like <code class="inline">/users/42/profile</code> into segments to route requests to the correct handler function.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🧬</div>
+          <h4>DNA Sequence Analysis</h4>
+          <p>Genomic data is literally stored and processed as strings over a 4-character alphabet (A, T, C, G). Substring matching finds genes and mutations in sequences billions of characters long.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🪪</div>
+          <h4>Deduplication &amp; Caching</h4>
+          <p>In-memory caches (like Redis) use string hashing to detect duplicate requests or cache keys in O(1). Python interns short strings so identical literals share one memory address.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">📝</div>
+          <h4>Text Editors &amp; Diff Tools</h4>
+          <p>Git's diff algorithm breaks files into lines (string slices) and computes the longest common subsequence between them to show exactly what changed.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+  <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
+</footer>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+</body>
+</html>

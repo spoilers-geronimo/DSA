@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stacks — DSA Zero to Hero</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f9f6f1;
+      --surface:   #ffffff;
+      --border:    #e4ddd3;
+      --text:      #1a1612;
+      --muted:     #6b6055;
+      --accent:    #c84b31;
+      --accent2:   #2d6a4f;
+      --accent3:   #1d3557;
+      --code-bg:   #1e1e2e;
+      --code-text: #cdd6f4;
+      --tag-bg:    #fce8e4;
+      --tag-text:  #c84b31;
+      --highlight: #fff3cd;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(249,246,241,0.92); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 58px;
+    }
+    .nav-brand { font-family: 'Lora', serif; font-weight: 700; font-size: 1.1rem; color: var(--accent); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a.active { color: var(--accent); }
+
+    /* ── HERO ── */
+    .hero { padding: 5rem 2rem 3rem; max-width: 860px; margin: 0 auto; text-align: center; }
+    .breadcrumb { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.2rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    .breadcrumb a { color: var(--accent); text-decoration: none; }
+    .hero h1 { font-family: 'Lora', serif; font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; color: var(--text); margin-bottom: 1rem; }
+    .hero h1 span { color: var(--accent); }
+    .hero-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
+    .tag { background: var(--tag-bg); color: var(--tag-text); border-radius: 20px; padding: 0.2rem 0.8rem; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.03em; }
+    .tag.green { background: #e0f0e9; color: var(--accent2); }
+    .tag.blue  { background: #dce8f5; color: var(--accent3); }
+    .tag.amber { background: #fff0d4; color: #a05c00; }
+    .hero-desc { font-size: 1.05rem; color: var(--muted); max-width: 580px; margin: 0 auto; }
+
+    /* ── TOC ── */
+    .toc-wrapper { max-width: 860px; margin: 0 auto 3rem; padding: 0 2rem; }
+    .toc { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.4rem 1.8rem; }
+    .toc h2 { font-family: 'Lora', serif; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.8rem; }
+    .toc ol { padding-left: 1.2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.2rem 2rem; }
+    .toc a { color: var(--accent3); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; }
+
+    /* ── MAIN ── */
+    main { max-width: 860px; margin: 0 auto; padding: 0 2rem 6rem; display: flex; flex-direction: column; gap: 3rem; }
+
+    /* ── SECTIONS ── */
+    section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .section-header { display: flex; align-items: center; gap: 0.75rem; padding: 1.2rem 1.8rem; border-bottom: 1px solid var(--border); background: #faf9f7; }
+    .section-number { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.78rem; font-weight: 700; flex-shrink: 0; }
+    .section-header h2 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 700; color: var(--text); }
+    .section-body { padding: 1.8rem; }
+    .section-body p { margin-bottom: 1rem; color: var(--muted); }
+    .section-body p:last-child { margin-bottom: 0; }
+    .section-body strong { color: var(--text); }
+
+    /* ── DEFINITION BOX ── */
+    .definition-box { background: var(--highlight); border: 1px solid #ffe08a; border-left: 4px solid #f5a623; border-radius: 8px; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem; font-family: 'Lora', serif; font-style: italic; font-size: 1.02rem; color: #3d2c00; line-height: 1.65; }
+
+    /* ── OPS TABLE ── */
+    .ops-table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+    .ops-table th { background: #f0ece6; text-align: left; padding: 0.6rem 1rem; font-weight: 600; color: var(--text); border-bottom: 2px solid var(--border); }
+    .ops-table td { padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--muted); vertical-align: top; }
+    .ops-table tr:last-child td { border-bottom: none; }
+    .ops-table tr:hover td { background: #faf8f5; }
+    code.inline { font-family: 'JetBrains Mono', monospace; background: #f0ece6; color: var(--accent); padding: 0.1em 0.4em; border-radius: 4px; font-size: 0.85em; }
+    .complexity { font-family: 'JetBrains Mono', monospace; }
+    .o1  { color: var(--accent2); font-weight: 700; }
+    .on  { color: #c47a00;        font-weight: 700; }
+    .na  { color: var(--muted);   font-weight: 500; font-style: italic; }
+
+    /* ── CODE BLOCK ── */
+    .code-block { background: var(--code-bg); border-radius: 10px; overflow: hidden; margin-top: 1rem; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1.1rem; background: #181825; }
+    .code-lang { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #a6adc8; letter-spacing: 0.06em; text-transform: uppercase; }
+    .copy-btn { background: #313244; border: none; color: #cdd6f4; padding: 0.25rem 0.65rem; border-radius: 5px; font-size: 0.75rem; cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500; transition: background .2s; }
+    .copy-btn:hover { background: #45475a; }
+    pre { margin: 0; padding: 1.5rem 1.4rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.65; }
+    pre code { font-family: 'JetBrains Mono', monospace; color: var(--code-text); }
+    .kw   { color: #cba6f7; }
+    .fn   { color: #89b4fa; }
+    .str  { color: #a6e3a1; }
+    .num  { color: #fab387; }
+    .cm   { color: #6c7086; font-style: italic; }
+    .cl   { color: #f38ba8; }
+    .prop { color: #89dceb; }
+
+    /* ── STACK DIAGRAM ── */
+    .diagram-area { background: #f9f6f1; border: 1px solid var(--border); border-radius: 10px; padding: 2rem 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-bottom: 1.4rem; overflow-x: auto; }
+    .diagram-caption { font-size: 0.82rem; color: var(--muted); text-align: center; font-style: italic; }
+    .mem-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    .stack-visual { display: flex; flex-direction: column; align-items: center; gap: 0; width: 180px; }
+    .stack-slot {
+      width: 100%; height: 48px;
+      border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; font-weight: 700;
+      background: var(--surface); color: var(--text);
+      margin-bottom: -2px; position: relative;
+    }
+    .stack-slot:first-child { border-radius: 6px 6px 0 0; }
+    .stack-slot:last-child  { border-radius: 0 0 6px 6px; margin-bottom: 0; }
+    .stack-slot.top { background: #fce8e4; border-color: var(--accent); color: var(--accent); z-index: 1; }
+    .stack-slot.empty { background: #f5f1ec; color: #c0b8af; border-style: dashed; }
+    .stack-label {
+      font-size: 0.72rem; font-family: 'JetBrains Mono', monospace;
+      color: var(--accent); font-weight: 700; margin-bottom: 4px;
+      align-self: flex-start; padding-left: 4px;
+    }
+    .stack-label.bottom { margin-top: 4px; margin-bottom: 0; align-self: flex-start; padding-left: 4px; color: var(--muted); }
+
+    /* Push/pop animation area */
+    .push-pop-row { display: flex; gap: 3rem; align-items: flex-start; flex-wrap: wrap; justify-content: center; }
+    .pp-block { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+    .pp-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+    .pp-arrow { font-size: 1.5rem; color: var(--accent); }
+
+    /* ── CALLOUT ── */
+    .callout { display: flex; gap: 0.8rem; align-items: flex-start; background: #eef4ff; border: 1px solid #b8d0f5; border-left: 4px solid var(--accent3); border-radius: 8px; padding: 1rem 1.2rem; margin-top: 1rem; }
+    .callout.green { background: #e8f5ee; border-color: #a8d5ba; border-left-color: var(--accent2); }
+    .callout.amber { background: #fff8e6; border-color: #ffe08a; border-left-color: #f5a623; }
+    .callout-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .callout p { margin: 0; font-size: 0.9rem; color: var(--accent3); }
+    .callout.green p { color: var(--accent2); }
+    .callout.amber p { color: #7a4800; }
+
+    /* ── ANALOGY ── */
+    .analogy-card { background: linear-gradient(135deg, #fdf6ec 0%, #fef9f5 100%); border: 1px solid #f0d9b5; border-radius: 10px; padding: 1.5rem; margin-bottom: 1rem; }
+    .analogy-icon { font-size: 2.2rem; margin-bottom: 0.6rem; }
+    .analogy-card h3 { font-family: 'Lora', serif; font-size: 1.05rem; margin-bottom: 0.5rem; color: var(--text); }
+    .analogy-card p { color: var(--muted); margin-bottom: 0.6rem; }
+    .analogy-card ul { padding-left: 1.3rem; color: var(--muted); font-size: 0.95rem; }
+    .analogy-card li { margin-bottom: 0.3rem; }
+
+    /* ── REAL WORLD ── */
+    .rw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+    .rw-card { border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.2rem; background: var(--surface); }
+    .rw-card .rw-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .rw-card h4 { font-family: 'Lora', serif; font-size: 0.95rem; margin-bottom: 0.35rem; color: var(--text); }
+    .rw-card p { font-size: 0.86rem; color: var(--muted); margin: 0; }
+
+    /* ── INTERVIEW ── */
+    .interview-problem { background: #f0f4ff; border: 1px solid #c0cff5; border-left: 4px solid var(--accent3); border-radius: 10px; padding: 1.4rem 1.6rem; margin-bottom: 1.4rem; }
+    .interview-problem h3 { font-family: 'Lora', serif; font-size: 1.05rem; color: var(--accent3); margin-bottom: 0.5rem; }
+    .interview-problem p { color: var(--muted); font-size: 0.95rem; margin-bottom: 0; }
+    .difficulty-badge { display: inline-block; margin-top: 0.6rem; background: #fff0d4; color: #a05c00; border-radius: 20px; padding: 0.18rem 0.75rem; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em; }
+    .step-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.7rem; margin: 1rem 0; }
+    .step-list li { display: flex; gap: 0.75rem; align-items: flex-start; font-size: 0.93rem; color: var(--muted); }
+    .step-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 0.72rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+
+    /* ── MODULE NAV ── */
+    .module-nav { max-width: 860px; margin: 0 auto; padding: 0 2rem 1rem; display: flex; justify-content: space-between; gap: 1rem; }
+    .module-nav a { display: flex; align-items: center; gap: 0.5rem; text-decoration: none; color: var(--muted); font-size: 0.88rem; font-weight: 500; padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); transition: border-color .2s, color .2s; }
+    .module-nav a:hover { border-color: var(--accent); color: var(--accent); }
+    .module-nav a.next { margin-left: auto; }
+
+    footer { text-align: center; padding: 2.5rem 1rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    @media (max-width: 620px) {
+      .toc ol { grid-template-columns: 1fr; }
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; }
+      .push-pop-row { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="index.html">DSA: Zero to Hero</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="arrays.html">Arrays</a></li>
+    <li><a href="linked-lists.html">Linked Lists</a></li>
+    <li><a href="stacks.html" class="active">Stacks</a></li>
+    <li><a href="queues.html">Queues</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <p class="breadcrumb"><a href="index.html">Home</a> &rsaquo; Data Structures &rsaquo; Stacks</p>
+  <h1>Data Structures:<br/><span>Stacks</span></h1>
+  <div class="hero-meta">
+    <span class="tag">LIFO</span>
+    <span class="tag green">O(1) Push &amp; Pop</span>
+    <span class="tag blue">Call Stack</span>
+    <span class="tag amber">Bracket Matching</span>
+  </div>
+  <p class="hero-desc">Last in, first out — the deceptively simple structure powering your function calls, undo history, and expression parsing.</p>
+</header>
+
+<div class="toc-wrapper">
+  <div class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#definition">Formal Definition</a></li>
+      <li><a href="#explanation">Explanation &amp; Operations</a></li>
+      <li><a href="#code">Code Snippet</a></li>
+      <li><a href="#diagram">Visual Diagram</a></li>
+      <li><a href="#analogy">Analogy (Plain English)</a></li>
+      <li><a href="#real-world">Real-World Applications</a></li>
+      <li><a href="#interview">Interview Question</a></li>
+    </ol>
+  </div>
+</div>
+
+<main>
+
+  <!-- 1. DEFINITION -->
+  <section id="definition">
+    <div class="section-header">
+      <div class="section-number">1</div>
+      <h2>Formal Definition</h2>
+    </div>
+    <div class="section-body">
+      <div class="definition-box">
+        A <strong>Stack</strong> is an abstract data type that represents a collection of elements governed by the <em>Last-In, First-Out (LIFO)</em> principle: the most recently inserted element is always the first to be removed. A stack exposes three primary operations — <strong>push</strong> (insert onto the top), <strong>pop</strong> (remove from the top), and <strong>peek</strong> (read the top element without removing it) — all of which execute in O(1) time. Access to arbitrary elements is not permitted; elements can only be interacted with at the <em>top</em> of the stack.
+      </div>
+      <p>A stack can be implemented using either an <strong>array</strong> (with a top-pointer tracking the last element) or a <strong>linked list</strong> (where push/pop operate on the head). Both give the same O(1) guarantees; the choice affects memory behaviour, not asymptotic complexity.</p>
+    </div>
+  </section>
+
+  <!-- 2. EXPLANATION -->
+  <section id="explanation">
+    <div class="section-header">
+      <div class="section-number">2</div>
+      <h2>Plain English Explanation &amp; Operations</h2>
+    </div>
+    <div class="section-body">
+      <p>A stack enforces a strict rule: <strong>you can only ever touch the top</strong>. There's no jumping to the middle, no peeking at the bottom. This constraint makes a stack simpler and faster than most other structures — and it turns out that a huge number of real computing problems are naturally "top-first".</p>
+
+      <table class="ops-table">
+        <thead>
+          <tr><th>Operation</th><th>Description</th><th>Time</th><th>Space</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code class="inline">push(x)</code></td>
+            <td>Add element <em>x</em> onto the top of the stack</td>
+            <td class="complexity o1">O(1)</td>
+            <td class="complexity o1">O(1)</td>
+          </tr>
+          <tr>
+            <td><code class="inline">pop()</code></td>
+            <td>Remove and return the top element</td>
+            <td class="complexity o1">O(1)</td>
+            <td class="complexity o1">O(1)</td>
+          </tr>
+          <tr>
+            <td><code class="inline">peek()</code></td>
+            <td>Return the top element without removing it</td>
+            <td class="complexity o1">O(1)</td>
+            <td class="complexity o1">O(1)</td>
+          </tr>
+          <tr>
+            <td><code class="inline">isEmpty()</code></td>
+            <td>Return true if the stack has no elements</td>
+            <td class="complexity o1">O(1)</td>
+            <td class="complexity o1">O(1)</td>
+          </tr>
+          <tr>
+            <td><code class="inline">size()</code></td>
+            <td>Return the number of elements</td>
+            <td class="complexity o1">O(1)</td>
+            <td class="complexity o1">O(1)</td>
+          </tr>
+          <tr>
+            <td>Access by index</td>
+            <td>Not supported — stacks do not allow random access</td>
+            <td class="na">N/A</td>
+            <td class="na">N/A</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout" style="margin-top:1.2rem;">
+        <span class="callout-icon">💡</span>
+        <p><strong>Why O(1) for everything?</strong> A stack only ever operates on a single, known position — the top. There's no searching, no shifting, no resizing in normal operation. It's the computational equivalent of a notepad where you only ever read or write the top sticky note.</p>
+      </div>
+
+      <div class="callout amber" style="margin-top:0.8rem;">
+        <span class="callout-icon">⚠️</span>
+        <p><strong>Stack Overflow:</strong> When a recursive function calls itself too many times, each call pushes a new frame onto the program's call stack. If the recursion has no proper base case, the stack grows until memory is exhausted — causing the famous "stack overflow" error.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. CODE -->
+  <section id="code">
+    <div class="section-header">
+      <div class="section-number">3</div>
+      <h2>Code Snippet</h2>
+    </div>
+    <div class="section-body">
+      <p>The first snippet shows a stack built on top of a JavaScript array (the idiomatic approach). The second builds one from scratch using a linked list to show how the internals work.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JavaScript — Stack using Array</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="cm">// ─── Stack backed by a dynamic array ────────────────────────────</span>
+<span class="kw">class</span> <span class="cl">Stack</span> {
+  <span class="fn">constructor</span>() {
+    <span class="kw">this</span>.<span class="prop">items</span> = [];
+  }
+
+  <span class="cm">// O(1) amortised — add to end of array</span>
+  <span class="fn">push</span>(value) {
+    <span class="kw">this</span>.<span class="prop">items</span>.<span class="fn">push</span>(value);
+  }
+
+  <span class="cm">// O(1) — remove from end of array</span>
+  <span class="fn">pop</span>() {
+    <span class="kw">if</span> (<span class="kw">this</span>.<span class="fn">isEmpty</span>()) <span class="kw">throw new</span> <span class="cl">Error</span>(<span class="str">"Stack underflow"</span>);
+    <span class="kw">return</span> <span class="kw">this</span>.<span class="prop">items</span>.<span class="fn">pop</span>();
+  }
+
+  <span class="cm">// O(1) — read top without removing</span>
+  <span class="fn">peek</span>() {
+    <span class="kw">if</span> (<span class="kw">this</span>.<span class="fn">isEmpty</span>()) <span class="kw">throw new</span> <span class="cl">Error</span>(<span class="str">"Stack is empty"</span>);
+    <span class="kw">return</span> <span class="kw">this</span>.<span class="prop">items</span>[<span class="kw">this</span>.<span class="prop">items</span>.<span class="prop">length</span> - <span class="num">1</span>];
+  }
+
+  <span class="fn">isEmpty</span>() { <span class="kw">return</span> <span class="kw">this</span>.<span class="prop">items</span>.<span class="prop">length</span> === <span class="num">0</span>; }
+  <span class="fn">size</span>()    { <span class="kw">return</span> <span class="kw">this</span>.<span class="prop">items</span>.<span class="prop">length</span>; }
+}
+
+<span class="cm">// ─── Usage ───────────────────────────────────────────────────────</span>
+<span class="kw">const</span> s = <span class="kw">new</span> <span class="cl">Stack</span>();
+s.<span class="fn">push</span>(<span class="num">10</span>);
+s.<span class="fn">push</span>(<span class="num">20</span>);
+s.<span class="fn">push</span>(<span class="num">30</span>);
+<span class="fn">console</span>.<span class="fn">log</span>(s.<span class="fn">peek</span>());   <span class="cm">// 30  — top of stack</span>
+<span class="fn">console</span>.<span class="fn">log</span>(s.<span class="fn">pop</span>());    <span class="cm">// 30  — removed</span>
+<span class="fn">console</span>.<span class="fn">log</span>(s.<span class="fn">peek</span>());   <span class="cm">// 20  — new top</span>
+<span class="fn">console</span>.<span class="fn">log</span>(s.<span class="fn">size</span>());   <span class="cm">// 2</span></code></pre>
+      </div>
+
+      <div class="code-block" style="margin-top:1.2rem;">
+        <div class="code-header">
+          <span class="code-lang">JavaScript — Stack using Linked List</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="cm">// ─── Stack backed by a singly linked list ───────────────────────</span>
+<span class="cm">// Push and pop operate on the HEAD — always O(1), no resizing.</span>
+<span class="kw">class</span> <span class="cl">StackNode</span> {
+  <span class="fn">constructor</span>(value) {
+    <span class="kw">this</span>.<span class="prop">value</span> = value;
+    <span class="kw">this</span>.<span class="prop">next</span>  = <span class="kw">null</span>;
+  }
+}
+
+<span class="kw">class</span> <span class="cl">LinkedStack</span> {
+  <span class="fn">constructor</span>() {
+    <span class="kw">this</span>.<span class="prop">top</span>    = <span class="kw">null</span>;
+    <span class="kw">this</span>.<span class="prop">_size</span>  = <span class="num">0</span>;
+  }
+
+  <span class="fn">push</span>(value) {
+    <span class="kw">const</span> node  = <span class="kw">new</span> <span class="cl">StackNode</span>(value);
+    node.<span class="prop">next</span>   = <span class="kw">this</span>.<span class="prop">top</span>;   <span class="cm">// new node points to old top</span>
+    <span class="kw">this</span>.<span class="prop">top</span>    = node;        <span class="cm">// advance top pointer</span>
+    <span class="kw">this</span>.<span class="prop">_size</span>++;
+  }
+
+  <span class="fn">pop</span>() {
+    <span class="kw">if</span> (!<span class="kw">this</span>.<span class="prop">top</span>) <span class="kw">throw new</span> <span class="cl">Error</span>(<span class="str">"Stack underflow"</span>);
+    <span class="kw">const</span> val   = <span class="kw">this</span>.<span class="prop">top</span>.<span class="prop">value</span>;
+    <span class="kw">this</span>.<span class="prop">top</span>    = <span class="kw">this</span>.<span class="prop">top</span>.<span class="prop">next</span>; <span class="cm">// advance past old top</span>
+    <span class="kw">this</span>.<span class="prop">_size</span>--;
+    <span class="kw">return</span> val;
+  }
+
+  <span class="fn">peek</span>()    { <span class="kw">return</span> <span class="kw">this</span>.<span class="prop">top</span>?.<span class="prop">value</span>; }
+  <span class="fn">isEmpty</span>() { <span class="kw">return</span> <span class="kw">this</span>.<span class="prop">top</span> === <span class="kw">null</span>; }
+  <span class="fn">size</span>()    { <span class="kw">return</span> <span class="kw">this</span>.<span class="prop">_size</span>; }
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. DIAGRAM -->
+  <section id="diagram">
+    <div class="section-header">
+      <div class="section-number">4</div>
+      <h2>Visual Diagram</h2>
+    </div>
+    <div class="section-body">
+      <p>Visualise a stack as a <strong>vertical column</strong>. Elements enter and leave only at the top. The bottom of the stack is the first element ever pushed and the last to ever leave.</p>
+
+      <!-- Push sequence -->
+      <div class="diagram-area">
+        <div class="mem-label">Push sequence: push(10) → push(20) → push(30)</div>
+        <div class="push-pop-row">
+
+          <div class="pp-block">
+            <div class="pp-title">After push(10)</div>
+            <div class="pp-arrow">↓</div>
+            <div class="stack-label">← top</div>
+            <div class="stack-visual">
+              <div class="stack-slot top">10</div>
+              <div class="stack-slot empty">—</div>
+              <div class="stack-slot empty">—</div>
+            </div>
+            <div class="stack-label bottom">bottom</div>
+          </div>
+
+          <div class="pp-block">
+            <div class="pp-title">After push(20)</div>
+            <div class="pp-arrow">↓</div>
+            <div class="stack-label">← top</div>
+            <div class="stack-visual">
+              <div class="stack-slot top">20</div>
+              <div class="stack-slot">10</div>
+              <div class="stack-slot empty">—</div>
+            </div>
+            <div class="stack-label bottom">bottom</div>
+          </div>
+
+          <div class="pp-block">
+            <div class="pp-title">After push(30)</div>
+            <div class="pp-arrow">↓</div>
+            <div class="stack-label">← top</div>
+            <div class="stack-visual">
+              <div class="stack-slot top">30</div>
+              <div class="stack-slot">20</div>
+              <div class="stack-slot">10</div>
+            </div>
+            <div class="stack-label bottom">bottom</div>
+          </div>
+
+          <div class="pp-block">
+            <div class="pp-title">After pop()</div>
+            <div class="pp-arrow" style="color:var(--accent2);">↑</div>
+            <div class="stack-label">← top</div>
+            <div class="stack-visual">
+              <div class="stack-slot top">20</div>
+              <div class="stack-slot">10</div>
+              <div class="stack-slot empty">—</div>
+            </div>
+            <div class="stack-label bottom">bottom</div>
+          </div>
+
+        </div>
+        <p class="diagram-caption">Elements stack on top of each other. Pop always returns the most recently pushed item (30 → 20 → 10).</p>
+      </div>
+
+      <p>Here's how the <strong>call stack</strong> looks when functions call each other. Each function call pushes a new <em>frame</em>; when it returns, its frame is popped:</p>
+
+      <div class="diagram-area">
+        <div class="mem-label">Call Stack during execution of main() → add() → multiply()</div>
+        <div class="stack-label" style="align-self:center; margin-bottom:4px;">← top (currently executing)</div>
+        <div class="stack-visual" style="width:260px;">
+          <div class="stack-slot top" style="font-size:0.82rem;">multiply(3, 4)</div>
+          <div class="stack-slot" style="font-size:0.82rem;">add(2, result)</div>
+          <div class="stack-slot" style="font-size:0.82rem;">main()</div>
+        </div>
+        <div class="stack-label bottom" style="align-self:center;">bottom (entry point)</div>
+        <p class="diagram-caption">multiply() finishes → popped. add() resumes. add() finishes → popped. main() resumes. main() returns → popped. Stack empty.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. ANALOGY -->
+  <section id="analogy">
+    <div class="section-header">
+      <div class="section-number">5</div>
+      <h2>Plain English Analogy</h2>
+    </div>
+    <div class="section-body">
+      <div class="analogy-card">
+        <div class="analogy-icon">🍽️</div>
+        <h3>A Stack of Plates in a Cafeteria</h3>
+        <p>Imagine a cafeteria with a spring-loaded plate dispenser. You can only ever take the <strong>top plate</strong> from the pile, and you can only ever place a new plate <strong>on top</strong>. You can't reach in and grab the plate from the middle — the whole structure would collapse.</p>
+        <p>That's exactly how a stack works. The last plate put on (pushed) is the first one taken off (popped). This is <strong>LIFO — Last In, First Out</strong>.</p>
+        <p>When your phone app has an "undo" button, each action you take is a plate being placed on the pile. Pressing undo lifts the top plate — the most recent action — and reverses it. You can't undo the action you did three steps ago without first undoing the two actions on top of it.</p>
+        <ul>
+          <li><strong>Plate</strong> = an element in the stack</li>
+          <li><strong>Place a plate on top</strong> = push</li>
+          <li><strong>Take the top plate</strong> = pop</li>
+          <li><strong>Glance at the top plate without touching it</strong> = peek</li>
+          <li><strong>Empty dispenser</strong> = stack underflow (popping an empty stack)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. REAL WORLD -->
+  <section id="real-world">
+    <div class="section-header">
+      <div class="section-number">6</div>
+      <h2>Real-World Coding Applications</h2>
+    </div>
+    <div class="section-body">
+      <p>Stacks are everywhere in software — often hidden inside the runtime itself.</p>
+      <div class="rw-grid">
+        <div class="rw-card">
+          <div class="rw-icon">📞</div>
+          <h4>The Call Stack</h4>
+          <p>Every programming language runtime uses a call stack to track active function calls. Each invocation pushes a frame; <code class="inline">return</code> pops it. "Stack overflow" literally means this stack ran out of memory.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">↩️</div>
+          <h4>Undo / Redo</h4>
+          <p>Text editors maintain two stacks — an undo stack and a redo stack. Each edit is pushed onto the undo stack. Pressing Ctrl+Z pops from undo and pushes to redo.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🔣</div>
+          <h4>Expression Parsing</h4>
+          <p>Compilers use stacks to evaluate mathematical expressions and convert between infix, prefix, and postfix notation. Your calculator app does this with every calculation.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🌐</div>
+          <h4>Browser Back Button</h4>
+          <p>Your browser's back navigation is a stack. Every page you visit is pushed. Clicking Back pops the current page and returns to the previous one.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🏗️</div>
+          <h4>Depth-First Search (DFS)</h4>
+          <p>Graph and tree DFS algorithms use a stack (either explicitly or via recursion's call stack) to track which nodes to visit next — diving deep before backtracking.</p>
+        </div>
+        <div class="rw-card">
+          <div class="rw-icon">🔒</div>
+          <h4>Syntax Validation</h4>
+          <p>Linters, IDEs, and parsers use stacks to check balanced brackets, HTML tags, and XML. Every <code class="inline">(</code> is pushed; every <code class="inline">)</code> is popped and matched.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. INTERVIEW -->
+  <section id="interview">
+    <div class="section-header">
+      <div class="section-number">7</div>
+      <h2>Classic Interview Question</h2>
+    </div>
+    <div class="section-body">
+
+      <div class="interview-problem">
+        <h3>🔣 Valid Parentheses</h3>
+        <p>Given a string containing only the characters <code class="inline">(</code>, <code class="inline">)</code>, <code class="inline">{</code>, <code class="inline">}</code>, <code class="inline">[</code>, and <code class="inline">]</code>, determine if the input string is valid. A string is valid if every opening bracket is closed by the same type of bracket in the correct order.</p>
+        <p style="margin-top:0.6rem;">Examples: <code class="inline">"()[]{}"</code> → true &nbsp;|&nbsp; <code class="inline">"([{}])"</code> → true &nbsp;|&nbsp; <code class="inline">"(]"</code> → false &nbsp;|&nbsp; <code class="inline">"([)]"</code> → false</p>
+        <span class="difficulty-badge">⚡ Easy — LeetCode #20, asked at every major company</span>
+      </div>
+
+      <p><strong>Why this question?</strong> It's the definitive stack problem. The solution is short, elegant, and only works if you truly understand that a stack naturally models the "most recent opening bracket" — the ideal candidate for LIFO access.</p>
+
+      <p><strong>The approach:</strong></p>
+      <ul class="step-list">
+        <li><div class="step-num">1</div><span>Create an empty stack and a mapping of closing → opening brackets.</span></li>
+        <li><div class="step-num">2</div><span>Loop through each character in the string.</span></li>
+        <li><div class="step-num">3</div><span>If it's an <strong>opening</strong> bracket (<code class="inline">(</code>, <code class="inline">[</code>, <code class="inline">{</code>), push it onto the stack.</span></li>
+        <li><div class="step-num">4</div><span>If it's a <strong>closing</strong> bracket, check if the stack's top is the matching opener. If not, return false.</span></li>
+        <li><div class="step-num">5</div><span>After the loop, the stack must be empty — any leftover openers mean unmatched brackets.</span></li>
+      </ul>
+
+      <div class="code-block">
+        <div class="code-header">
+          <span class="code-lang">JavaScript — Valid Parentheses</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+        <pre><code><span class="cm">// ─── Valid Parentheses — O(n) time, O(n) space ──────────────────</span>
+<span class="kw">function</span> <span class="fn">isValid</span>(s) {
+  <span class="kw">const</span> stack = [];
+  <span class="kw">const</span> map = {
+    <span class="str">')'</span>: <span class="str">'('</span>,
+    <span class="str">']'</span>: <span class="str">'['</span>,
+    <span class="str">'}'</span>: <span class="str">'{'</span>,
+  };
+
+  <span class="kw">for</span> (<span class="kw">const</span> ch <span class="kw">of</span> s) {
+    <span class="kw">if</span> (ch === <span class="str">'('</span> || ch === <span class="str">'['</span> || ch === <span class="str">'{'</span>) {
+      stack.<span class="fn">push</span>(ch);             <span class="cm">// opening — push onto stack</span>
+    } <span class="kw">else</span> {
+      <span class="kw">if</span> (stack.<span class="fn">pop</span>() !== map[ch]) {
+        <span class="kw">return false</span>;            <span class="cm">// mismatch or empty stack</span>
+      }
+    }
+  }
+
+  <span class="kw">return</span> stack.<span class="prop">length</span> === <span class="num">0</span>;   <span class="cm">// true only if all openers were matched</span>
+}
+
+<span class="cm">// ─── Test cases ──────────────────────────────────────────────────</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">isValid</span>(<span class="str">"()[]{}"</span>));  <span class="cm">// true</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">isValid</span>(<span class="str">"([{}])"</span>));  <span class="cm">// true</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">isValid</span>(<span class="str">"(]"</span>));      <span class="cm">// false — wrong closing bracket</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">isValid</span>(<span class="str">"([)]"</span>));    <span class="cm">// false — wrong order</span>
+<span class="fn">console</span>.<span class="fn">log</span>(<span class="fn">isValid</span>(<span class="str">"{"</span>));        <span class="cm">// false — unmatched opener</span>
+
+<span class="cm">// ─── Walkthrough: "([{}])" ───────────────────────────────────────</span>
+<span class="cm">// '('  → push → stack: ['(']</span>
+<span class="cm">// '['  → push → stack: ['(', '[']</span>
+<span class="cm">// '{'  → push → stack: ['(', '[', '{']</span>
+<span class="cm">// '}'  → pop '{' — matches map['}'] ✓ → stack: ['(', '[']</span>
+<span class="cm">// ']'  → pop '[' — matches map[']'] ✓ → stack: ['(']</span>
+<span class="cm">// ')'  → pop '(' — matches map[')'] ✓ → stack: []</span>
+<span class="cm">// stack.length === 0 → return true ✓</span></code></pre>
+      </div>
+
+      <div class="callout green" style="margin-top:1rem;">
+        <span class="callout-icon">✅</span>
+        <p><strong>Interview tip:</strong> When you call <code class="inline">stack.pop()</code> on an empty array in JavaScript, it returns <code class="inline">undefined</code> — which won't match any bracket, so the check handles the empty-stack edge case automatically. Point this out: interviewers love candidates who think about edge cases without prompting. Also mention the O(n) space for the stack in your complexity analysis.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="module-nav">
+  <a href="linked-lists.html">← Linked Lists</a>
+  <a href="queues.html" class="next">Queues →</a>
+</div>
+
+<footer>
+  <p>DSA: Zero to Hero &mdash; <a href="index.html">Back to Home</a></p>
+  <p style="margin-top:0.4rem; font-size:0.8rem;">Built for learners, by learners.</p>
+</footer>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+</body>
+</html>
